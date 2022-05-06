@@ -1,0 +1,21 @@
+.addcontentbutton{
+    justify-content: end;
+    display: flex;
+    /* padding: 20px;  */
+}
+.flex_sb{
+    display: flex;
+    justify-content: space-between;
+}
+.m5 {
+    margin: 5px;
+}
+.pl5 {
+    padding-left: 5px;
+}
+.text_decoration{
+    text-decoration: none ;
+}
+.s16{
+    font-size: 16px;
+}

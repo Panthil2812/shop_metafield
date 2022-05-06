@@ -9,6 +9,9 @@ import {
 } from "@shopify/polaris";
 import { Link } from "react-router-dom";
 import ReactFlagsSelect from "react-flags-select";
+import ReactQuill from "react-quill";
+import EditorToolbar, { modules, formats } from "./EditorToolbar";
+import "react-quill/dist/quill.snow.css";
 import "./main.css";
 const AddContent = () => {
   const CustomLinkComponent = ({ children, url, ...rest }) => {
@@ -27,6 +30,11 @@ const AddContent = () => {
   const [option, setOption] = useState("Select display content");
 
   const [selected, setSelected] = useState("");
+  const [content, setContent] = useState({ value: null });
+  const handleChange = (value) => {
+    setContent({ value });
+    console.log(value);
+  };
   return (
     <AppProvider
       linkComponent={CustomLinkComponent}
@@ -43,7 +51,7 @@ const AddContent = () => {
       <Page
         breadcrumbs={[{ content: "Products", url: "/" }]}
         title="Add New Country Content"
-        primaryAction={{ content: "Save" }}
+        // primaryAction={{ content: "Save" }}
         // secondaryActions={[
         //   { content: "Duplicate", url: "#" },
         //   { content: "View on your store", url: "#" },
@@ -74,7 +82,23 @@ const AddContent = () => {
               />
             </FormLayout.Group>
           </FormLayout>
+          <div className="text-editor">
+            <EditorToolbar />
+            <ReactQuill
+              theme="snow"
+              value={content.value}
+              onChange={handleChange}
+              placeholder={"Write something awesome..."}
+              modules={modules}
+              formats={formats}
+            />
+          </div>
         </Card>
+        <Page
+          primaryAction={{
+            content: "Save",
+          }}
+        />
       </Page>
     </AppProvider>
   );

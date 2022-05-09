@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
-const connectDB = () => {
-  const url = process.env.MONGODB_URL;
+export const connectDB = () => {
+  const url = process.env.MONGO_SRV;
   return new Promise((resolve, reject) => {
     mongoose
       .connect(url, {
@@ -18,6 +18,6 @@ const connectDB = () => {
       });
   });
 };
-export default connectDB;
-// export * as DBShopServices from "./shop/shop.services.js";
-// export * as DBSessionServices from "./session/session.services.js";
+
+export * as DBShopServices from "./shop/shop.services.js";
+export * as DBSessionServices from "./session/session.services.js";

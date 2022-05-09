@@ -4,10 +4,11 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import { Shopify, ApiVersion } from "@shopify/shopify-api";
 import "dotenv/config";
-
+import { SessionService } from "./services/session/index.js";
+import { connectDB } from "./services/db/index.js";
 import applyAuthMiddleware from "./middleware/auth.js";
 import verifyRequest from "./middleware/verify-request.js";
-import connectDB from "./initdb.js";
+// import connectDB from "./initdb.js";
 const USE_ONLINE_TOKENS = true;
 const TOP_LEVEL_OAUTH_COOKIE = "shopify_top_level_oauth";
 
@@ -28,6 +29,8 @@ Shopify.Context.initialize({
 // Storing the currently active shops in memory will force them to re-login when your server restarts. You should
 // persist this object in your app.
 const ACTIVE_SHOPIFY_SHOPS = {};
+global.ACTIVE_SHOPIFY_SHOPS = ACTIVE_SHOPIFY_SHOPS;
+
 Shopify.Webhooks.Registry.addHandler("APP_UNINSTALLED", {
   path: "/webhooks",
   webhookHandler: async (topic, shop, body) => {
@@ -152,6 +155,12 @@ export async function createServer(
 }
 
 if (!isTest) {
-  connectDB();
-  createServer().then(({ app }) => app.listen(PORT));
+  // connectDB();
+  connectDB().then(() => {
+    SessionService.loadSessions().then(() =>
+      createServer().then(({ app }) =>
+        app.listen(PORT, () => console.log(`Server listening on PORT: ${PORT}`))
+      )
+    );
+  });
 }

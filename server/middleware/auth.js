@@ -1,6 +1,16 @@
 import { Shopify } from "@shopify/shopify-api";
 
 import topLevelAuthRedirect from "../helpers/top-level-auth-redirect.js";
+import { registerWebhooks } from "../webhooks/index.js";
+import {
+  ShopifyShopServices,
+  createShopifyRestClient,
+  createShopifyGraphqlClient,
+} from "../services/shopify/index.js";
+
+import { DBShopServices } from "../services/db/index.js";
+import { SessionService } from "../services/session/index.js";
+import { APP_STATUS } from "../constants/index.js";
 
 export default function applyAuthMiddleware(app) {
   app.get("/auth", async (req, res) => {
@@ -49,12 +59,45 @@ export default function applyAuthMiddleware(app) {
       );
       console.log("accessToken   :   ", session.accessToken);
       const host = req.query.host;
+
+      //Register webhooks
+      await registerWebhooks(session.shop, session.accessToken);
+
+      //save shop data to db
+
+      const restClient = createShopifyRestClient(
+        session.shop,
+        session.accessToken
+      );
+
+      const gqlClient = createShopifyGraphqlClient(
+        session.shop,
+        session.accessToken
+      );
+
+      //GetShop data
+      const {
+        data: { shop },
+      } = await ShopifyShopServices.getShopData(restClient);
+
       app.set(
         "active-shopify-shops",
         Object.assign(app.get("active-shopify-shops"), {
           [session.shop]: session.scope,
         })
       );
+      await DBShopServices.addShopData({
+        shop: session.shop,
+        data: {
+          ...shop,
+          app_status: APP_STATUS.INSTALLED,
+          access_token: session.accessToken,
+          access_scope: session.scope,
+          // sf_access_token: sfToken,
+        },
+      });
+
+      // await SessionService.createSession(session.shop, session.scope);
 
       const response = await Shopify.Webhooks.Registry.register({
         shop: session.shop,

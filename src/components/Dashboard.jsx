@@ -19,10 +19,13 @@ import {
   ResourceList,
   TextField,
   TextStyle,
+  Pagination,
 } from "@shopify/polaris";
 
 const Dashboard = () => {
-  const [appOption, setAppOption] = React.useState(true);
+  const [DisplayEmail, setDisplayEmail] = useState([]);
+
+  const [appOption, setAppOption] = useState(true);
   const appEDoption = () => {
     // alert(appOption);
     setAppOption(!appOption);
@@ -63,7 +66,8 @@ const Dashboard = () => {
       Name: "John Linda",
       Country: "	United States",
       Display: "Header",
-      Content: "HTML text editor",
+      Content:
+        "HTML text editor HTML text editor HTML text editor HTML text editor HTML text editor HTML text editor HTML text editor HTML text editor",
     },
     {
       id: 104,
@@ -181,53 +185,93 @@ const Dashboard = () => {
               // showHeader={true}
               loading={false}
             />
+            <br />
+            <div className="pagination">
+              <Pagination
+                hasPrevious
+                onPrevious={() => {
+                  console.log("Previous");
+                }}
+                hasNext
+                onNext={() => {
+                  console.log("Next");
+                }}
+              />
+              <br />
+            </div>
           </Card>
         </Layout.Section>
       </Layout>
     </Page>
   );
-  function renderItem(item) {
-    const { id, url, Name, Country, Display, Content } = item;
-    const media = <Avatar customer size="medium" name={Name} />;
+  function renderItem(item, _, index) {
+    const { id, Name, Country, Display, Content } = item;
+
+    const firstItem =
+      items && Array.isArray(items) && items.length && items.length !== 0
+        ? items[0]
+        : "";
 
     return (
-      <ResourceItem id={id}>
-        <h3>
-          <div className="flex_sb s16">
-            <p>{Name}</p>
-            <p>{Country}</p>
-            <p>{Display}</p>
-            <p>{Content}</p>
-            <div className="flex_sb">
-              <div
-                className="m5"
-                onClick={() => {
-                  alert("EditMajor");
-                }}
-              >
-                <Icon source={EditMajor} color="primary" />
-              </div>
-              <div
-                className="m5"
-                onClick={() => {
-                  alert("ViewMajor");
-                }}
-              >
-                <Icon source={ViewMajor} color="warning" />
-              </div>
-              <div
-                className="m5"
-                onClick={() => {
-                  alert("DeleteMajor");
-                }}
-              >
-                <Icon source={DeleteMajor} color="critical" />
+      <>
+        {(firstItem === item || firstItem === "") && (
+          <div className="custome_header">
+            <div className="header_text">
+              <TextStyle variation="strong">Name</TextStyle>
+            </div>
+            <div className="header_text">
+              <TextStyle variation="strong">Country</TextStyle>
+            </div>
+            <div className="header_text">
+              <TextStyle variation="strong">Displayed At</TextStyle>
+            </div>
+            <div className="header_text">
+              <TextStyle variation="strong">Content</TextStyle>
+            </div>
+            <div>
+              <TextStyle variation="strong">Action</TextStyle>
+            </div>
+          </div>
+        )}
+
+        <ResourceItem id={id} sortOrder={index}>
+          <>
+            <div className="dynamic-details">
+              {/* <div>{index + 1}</div> */}
+              <div className="header_text">{Name}</div>
+              <div className="header_text">{Country}</div>
+              <div className="header_text">{Display}</div>
+              <div className="header_text">{Content}</div>
+              <div className="flex_sb">
+                <div
+                  className="m5"
+                  onClick={() => {
+                    alert("EditMajor");
+                  }}
+                >
+                  <Icon source={EditMajor} color="primary" />
+                </div>
+                <div
+                  className="m5"
+                  onClick={() => {
+                    alert("ViewMajor");
+                  }}
+                >
+                  <Icon source={ViewMajor} color="warning" />
+                </div>
+                <div
+                  className="m5"
+                  onClick={() => {
+                    alert("DeleteMajor");
+                  }}
+                >
+                  <Icon source={DeleteMajor} color="critical" />
+                </div>
               </div>
             </div>
-            {/* <div>{location}</div> */}
-          </div>
-        </h3>
-      </ResourceItem>
+          </>
+        </ResourceItem>
+      </>
     );
   }
 };

@@ -59,3 +59,10 @@
   justify-content: center;
   padding-bottom: 20px;
 }
+.react-flages-select {
+  flex: 1 0 auto;
+}
+.react-flages-disable-select {
+  flex: 1 0 auto;
+  pointer-events: none;
+}

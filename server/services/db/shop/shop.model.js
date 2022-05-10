@@ -18,6 +18,12 @@ const ShopSchema = mongoose.Schema({
     required: true,
     unique: true,
   },
+  metafield_id: {
+    type: String,
+    trim: true,
+    required: true,
+    unique: true,
+  },
   sf_access_token: {
     type: String,
     trim: true,

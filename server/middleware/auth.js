@@ -7,11 +7,11 @@ import {
   createShopifyRestClient,
   createShopifyGraphqlClient,
 } from "../services/shopify/index.js";
-
+import { createMetafield } from "../services/metafield/metafield.route.js";
 import { DBShopServices } from "../services/db/index.js";
 import { SessionService } from "../services/session/index.js";
 import { APP_STATUS } from "../constants/index.js";
-
+import axios from "axios";
 export default function applyAuthMiddleware(app) {
   app.get("/auth", async (req, res) => {
     if (!req.signedCookies[app.get("top-level-oauth-cookie")]) {
@@ -86,17 +86,20 @@ export default function applyAuthMiddleware(app) {
           [session.shop]: session.scope,
         })
       );
+
       await DBShopServices.addShopData({
         shop: session.shop,
         data: {
           ...shop,
           app_status: APP_STATUS.INSTALLED,
           access_token: session.accessToken,
+          metafield_id: 1,
           access_scope: session.scope,
-          // sf_access_token: sfToken,
         },
       });
+      const dataShop = await DBShopServices.getShopData(session.shop);
 
+      // console.log("Shop Data : ", JSON.stringify(dataShop));
       // await SessionService.createSession(session.shop, session.scope);
 
       const response = await Shopify.Webhooks.Registry.register({
@@ -115,6 +118,7 @@ export default function applyAuthMiddleware(app) {
       // Redirect to app with shop parameter upon auth
       res.redirect(`/?shop=${session.shop}&host=${host}`);
     } catch (e) {
+      console.log(e);
       switch (true) {
         case e instanceof Shopify.Errors.InvalidOAuthError:
           res.status(400);

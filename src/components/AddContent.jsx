@@ -6,7 +6,10 @@ import {
   Select,
   FormLayout,
   TextField,
+  Stack,
 } from "@shopify/polaris";
+import Switch from "react-switch";
+
 import { Link } from "react-router-dom";
 import ReactFlagsSelect from "react-flags-select";
 import ReactQuill from "react-quill";
@@ -35,6 +38,13 @@ const AddContent = () => {
     setContent({ value });
     console.log(value);
   };
+
+  const [countryFlag, setCountryFlag] = useState(false);
+
+  const handleToggle = (nextChecked) => {
+    setCountryFlag(nextChecked);
+  };
+
   return (
     <AppProvider
       linkComponent={CustomLinkComponent}
@@ -64,24 +74,81 @@ const AddContent = () => {
               onChange={() => {}}
               autoComplete="off"
             />
-            <FormLayout.Group>
-              <Select
-                // label="Date range"
-                options={options}
-                onChange={(value) => {
-                  //   alert(options[e].label);
-                  setOption(value);
-                  console.log(value);
+            <Select
+              // label="Date range"
+              options={options}
+              onChange={(value) => {
+                //   alert(options[e].label);
+                setOption(value);
+                console.log(value);
+              }}
+              value={option}
+            />
+            {/* <FormLayout.Group> */}
+            <div
+              style={{
+                display: "flex",
+                // justifyContent: "normal",
+              }}
+            >
+              <div
+                style={{
+                  marginRight: "30px",
+                  display: "flex",
+                  padding: "3px",
+                  // border: "2px solid #F0F0F0",
+                  // justifyContent: "center",
+                  // justifyContent: "space-between",
                 }}
-                value={option}
-              />
-              <ReactFlagsSelect
-                selected={selected}
-                onSelect={(code) => setSelected(code)}
-                selectedSize={12}
-              />
-            </FormLayout.Group>
+              >
+                <p
+                  style={{
+                    // marginRight: "20px",
+                    // marginLeft: "20px",
+                    marginRight: "20px",
+                    paddingTop: "3px",
+                    paddingBottom: "2px",
+                    fontSize: "16px",
+                  }}
+                >
+                  Default Country{" "}
+                </p>
+                <Switch
+                  onChange={handleToggle}
+                  checked={countryFlag}
+                  uncheckedIcon={false}
+                  checkedIcon={false}
+                  className="react-switch"
+                />
+              </div>
+
+              {!countryFlag === true ? (
+                <ReactFlagsSelect
+                  selected={selected}
+                  onSelect={(code) => setSelected(code)}
+                  selectedSize={12}
+                  className="react-flages-select"
+                />
+              ) : (
+                // <div style={{ pointerEvents: "none" }}>
+                <ReactFlagsSelect
+                  selected={selected}
+                  onSelect={(code) => setSelected(code)}
+                  selectedSize={12}
+                  className="react-flages-disable-select"
+                />
+                // </div>
+              )}
+            </div>
+            {/* </FormLayout.Group> */}
           </FormLayout>
+
+          {/* <div>
+            <Stack distribution="fill">
+              
+              <></>
+            </Stack>
+          </div> */}
           <div className="text-editor">
             <EditorToolbar />
             <ReactQuill

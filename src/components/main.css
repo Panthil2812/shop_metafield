@@ -8,7 +8,9 @@
   display: flex;
   justify-content: space-between;
 }
-
+.flex {
+  display: flex;
+}
 .m5 {
   margin: 5px;
 }
@@ -65,4 +67,15 @@
 .react-flages-disable-select {
   flex: 1 0 auto;
   pointer-events: none;
+}
+.react-country-switch {
+  margin-right: 30px;
+  display: flex;
+  padding: 3px;
+}
+.react-country-switch p {
+  margin-right: 20px;
+  padding-top: 3px;
+  padding-bottom: 2px;
+  font-size: 16px;
 }

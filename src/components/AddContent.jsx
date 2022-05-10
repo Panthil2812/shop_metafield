@@ -6,6 +6,8 @@ import {
   Select,
   FormLayout,
   TextField,
+  PageActions,
+  InlineError,
   Stack,
 } from "@shopify/polaris";
 import Switch from "react-switch";
@@ -30,21 +32,84 @@ const AddContent = () => {
     { label: "Footer", value: "2" },
     { label: "Product page", value: "3" },
   ];
+  const [storeName, setStoreName] = useState("");
   const [option, setOption] = useState("Select display content");
-
-  const [selected, setSelected] = useState("");
-  const [content, setContent] = useState({ value: null });
-  const handleChange = (value) => {
-    setContent({ value });
-    console.log(value);
+  const [selected, setSelected] = useState(null);
+  const [content, setContent] = useState("");
+  const [switchFlag, setSwitchFlag] = useState(false);
+  const [errorMessage, setErrorMessage] = useState({
+    store: "",
+    option: "",
+    country: "",
+    content: "",
+  });
+  const validationContent = () => {
+    if (storeName === "") {
+      setErrorMessage((errorMessage) => ({
+        ...errorMessage,
+        store: "Store name is required",
+      }));
+    } else {
+      setErrorMessage((errorMessage) => ({
+        ...errorMessage,
+        store: "",
+      }));
+    }
+    if (option === "Select display content") {
+      setErrorMessage((errorMessage) => ({
+        ...errorMessage,
+        option: "Select Option is required",
+      }));
+    } else {
+      setErrorMessage((errorMessage) => ({
+        ...errorMessage,
+        option: "",
+      }));
+    }
+    if (!switchFlag) {
+      if (selected === null) {
+        setErrorMessage((errorMessage) => ({
+          ...errorMessage,
+          country: "Select Country is required",
+        }));
+      } else {
+        setErrorMessage((errorMessage) => ({
+          ...errorMessage,
+          country: "",
+        }));
+      }
+    } else {
+      setErrorMessage((errorMessage) => ({
+        ...errorMessage,
+        country: "",
+      }));
+    }
+    if (content === "" || content === "<p><br></p>") {
+      setErrorMessage((errorMessage) => ({
+        ...errorMessage,
+        content: "Content is required",
+      }));
+    } else {
+      setErrorMessage((errorMessage) => ({
+        ...errorMessage,
+        content: "",
+      }));
+    }
   };
-
-  const [countryFlag, setCountryFlag] = useState(false);
-
-  const handleToggle = (nextChecked) => {
-    setCountryFlag(nextChecked);
+  const errorDisplayCheck = () => {
+    return (
+      errorMessage.store === "" &&
+      errorMessage.option === "" &&
+      errorMessage.country === "" &&
+      errorMessage.content === ""
+    );
   };
-
+  const saveContent = () => {
+    validationContent();
+    if (errorDisplayCheck) {
+      alert("panthil");
+    }
+  };
   return (
     <AppProvider
       linkComponent={CustomLinkComponent}
@@ -61,109 +126,75 @@ const AddContent = () => {
       <Page
         breadcrumbs={[{ content: "Products", url: "/" }]}
         title="Add New Country Content"
-        // primaryAction={{ content: "Save" }}
-        // secondaryActions={[
-        //   { content: "Duplicate", url: "#" },
-        //   { content: "View on your store", url: "#" },
-        // ]}
       >
         <Card sectioned>
           <FormLayout>
             <TextField
               label="Store name"
-              onChange={() => {}}
+              value={storeName}
+              onChange={(value) => {
+                setStoreName(value);
+              }}
               autoComplete="off"
             />
+            <InlineError message={errorMessage.store} fieldID="myFieldID" />
             <Select
-              // label="Date range"
               options={options}
               onChange={(value) => {
-                //   alert(options[e].label);
                 setOption(value);
-                console.log(value);
+                // console.log(value);
               }}
               value={option}
             />
-            {/* <FormLayout.Group> */}
-            <div
-              style={{
-                display: "flex",
-                // justifyContent: "normal",
-              }}
-            >
-              <div
-                style={{
-                  marginRight: "30px",
-                  display: "flex",
-                  padding: "3px",
-                  // border: "2px solid #F0F0F0",
-                  // justifyContent: "center",
-                  // justifyContent: "space-between",
-                }}
-              >
-                <p
-                  style={{
-                    // marginRight: "20px",
-                    // marginLeft: "20px",
-                    marginRight: "20px",
-                    paddingTop: "3px",
-                    paddingBottom: "2px",
-                    fontSize: "16px",
-                  }}
-                >
-                  Default Country{" "}
-                </p>
+            <InlineError message={errorMessage.option} fieldID="myFieldID" />
+            <div className="flex">
+              <div className="react-country-switch">
+                <p>Default Country</p>
                 <Switch
-                  onChange={handleToggle}
-                  checked={countryFlag}
+                  onChange={(nextChecked) => {
+                    setSelected(null);
+                    setSwitchFlag(nextChecked);
+                  }}
+                  checked={switchFlag}
                   uncheckedIcon={false}
                   checkedIcon={false}
                   className="react-switch"
                 />
               </div>
-
-              {!countryFlag === true ? (
-                <ReactFlagsSelect
-                  selected={selected}
-                  onSelect={(code) => setSelected(code)}
-                  selectedSize={12}
-                  className="react-flages-select"
-                />
-              ) : (
-                // <div style={{ pointerEvents: "none" }}>
-                <ReactFlagsSelect
-                  selected={selected}
-                  onSelect={(code) => setSelected(code)}
-                  selectedSize={12}
-                  className="react-flages-disable-select"
-                />
-                // </div>
-              )}
+              <ReactFlagsSelect
+                // placeholder="Write something awesome"
+                selected={selected}
+                onSelect={(code) => {
+                  console.log(code);
+                  setSelected(code);
+                }}
+                disabled={switchFlag}
+                selectedSize={12}
+                className="react-flages-select"
+              />
             </div>
-            {/* </FormLayout.Group> */}
+            <InlineError message={errorMessage.country} fieldID="myFieldID" />
           </FormLayout>
-
-          {/* <div>
-            <Stack distribution="fill">
-              
-              <></>
-            </Stack>
-          </div> */}
           <div className="text-editor">
             <EditorToolbar />
             <ReactQuill
               theme="snow"
-              value={content.value}
-              onChange={handleChange}
+              value={content}
+              onChange={(value) => {
+                console.log("panthil : ", value);
+                setContent(value);
+              }}
               placeholder={"Write something awesome..."}
               modules={modules}
               formats={formats}
             />
           </div>
+          <InlineError message={errorMessage.content} fieldID="myFieldID" />
         </Card>
-        <Page
+        <PageActions
           primaryAction={{
             content: "Save",
+            onAction: saveContent,
           }}
         />
       </Page>

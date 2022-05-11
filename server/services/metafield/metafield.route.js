@@ -1,7 +1,7 @@
 import { resolve } from "path";
 import express from "express";
 import cookieParser from "cookie-parser";
-import { Shopify, ApiVersion } from "@shopify/shopify-api";
+import { Shopify, ApiVersion, DataType } from "@shopify/shopify-api";
 import "dotenv/config";
 import applyAuthMiddleware from "../../middleware/auth.js";
 import verifyRequest from "../../middleware/verify-request.js";
@@ -10,45 +10,39 @@ const router = express.Router();
 app.use(express.json());
 applyAuthMiddleware(app);
 
-// import { Metafield } from "@shopify/shopify-api/dist/rest-resources/${Shopify.Context.API_VERSION}/index.js";
-
+//create shop metafield
 router.post("/create-metafield-shop", verifyRequest(app), async (req, res) => {
+  // res.status(200).send(req);
+  console.log(req.body);
+  const session = await Shopify.Utils.loadCurrentSession(req, res);
+  // console.log(session, "session");
   const { Metafield } = await import(
-    `@shopify/shopify-api/dist/rest-resources/${Shopify.Context.API_VERSION}/index.js`
+    `@shopify/shopify-api/dist/rest-resources/2022-04/index.js`
   );
-  const test_session = await Shopify.Utils.loadCurrentSession(
-    request,
-    response
-  );
-  console.log("panthil api calling .......................................");
-  const metafield = new Metafield({ session: test_session });
-  metafield.namespace = "inventory";
-  metafield.key = "warehouse";
-  metafield.value = 25;
-  metafield.type = "number_integer";
-  console.log("metafield data : ...........................................");
-  await metafield.save({});
-  res.status(200).send(metafield);
-});
-export const createMetafield = async (session) => {
-  const { Metafield } = await import(
-    `@shopify/shopify-api/dist/rest-resources/${Shopify.Context.API_VERSION}/index.js`
-  );
-  //   const test_session = await Shopify.Utils.loadCurrentSession(
-  //     request,
-  //     response
-  //   );
-  console.log("panthil api calling .......................................");
   const metafield = new Metafield({ session: session });
-  metafield.namespace = "inventory";
-  metafield.key = "paNTHIL";
-  metafield.value = 25;
-  metafield.type = "number_integer";
-  console.log("metafield data : ...........................................");
-  //   console.log("fvuiegberuifbgvuif : ", metafield);
-  //   console.log("fvuiegberuifbgvuif : ", metafield);
-  const fvuib = await metafield.save({});
-  console.log("fvuiegberuifbgvuif : ", metafield);
-  return fvuib;
-};
+  metafield.namespace = "appmixo_dynamic";
+  metafield.key = "appmixo";
+  metafield.value = JSON.stringify({
+    store_name: "panthil",
+    country_content: {
+      IN: ["Header", "Footer", "products"],
+      AF: ["Header", "Footer", "products"],
+      UK: ["Header", "Footer", "products"],
+      CN: ["Header", "Footer", "products"],
+      US: ["Header", "Footer", "products"],
+    },
+    default: ["Header", "Footer", "products"],
+  });
+
+  metafield.type = "json";
+  const client = new Shopify.Clients.Rest(session.shop, session.accessToken);
+  const test = await client.post({
+    path: "metafields",
+    data: { metafield },
+    type: DataType.JSON,
+  });
+  console.log("Metafield :  .....", JSON.stringify(test, null, 2));
+  res.status(200).send(test);
+});
+
 export default router;

@@ -11,14 +11,44 @@ import {
   Stack,
 } from "@shopify/polaris";
 import Switch from "react-switch";
-
+import "react-quill/dist/quill.snow.css"; // ES6
 import { Link } from "react-router-dom";
 import ReactFlagsSelect from "react-flags-select";
-import ReactQuill from "react-quill";
-import EditorToolbar, { modules, formats } from "./EditorToolbar";
-import "react-quill/dist/quill.snow.css";
 import "./main.css";
+import axios from "axios";
+import { Toast, useAppBridge } from "@shopify/app-bridge-react";
+import { gql, useMutation } from "@apollo/client";
+import { getSessionToken } from "@shopify/app-bridge-utils";
+import { userLoggedInFetch } from "../App";
+import SunEditor from "suneditor-react";
+import "suneditor/dist/css/suneditor.min.css";
+const editorOptions = {
+  imageUrlInput: false,
+  buttonList: [
+    ["undo", "redo"],
+    ["font", "fontSize", "formatBlock"],
+    [
+      "paragraphStyle",
+      "bold",
+      "underline",
+      "italic",
+      "strike",
+      "subscript",
+      "superscript",
+    ],
+    ["fontColor", "hiliteColor", "textStyle"],
+    ["removeFormat"],
+    // '/', // Line break
+    ["outdent", "indent"],
+    ["align", "list", "lineHeight"],
+    ["link"],
+    ["fullScreen", "showBlocks", "codeView"],
+  ],
+};
+
 const AddContent = () => {
+  const app = useAppBridge();
+  const fetch = userLoggedInFetch(app);
   const CustomLinkComponent = ({ children, url, ...rest }) => {
     return (
       <Link to={url} {...rest}>
@@ -35,79 +65,117 @@ const AddContent = () => {
   const [storeName, setStoreName] = useState("");
   const [option, setOption] = useState("Select display content");
   const [selected, setSelected] = useState(null);
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState({
+    contents: "",
+    getValue: "",
+  });
   const [switchFlag, setSwitchFlag] = useState(false);
   const [errorMessage, setErrorMessage] = useState({
-    store: "",
-    option: "",
-    country: "",
-    content: "",
+    store: false,
+    option: false,
+    country: false,
+    content: false,
   });
   const validationContent = () => {
+    // console.log("validationContent");
+
     if (storeName === "") {
       setErrorMessage((errorMessage) => ({
         ...errorMessage,
-        store: "Store name is required",
+        store: true,
       }));
     } else {
       setErrorMessage((errorMessage) => ({
         ...errorMessage,
-        store: "",
+        store: false,
       }));
     }
     if (option === "Select display content") {
       setErrorMessage((errorMessage) => ({
         ...errorMessage,
-        option: "Select Option is required",
+        option: true,
       }));
     } else {
       setErrorMessage((errorMessage) => ({
         ...errorMessage,
-        option: "",
+        option: false,
       }));
     }
     if (!switchFlag) {
       if (selected === null) {
         setErrorMessage((errorMessage) => ({
           ...errorMessage,
-          country: "Select Country is required",
+          country: true,
         }));
       } else {
         setErrorMessage((errorMessage) => ({
           ...errorMessage,
-          country: "",
+          country: false,
         }));
       }
     } else {
       setErrorMessage((errorMessage) => ({
         ...errorMessage,
-        country: "",
+        country: false,
       }));
     }
-    if (content === "" || content === "<p><br></p>") {
+    if (content.getValue === "" || content.getValue === "<p><br></p>") {
       setErrorMessage((errorMessage) => ({
         ...errorMessage,
-        content: "Content is required",
+        content: true,
       }));
     } else {
       setErrorMessage((errorMessage) => ({
         ...errorMessage,
-        content: "",
+        content: false,
       }));
     }
+    // console.log("end");
+    // return errorDisplayCheck();
   };
-  const errorDisplayCheck = () => {
+  const errorValidtion = () => {
     return (
-      errorMessage.store === "" &&
-      errorMessage.option === "" &&
-      errorMessage.country === "" &&
-      errorMessage.content === ""
+      storeName !== "" &&
+      option !== "Select display content" &&
+      ((!switchFlag && selected !== null) || switchFlag) &&
+      (content.getValue !== "" || content.getValue !== "<p><br></p>")
     );
   };
-  const saveContent = () => {
+  const fetchMetafield = async (app) => {
+    const token = await getSessionToken(app);
+    axios
+      .post(
+        "/create-metafield-shop",
+        { data: "panthil" },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then((res) => {
+        console.log("ufibvfvud");
+        console.log(
+          "res.................................................",
+          res
+        );
+      })
+
+      .catch((err) => {
+        console.log("error", err);
+      });
+  };
+  React.useEffect(() => {}, [errorMessage]);
+  const myfunction = () => {
+    console.log(content);
+    document.getElementById("panthil").innerHTML = content.getValue;
+  };
+  const saveContent = async () => {
+    // myfunction();
     validationContent();
-    if (errorDisplayCheck) {
-      alert("panthil");
+    if (errorValidtion()) {
+      console.log("form validation is true");
+      fetchMetafield(app);
     }
   };
   return (
@@ -137,7 +205,10 @@ const AddContent = () => {
               }}
               autoComplete="off"
             />
-            <InlineError message={errorMessage.store} fieldID="myFieldID" />
+            <InlineError
+              message={errorMessage.store ? "Store name is required" : ""}
+              fieldID="myFieldID"
+            />
             <Select
               options={options}
               onChange={(value) => {
@@ -146,7 +217,10 @@ const AddContent = () => {
               }}
               value={option}
             />
-            <InlineError message={errorMessage.option} fieldID="myFieldID" />
+            <InlineError
+              message={errorMessage.option ? "Select Option is required" : ""}
+              fieldID="myFieldID"
+            />
             <div className="flex">
               <div className="react-country-switch">
                 <p>Default Country</p>
@@ -165,7 +239,8 @@ const AddContent = () => {
                 // placeholder="Write something awesome"
                 selected={selected}
                 onSelect={(code) => {
-                  console.log(code);
+                  // console.log(code);
+
                   setSelected(code);
                 }}
                 disabled={switchFlag}
@@ -173,23 +248,37 @@ const AddContent = () => {
                 className="react-flages-select"
               />
             </div>
-            <InlineError message={errorMessage.country} fieldID="myFieldID" />
+            <InlineError
+              message={errorMessage.country ? "Select Country is required" : ""}
+              fieldID="myFieldID"
+            />
           </FormLayout>
           <div className="text-editor">
-            <EditorToolbar />
-            <ReactQuill
-              theme="snow"
-              value={content}
+            {/* <Editor contents={content.contents} getValue={content.getValue} /> */}
+            <SunEditor
+              // ref={refContainer}
+              name="my-editor"
+              enableToolbar={true}
+              showToolbar={true}
+              placeholder="Email body content here..."
+              setOptions={editorOptions}
+              // appendContents={contents}
+              setContents={content.contents}
+              height={220}
               onChange={(value) => {
-                console.log("panthil : ", value);
-                setContent(value);
+                console.log(value);
+                setContent((content) => ({
+                  ...content,
+                  getValue: value,
+                }));
               }}
-              placeholder={"Write something awesome..."}
-              modules={modules}
-              formats={formats}
             />
           </div>
-          <InlineError message={errorMessage.content} fieldID="myFieldID" />
+          <div id="panthil"></div>
+          <InlineError
+            message={errorMessage.content ? "Content is required" : ""}
+            fieldID="myFieldID"
+          />
         </Card>
         <PageActions
           primaryAction={{

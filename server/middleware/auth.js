@@ -7,7 +7,6 @@ import {
   createShopifyRestClient,
   createShopifyGraphqlClient,
 } from "../services/shopify/index.js";
-import { createMetafield } from "../services/metafield/metafield.route.js";
 import { DBShopServices } from "../services/db/index.js";
 import { SessionService } from "../services/session/index.js";
 import { APP_STATUS } from "../constants/index.js";

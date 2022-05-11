@@ -9,7 +9,7 @@ import { connectDB } from "./services/db/index.js";
 import applyAuthMiddleware from "./middleware/auth.js";
 import verifyRequest from "./middleware/verify-request.js";
 import MetafieldRouter from "./services/metafield/metafield.route.js";
-const USE_ONLINE_TOKENS = false;
+const USE_ONLINE_TOKENS = true;
 const TOP_LEVEL_OAUTH_COOKIE = "shopify_top_level_oauth";
 
 const PORT = parseInt(process.env.PORT || "8081", 10);
@@ -51,7 +51,7 @@ export async function createServer(
   app.use(cookieParser(Shopify.Context.API_SECRET_KEY));
 
   applyAuthMiddleware(app);
-  app.use("/", MetafieldRouter);
+
   app.post("/webhooks", async (req, res) => {
     try {
       await Shopify.Webhooks.Registry.process(req, res);
@@ -109,7 +109,7 @@ export async function createServer(
       next();
     }
   });
-
+  app.use("/", MetafieldRouter);
   /**
    * @type {import('vite').ViteDevServer}
    */

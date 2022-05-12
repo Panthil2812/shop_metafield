@@ -21,7 +21,8 @@ router.post("/create-metafield-shop", verifyRequest(app), async (req, res) => {
   metafield.namespace = "appmixo_dynamic";
   metafield.key = "appmixo_1";
   metafield.value = JSON.stringify(req.body.value);
-  metafield.type = "json";
+  // metafield.value_type = "string";
+  metafield.type = "string";
   const client = new Shopify.Clients.Rest(session.shop, session.accessToken);
   const test = await client.post({
     path: "metafields",
@@ -42,7 +43,7 @@ router.get("/get-metafield", verifyRequest(app), async (req, res) => {
   const query = { namespace: "appmixo_dynamic", owner_resource: "shop" };
   const test = await client.get({
     path: `metafields`,
-    query: { namespace: "appmixo_dynamic" },
+    query: query,
     type: DataType.JSON,
   });
   // const test = await Metafield.all({

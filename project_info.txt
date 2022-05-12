@@ -3,17 +3,14 @@ Metafield Data
     namespace : "appmixo_dynamic",
     key : "appmixo_1",
     value : {
-        store_name : "panthil",
         country_content: {
-
-            "country_code":["content","backgroundColor"],
-               ["content","backgroundColor"],
-                ["content","backgroundColor"]
-            
+            "country_code":["name","content","backgroundColor"],
+               ["name","content","backgroundColor"],
+                ["name","content","backgroundColor"]
         },
-        default: ["content","backgroundColor"],
-               ["content","backgroundColor"],
-                ["content","backgroundColor"]
+        default: ["name","content","backgroundColor"],
+               ["name","content","backgroundColor"],
+                ["name","content","backgroundColor"]
     },
     type : "json",
 }
@@ -38,5 +35,12 @@ task
           > If finded metafield then 
                    :> UPDATE country_content using country_code given by form data
                    :> UPDATE default content if c_flag is true
-                    
+
    [2] Display content on deshborad
+
+
+
+
+
+
+   contins with all country 

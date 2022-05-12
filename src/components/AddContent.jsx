@@ -45,7 +45,7 @@ const editorOptions = {
     ["fullScreen", "showBlocks", "codeView"],
   ],
 };
-
+import { dome } from "./dome";
 const AddContent = () => {
   const app = useAppBridge();
   const fetch = userLoggedInFetch(app);
@@ -63,7 +63,7 @@ const AddContent = () => {
     { label: "Product page", value: "2" },
   ];
   const [storeName, setStoreName] = useState("");
-  const [option, setOption] = useState("Select display content");
+  const [option, setOption] = useState("10");
   const [country, setCountry] = useState(null);
   const [content, setContent] = useState({
     contents: "",
@@ -90,7 +90,7 @@ const AddContent = () => {
         store: false,
       }));
     }
-    if (option === "Select display content") {
+    if (option === "Select display content" || option === "10") {
       setErrorMessage((errorMessage) => ({
         ...errorMessage,
         option: true,
@@ -137,6 +137,7 @@ const AddContent = () => {
     return (
       storeName !== "" &&
       option !== "Select display content" &&
+      option !== "10" &&
       ((!switchFlag && country !== null) || switchFlag) &&
       (content.getValue !== "" || content.getValue !== "<p><br></p>")
     );
@@ -150,23 +151,26 @@ const AddContent = () => {
     if (info.cFlag) {
       //default
       c_content = cJson;
-      defaultData[parseInt(info.option)] = [info.content, info.backgroundcolor];
+      defaultData[info.option] = [
+        info.name,
+        info.content,
+        info.backgroundcolor,
+      ];
     } else {
       //using country
-      cArray[parseInt(info.option)] = [info.content, info.backgroundcolor];
+      cArray[info.option] = [info.name, info.content, info.backgroundcolor];
       cJson[info.country_code] = cArray;
       // cJson[backgroundcolor] = info.backgroundcolor;
       c_content = cJson;
     }
-    console.log("country array : ", cArray);
-    console.log("country content JSON : ", c_content);
+    // console.log("country array : ", cArray);
+    // console.log("country content JSON : ", c_content);
 
     const reqValue = {
-      store_name: info.store_name,
       country_content: c_content,
       default: defaultData,
     };
-    console.log("Final JSON Data: ", reqValue);
+    // console.log("Final JSON Data: ", reqValue);
 
     await axios
       .post(
@@ -187,12 +191,86 @@ const AddContent = () => {
           res
         );
       })
-
       .catch((err) => {
         console.log("error", err);
       });
   };
-  const updateMetaField = async (app, data, info) => {};
+  const updateMetaField = async (app, data, info) => {
+    console.log("UPDATEMETAFIELD FUNCTION");
+    const token = await getSessionToken(app);
+    let index = data.length - 1;
+    let defaultData = JSON.parse(data[index].value).default;
+    let cArray = new Array(3).fill(null);
+    let cJson = JSON.parse(data[index].value).country_content;
+    let c_content;
+    // console.log("index last index of metafield : ", index);
+    // console.log("Default Country data : ", typeof defaultData, defaultData);
+    // console.log("Costom Country data : ", typeof cArray, cArray);
+
+    if (info.cFlag) {
+      //Country Default
+      // console.log("Costom Country data : ", typeof cArray, cArray);
+      c_content = cJson;
+      defaultData[info.option] = [
+        info.name,
+        info.content,
+        info.backgroundcolor,
+      ];
+    } else {
+      console.log("ALL Country Content : ", cJson);
+      const checkCountry = cJson[info.country_code];
+      if (checkCountry) {
+        //already exists Country
+        console.log("before update data 0000: ", c_content);
+        checkCountry[info.option] = [
+          info.name,
+          info.content,
+          info.backgroundcolor,
+        ];
+        cJson[info.country_code] = checkCountry;
+        // cJson[info.country_code] = cArray;
+        c_content = cJson;
+        console.log("after updata data 0000: ", c_content);
+      } else {
+        //create country
+        console.log("before updata data 1111: ", c_content);
+
+        cArray[info.option] = [info.name, info.content, info.backgroundcolor];
+        cJson[info.country_code] = cArray;
+        // cJson[backgroundcolor] = info.backgroundcolor;
+        c_content = cJson;
+        console.log("after updata data 1111: ", c_content);
+      }
+      //costom country
+    }
+    const reqValue = {
+      country_content: c_content,
+      default: defaultData,
+    };
+    console.log("ADD  DATA    BBBBB :  ", reqValue);
+    await axios
+      .post(
+        "/create-metafield-shop",
+        {
+          value: reqValue,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then((res) => {
+        console.log("ufibvfvud");
+        console.log(
+          "res.................................................",
+          res.data.body
+        );
+      })
+      .catch((err) => {
+        console.log("error", err);
+      });
+  };
   const addMetafieldData = async (app, info) => {
     const token = await getSessionToken(app);
     axios
@@ -211,7 +289,7 @@ const AddContent = () => {
         } else {
           console.log("Update metafield ... ");
           updateMetaField(app, data, info);
-          console.log("STRING Data :", data);
+          // console.log("STRING Data :", data);
           // console.log("sdvuiozgbyuvrguqcnse uivn eugbyuksvbgnscbukv");
           // console.log(
           //   "JSON  Data :",
@@ -233,8 +311,8 @@ const AddContent = () => {
     if (errorValidtion()) {
       console.log("form validation is true");
       const info = {
-        store_name: storeName,
-        option: option,
+        name: storeName,
+        option: parseInt(option),
         cFlag: switchFlag,
         country_code: country,
         backgroundcolor: "",

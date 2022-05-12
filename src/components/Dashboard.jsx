@@ -1,7 +1,8 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { DeleteMajor, EditMajor, ViewMajor } from "@shopify/polaris-icons";
 import ReactFlagsSelect from "react-flags-select";
+import { getallMetaField } from "../function/allFunction";
 import "./main.css";
 import {
   Card,
@@ -21,10 +22,11 @@ import {
   TextStyle,
   Pagination,
 } from "@shopify/polaris";
+import { Toast, useAppBridge } from "@shopify/app-bridge-react";
 
 const Dashboard = () => {
-  const [DisplayEmail, setDisplayEmail] = useState([]);
-
+  const [displayData, setDisplayData] = useState();
+  const app = useAppBridge();
   const [appOption, setAppOption] = useState(true);
   const appEDoption = () => {
     // alert(appOption);
@@ -42,13 +44,16 @@ const Dashboard = () => {
     singular: "customer",
     plural: "customers",
   };
-
+  useEffect(async () => {
+    const response = await getallMetaField(app);
+    console.log("response ", JSON.parse(response));
+  }, []);
   const items = [
     {
       id: 101,
       Url: "customers/341",
       Name: "Mae Jemison",
-      Country: "China",
+      Country: <h1 style={{ fontSize: "20px" }}>customers/341</h1>,
       Display: "Header",
       Content: "HTML text editor",
     },
@@ -231,9 +236,6 @@ const Dashboard = () => {
             <div className="header_text">
               <TextStyle variation="strong">Displayed At</TextStyle>
             </div>
-            <div className="header_text">
-              <TextStyle variation="strong">Content</TextStyle>
-            </div>
             <div>
               <TextStyle variation="strong">Action</TextStyle>
             </div>
@@ -247,21 +249,18 @@ const Dashboard = () => {
               <div className="header_text">{Name}</div>
               <div className="header_text">{Country}</div>
               <div className="header_text">{Display}</div>
-              <div className="header_text">{Content}</div>
               <div className="flex_sb">
                 <div
-                  className="m5"
                   onClick={() => {
                     alert("EditMajor");
                   }}
                 >
                   <Icon source={EditMajor} color="primary" />
                 </div>
-                <div className="m5" onClick={handleRirectAndShowContent}>
+                <div onClick={handleRirectAndShowContent}>
                   <Icon source={ViewMajor} color="warning" />
                 </div>
                 <div
-                  className="m5"
                   onClick={() => {
                     alert("DeleteMajor");
                   }}

@@ -9,33 +9,25 @@ import {
   PageActions,
   InlineError,
   Stack,
+  Button,
 } from "@shopify/polaris";
 import Switch from "react-switch";
 import "react-quill/dist/quill.snow.css"; // ES6
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ReactFlagsSelect from "react-flags-select";
 import "./main.css";
 import axios from "axios";
 import { Toast, useAppBridge } from "@shopify/app-bridge-react";
-import { gql, useMutation } from "@apollo/client";
-import { getSessionToken } from "@shopify/app-bridge-utils";
 import { userLoggedInFetch } from "../App";
 import SunEditor from "suneditor-react";
 import "suneditor/dist/css/suneditor.min.css";
+import { addMetafieldData } from "../function/allFunction";
 const editorOptions = {
   imageUrlInput: false,
   buttonList: [
     ["undo", "redo"],
     ["font", "fontSize", "formatBlock"],
-    [
-      "paragraphStyle",
-      "bold",
-      "underline",
-      "italic",
-      "strike",
-      "subscript",
-      "superscript",
-    ],
+    ["bold", "underline", "italic", "strike", "subscript", "superscript"],
     ["fontColor", "hiliteColor", "textStyle"],
     ["removeFormat"],
     // '/', // Line break
@@ -45,8 +37,8 @@ const editorOptions = {
     ["fullScreen", "showBlocks", "codeView"],
   ],
 };
-import { dome } from "./dome";
 const AddContent = () => {
+  const navigate = useNavigate();
   const app = useAppBridge();
   const fetch = userLoggedInFetch(app);
   const CustomLinkComponent = ({ children, url, ...rest }) => {
@@ -142,165 +134,7 @@ const AddContent = () => {
       (content.getValue !== "" || content.getValue !== "<p><br></p>")
     );
   };
-  const createMetaField = async (app, info) => {
-    const token = await getSessionToken(app);
-    let defaultData = new Array(3).fill(null);
-    let cArray = new Array(3).fill(null);
-    let cJson = {};
-    let c_content;
-    if (info.cFlag) {
-      //default
-      c_content = cJson;
-      defaultData[info.option] = [
-        info.name,
-        info.content,
-        info.backgroundcolor,
-      ];
-    } else {
-      //using country
-      cArray[info.option] = [info.name, info.content, info.backgroundcolor];
-      cJson[info.country_code] = cArray;
-      // cJson[backgroundcolor] = info.backgroundcolor;
-      c_content = cJson;
-    }
-    // console.log("country array : ", cArray);
-    // console.log("country content JSON : ", c_content);
 
-    const reqValue = {
-      country_content: c_content,
-      default: defaultData,
-    };
-    // console.log("Final JSON Data: ", reqValue);
-
-    await axios
-      .post(
-        "/create-metafield-shop",
-        {
-          value: reqValue,
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        }
-      )
-      .then((res) => {
-        console.log("ufibvfvud");
-        console.log(
-          "res.................................................",
-          res
-        );
-      })
-      .catch((err) => {
-        console.log("error", err);
-      });
-  };
-  const updateMetaField = async (app, data, info) => {
-    console.log("UPDATEMETAFIELD FUNCTION");
-    const token = await getSessionToken(app);
-    let index = data.length - 1;
-    let defaultData = JSON.parse(data[index].value).default;
-    let cArray = new Array(3).fill(null);
-    let cJson = JSON.parse(data[index].value).country_content;
-    let c_content;
-    // console.log("index last index of metafield : ", index);
-    // console.log("Default Country data : ", typeof defaultData, defaultData);
-    // console.log("Costom Country data : ", typeof cArray, cArray);
-
-    if (info.cFlag) {
-      //Country Default
-      // console.log("Costom Country data : ", typeof cArray, cArray);
-      c_content = cJson;
-      defaultData[info.option] = [
-        info.name,
-        info.content,
-        info.backgroundcolor,
-      ];
-    } else {
-      console.log("ALL Country Content : ", cJson);
-      const checkCountry = cJson[info.country_code];
-      if (checkCountry) {
-        //already exists Country
-        console.log("before update data 0000: ", c_content);
-        checkCountry[info.option] = [
-          info.name,
-          info.content,
-          info.backgroundcolor,
-        ];
-        cJson[info.country_code] = checkCountry;
-        // cJson[info.country_code] = cArray;
-        c_content = cJson;
-        console.log("after updata data 0000: ", c_content);
-      } else {
-        //create country
-        console.log("before updata data 1111: ", c_content);
-
-        cArray[info.option] = [info.name, info.content, info.backgroundcolor];
-        cJson[info.country_code] = cArray;
-        // cJson[backgroundcolor] = info.backgroundcolor;
-        c_content = cJson;
-        console.log("after updata data 1111: ", c_content);
-      }
-      //costom country
-    }
-    const reqValue = {
-      country_content: c_content,
-      default: defaultData,
-    };
-    console.log("ADD  DATA    BBBBB :  ", reqValue);
-    await axios
-      .post(
-        "/create-metafield-shop",
-        {
-          value: reqValue,
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        }
-      )
-      .then((res) => {
-        console.log("ufibvfvud");
-        console.log(
-          "res.................................................",
-          res.data.body
-        );
-      })
-      .catch((err) => {
-        console.log("error", err);
-      });
-  };
-  const addMetafieldData = async (app, info) => {
-    const token = await getSessionToken(app);
-    axios
-      .get("/get-metafield", {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
-      .then((res) => {
-        const data = res.data.body.metafields;
-        console.log("data : ", data.length);
-        if (data.length === 0) {
-          //not any metafield
-          console.log("create metafield ..");
-          createMetaField(app, info);
-        } else {
-          console.log("Update metafield ... ");
-          updateMetaField(app, data, info);
-          // console.log("STRING Data :", data);
-          // console.log("sdvuiozgbyuvrguqcnse uivn eugbyuksvbgnscbukv");
-          // console.log(
-          //   "JSON  Data :",
-          //   JSON.parse(data[0].value).country_content
-          // );
-        }
-      })
-      .catch((err) => {
-        console.log("error", err);
-      });
-  };
   const myfunction = () => {
     console.log(content);
     document.getElementById("panthil").innerHTML = content.getValue;
@@ -319,8 +153,14 @@ const AddContent = () => {
         content: content.getValue,
       };
       // console.log("data : ", data);
-      addMetafieldData(app, info);
+      const response = await addMetafieldData(app, info);
+      console.log("res", response);
+      navigate("/");
+      //  return Promise.resolve(response);
     }
+  };
+  const onclickSaveMethod = () => {
+    saveContent;
   };
   return (
     <AppProvider
@@ -424,12 +264,23 @@ const AddContent = () => {
             fieldID="myFieldID"
           />
         </Card>
+        {/* <Button
+          primary
+          onClick={() => {
+            window.location.replace("/");
+          }}
+        >
+          ADD CONTENT
+        </Button> */}
+        {/* <Link to="/" className="text_decoration"> */}
         <PageActions
           primaryAction={{
+            // url: completed ? "/" : "",
             content: "Save",
             onAction: saveContent,
           }}
         />
+        {/* </Link> */}
       </Page>
     </AppProvider>
   );

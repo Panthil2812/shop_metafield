@@ -29,15 +29,8 @@ Metafield Data
 
 
 task 
-   [1] in second submit save then 
-          > first check any metafield created or not 
-          > Is created then check shop metafield and fillter (metafield)
-          > If finded metafield then 
-                   :> UPDATE country_content using country_code given by form data
-                   :> UPDATE default content if c_flag is true
-
    [2] Display content on deshborad
-
+   [3]
 
 
 

@@ -6,6 +6,7 @@
 
 .flex_sb {
   display: flex;
+  flex: 1;
   justify-content: space-between;
 }
 .flex {
@@ -41,14 +42,14 @@
   /* display: flex; */
   /* justify-content: space-between; */
   padding: var(--p-space-3) var(--p-space-5);
-  grid-template-columns: 1fr 1fr 1fr 2fr 0.48fr;
+  grid-template-columns: 1fr 1fr 1fr 0.48fr;
   display: grid;
 }
 
 .dynamic-details {
   /* display: flex;
     justify-content: space-between; */
-  grid-template-columns: 1fr 1fr 1fr 2fr 0.4fr;
+  grid-template-columns: 1fr 1fr 1fr 0.48fr;
   display: grid;
 }
 

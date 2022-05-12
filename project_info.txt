@@ -1,0 +1,42 @@
+Metafield Data  
+{
+    namespace : "appmixo_dynamic",
+    key : "appmixo_1",
+    value : {
+        store_name : "panthil",
+        country_content: {
+
+            "country_code":["content","backgroundColor"],
+               ["content","backgroundColor"],
+                ["content","backgroundColor"]
+            
+        },
+        default: ["content","backgroundColor"],
+               ["content","backgroundColor"],
+                ["content","backgroundColor"]
+    },
+    type : "json",
+}
+
+
+
+"country_code":{
+                "Header":["content","backgroundColor"],
+                "Footer":["content","backgroundColor"],
+                "Product page":["content","backgroundColor"],
+            }
+            
+
+
+
+
+
+task 
+   [1] in second submit save then 
+          > first check any metafield created or not 
+          > Is created then check shop metafield and fillter (metafield)
+          > If finded metafield then 
+                   :> UPDATE country_content using country_code given by form data
+                   :> UPDATE default content if c_flag is true
+                    
+   [2] Display content on deshborad

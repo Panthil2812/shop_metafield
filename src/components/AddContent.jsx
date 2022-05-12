@@ -57,14 +57,14 @@ const AddContent = () => {
     );
   };
   const options = [
-    { label: "Select display content", value: "0" },
-    { label: "Header", value: "1" },
-    { label: "Footer", value: "2" },
-    { label: "Product page", value: "3" },
+    { label: "Select display content", value: "10" },
+    { label: "Header", value: "0" },
+    { label: "Footer", value: "1" },
+    { label: "Product page", value: "2" },
   ];
   const [storeName, setStoreName] = useState("");
   const [option, setOption] = useState("Select display content");
-  const [selected, setSelected] = useState(null);
+  const [country, setCountry] = useState(null);
   const [content, setContent] = useState({
     contents: "",
     getValue: "",
@@ -102,7 +102,7 @@ const AddContent = () => {
       }));
     }
     if (!switchFlag) {
-      if (selected === null) {
+      if (country === null) {
         setErrorMessage((errorMessage) => ({
           ...errorMessage,
           country: true,
@@ -137,16 +137,43 @@ const AddContent = () => {
     return (
       storeName !== "" &&
       option !== "Select display content" &&
-      ((!switchFlag && selected !== null) || switchFlag) &&
+      ((!switchFlag && country !== null) || switchFlag) &&
       (content.getValue !== "" || content.getValue !== "<p><br></p>")
     );
   };
-  const fetchMetafield = async (app) => {
+  const createMetaField = async (app, info) => {
     const token = await getSessionToken(app);
-    axios
+    let defaultData = new Array(3).fill(null);
+    let cArray = new Array(3).fill(null);
+    let cJson = {};
+    let c_content;
+    if (info.cFlag) {
+      //default
+      c_content = cJson;
+      defaultData[parseInt(info.option)] = [info.content, info.backgroundcolor];
+    } else {
+      //using country
+      cArray[parseInt(info.option)] = [info.content, info.backgroundcolor];
+      cJson[info.country_code] = cArray;
+      // cJson[backgroundcolor] = info.backgroundcolor;
+      c_content = cJson;
+    }
+    console.log("country array : ", cArray);
+    console.log("country content JSON : ", c_content);
+
+    const reqValue = {
+      store_name: info.store_name,
+      country_content: c_content,
+      default: defaultData,
+    };
+    console.log("Final JSON Data: ", reqValue);
+
+    await axios
       .post(
         "/create-metafield-shop",
-        { data: "panthil" },
+        {
+          value: reqValue,
+        },
         {
           headers: {
             Authorization: "Bearer " + token,
@@ -165,17 +192,56 @@ const AddContent = () => {
         console.log("error", err);
       });
   };
-  React.useEffect(() => {}, [errorMessage]);
+  const updateMetaField = async (app, data, info) => {};
+  const addMetafieldData = async (app, info) => {
+    const token = await getSessionToken(app);
+    axios
+      .get("/get-metafield", {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((res) => {
+        const data = res.data.body.metafields;
+        console.log("data : ", data.length);
+        if (data.length === 0) {
+          //not any metafield
+          console.log("create metafield ..");
+          createMetaField(app, info);
+        } else {
+          console.log("Update metafield ... ");
+          updateMetaField(app, data, info);
+          console.log("STRING Data :", data);
+          // console.log("sdvuiozgbyuvrguqcnse uivn eugbyuksvbgnscbukv");
+          // console.log(
+          //   "JSON  Data :",
+          //   JSON.parse(data[0].value).country_content
+          // );
+        }
+      })
+      .catch((err) => {
+        console.log("error", err);
+      });
+  };
   const myfunction = () => {
     console.log(content);
     document.getElementById("panthil").innerHTML = content.getValue;
   };
   const saveContent = async () => {
-    // myfunction();
+    myfunction();
     validationContent();
     if (errorValidtion()) {
       console.log("form validation is true");
-      fetchMetafield(app);
+      const info = {
+        store_name: storeName,
+        option: option,
+        cFlag: switchFlag,
+        country_code: country,
+        backgroundcolor: "",
+        content: content.getValue,
+      };
+      // console.log("data : ", data);
+      addMetafieldData(app, info);
     }
   };
   return (
@@ -226,7 +292,7 @@ const AddContent = () => {
                 <p>Default Country</p>
                 <Switch
                   onChange={(nextChecked) => {
-                    setSelected(null);
+                    setCountry(null);
                     setSwitchFlag(nextChecked);
                   }}
                   checked={switchFlag}
@@ -237,11 +303,11 @@ const AddContent = () => {
               </div>
               <ReactFlagsSelect
                 // placeholder="Write something awesome"
-                selected={selected}
+                selected={country}
                 onSelect={(code) => {
                   // console.log(code);
 
-                  setSelected(code);
+                  setCountry(code);
                 }}
                 disabled={switchFlag}
                 selectedSize={12}

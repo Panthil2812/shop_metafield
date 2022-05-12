@@ -56,6 +56,7 @@ const Dashboard = () => {
       id: 102,
       Url: "customers/341",
       Name: "James Mary",
+
       Country: "India",
       Display: "Product page",
       Content: "HTML text editor",
@@ -144,6 +145,11 @@ const Dashboard = () => {
       </div>
     </Filters>
   );
+
+  const handleRirectAndShowContent = () => {
+    window.open("https://" + window.shop, "_blank");
+    // redirectPoint.document.write("<div>Panthil</div>");
+  };
   return (
     <Page fullWidth>
       <Layout>
@@ -251,12 +257,7 @@ const Dashboard = () => {
                 >
                   <Icon source={EditMajor} color="primary" />
                 </div>
-                <div
-                  className="m5"
-                  onClick={() => {
-                    alert("ViewMajor");
-                  }}
-                >
+                <div className="m5" onClick={handleRirectAndShowContent}>
                   <Icon source={ViewMajor} color="warning" />
                 </div>
                 <div

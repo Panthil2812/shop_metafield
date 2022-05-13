@@ -12,8 +12,7 @@ import {
   Button,
 } from "@shopify/polaris";
 import Switch from "react-switch";
-import "react-quill/dist/quill.snow.css"; // ES6
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import ReactFlagsSelect from "react-flags-select";
 import "./main.css";
 import axios from "axios";
@@ -39,6 +38,9 @@ const editorOptions = {
 };
 const AddContent = () => {
   const navigate = useNavigate();
+  const Location = useLocation();
+  // console.log("asdfghfefgegdefdegdgdsgdfgbdgdgdfdfgdsgdg    :", );
+
   const app = useAppBridge();
   const fetch = userLoggedInFetch(app);
   const CustomLinkComponent = ({ children, url, ...rest }) => {
@@ -54,20 +56,35 @@ const AddContent = () => {
     { label: "Footer", value: "1" },
     { label: "Product page", value: "2" },
   ];
-  const [storeName, setStoreName] = useState("");
-  const [option, setOption] = useState("10");
-  const [country, setCountry] = useState(null);
+  const [storeName, setStoreName] = useState(
+    Location.state ? Location.state.Name : ""
+  );
+  const [option, setOption] = useState(
+    Location.state
+      ? Location.state.Display === "Header"
+        ? "0"
+        : Location.state.Display === "Footer"
+        ? "1"
+        : "2"
+      : "10"
+  );
+  const [country, setCountry] = useState(
+    Location.state ? Location.state.Country : null
+  );
   const [content, setContent] = useState({
-    contents: "",
+    contents: Location.state ? Location.state.Content : "",
     getValue: "",
   });
-  const [switchFlag, setSwitchFlag] = useState(false);
+  const [switchFlag, setSwitchFlag] = useState(
+    Location.state ? (Location.state.Country ? false : true) : false
+  );
   const [errorMessage, setErrorMessage] = useState({
     store: false,
     option: false,
     country: false,
     content: false,
   });
+
   const validationContent = () => {
     // console.log("validationContent");
 

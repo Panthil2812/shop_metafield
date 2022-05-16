@@ -144,6 +144,34 @@ export const updateMetaField = async (app, data, info) => {
     return Promise.reject(err);
   }
 };
+export const deleteMetaField = async (app, info) => {
+  try {
+    const token = await getSessionToken(app);
+    const Data = JSON.parse(await getallMetaField(app));
+    if (info.Country) {
+      Data.country_content[info.Country][info.Display] = null;
+    } else {
+      // console.log("Default Before: ", Data.default);
+      Data.default[info.Display] = null;
+      // console.log("Default After: ", Data.default);
+    }
+    const res = await axios.post(
+      "/create-metafield-shop",
+      {
+        value: Data,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    return Promise.resolve(res);
+  } catch (err) {
+    return Promise.reject(err);
+  }
+};
+export const deletedDataupdateField = async (app, data) => {};
 export const getallMetaField = async (app) => {
   try {
     console.log("uhfbveuy ..............................");

@@ -56,6 +56,7 @@ const AddContent = () => {
     { label: "Footer", value: "1" },
     { label: "Product page", value: "2" },
   ];
+  const [loadingFlag, setloadingFlag] = useState(false);
   const [storeName, setStoreName] = useState(
     Location.state ? Location.state.Name : ""
   );
@@ -157,6 +158,7 @@ const AddContent = () => {
     document.getElementById("panthil").innerHTML = content.getValue;
   };
   const saveContent = async () => {
+    setloadingFlag(true);
     myfunction();
     validationContent();
     if (errorValidtion()) {
@@ -172,6 +174,7 @@ const AddContent = () => {
       // console.log("data : ", data);
       const response = await addMetafieldData(app, info);
       console.log("res", response);
+      setloadingFlag(false);
       navigate("/");
       //  return Promise.resolve(response);
     }
@@ -294,6 +297,7 @@ const AddContent = () => {
           primaryAction={{
             // url: completed ? "/" : "",
             content: "Save",
+            loading: loadingFlag,
             onAction: saveContent,
           }}
         />

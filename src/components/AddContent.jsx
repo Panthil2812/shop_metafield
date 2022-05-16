@@ -159,7 +159,7 @@ const AddContent = () => {
   };
   const saveContent = async () => {
     setloadingFlag(true);
-    myfunction();
+    // myfunction();
     validationContent();
     if (errorValidtion()) {
       console.log("form validation is true");

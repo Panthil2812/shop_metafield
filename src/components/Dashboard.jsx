@@ -54,10 +54,10 @@ const Dashboard = () => {
     BackgroundColor: "",
   });
   const pagePerData = 5;
-  const handleQueryValueRemove = useCallback(() => setQueryValue(null), []);
-  const handleClearAll = useCallback(() => {
-    handleQueryValueRemove();
-  }, [handleQueryValueRemove]);
+  // const handleQueryValueRemove = useCallback(() => setQueryValue(null), []);
+  // const handleClearAll = useCallback(() => {
+  //   handleQueryValueRemove();
+  // }, [handleQueryValueRemove]);
 
   const resourceName = {
     singular: "Country Content",
@@ -73,7 +73,7 @@ const Dashboard = () => {
             id: (Math.random() + 1).toString(36).substring(7),
             Name: data[0],
             Country: "",
-            fullCountry: "",
+            fullCountry: "Default",
             Display: index ? (index === 1 ? "Footer" : "Products") : "Header",
             Content: data[1],
             BackgroundColor: data[2],
@@ -133,8 +133,10 @@ const Dashboard = () => {
       queryValue={queryValue}
       filters={[]}
       onQueryChange={setQueryValue}
-      onQueryClear={handleQueryValueRemove}
-      onClearAll={handleClearAll}
+      onQueryClear={() => {
+        setQueryValue("");
+      }}
+      // onClearAll={handleClearAll}
     >
       {/* <div className="pl5">
         <Button primary onClick={() => {}}>
@@ -174,7 +176,7 @@ const Dashboard = () => {
   };
   const handleRirectAndShowContent = () => {
     window.open("https://" + window.shop, "_blank");
-    // redirectPoint.document.write("<div>Panthil</div>");
+    redirectPoint.document.write("<div>Panthil</div>");
   };
   const deleteModel = () => {
     return (

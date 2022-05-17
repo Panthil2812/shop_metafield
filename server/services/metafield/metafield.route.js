@@ -51,7 +51,7 @@ router.get("/get-metafield", verifyRequest(app), async (req, res) => {
   //   // metafield: { namespace: "appmixo_dynamic", owner_resource: "shop" },
   //   // metafield: { owner_id: "674387490", owner_resource: "article" },
   // });
-  console.log("Metafield :  .....", JSON.stringify(test));
+  // console.log("Metafield :  .....", JSON.stringify(test));
   res.status(200).send(test);
 });
 export default router;

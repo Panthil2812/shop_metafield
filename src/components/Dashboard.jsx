@@ -106,7 +106,7 @@ const Dashboard = () => {
     setDisplayData(info);
     setTotalPage(Math.ceil(info.length / pagePerData));
     setItem(info);
-  }, []);
+  }, [deleteActive]);
 
   useEffect(async () => {
     if (totalPage > page) {
@@ -116,7 +116,7 @@ const Dashboard = () => {
     let endIndex = (page - 1) * pagePerData + pagePerData;
     console.log("page :", startIndex, endIndex);
     setcurrentpageDate(item.slice(startIndex, endIndex));
-  }, [totalPage, page, item]);
+  }, [totalPage, page, item, deleteActive]);
 
   useEffect(async () => {
     const temp = displayData.filter(
@@ -127,7 +127,7 @@ const Dashboard = () => {
     setItem(temp);
     setPage(1);
     // setTotalPage(temp.length / pagePerData);
-  }, [queryValue]);
+  }, [queryValue, deleteActive]);
   const filterControl = (
     <Filters
       queryValue={queryValue}
@@ -198,6 +198,8 @@ const Dashboard = () => {
               const res = await deleteMetaField(app, actionData);
               setloadingFlag(false);
               setDeleteActive(false);
+              setPage(1);
+              setQueryValue("");
             },
             // },
           }}

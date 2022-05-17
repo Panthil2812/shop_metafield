@@ -162,9 +162,11 @@ const Dashboard = () => {
         }
       } else {
         //Next
+        console.log("total page : ", totalPage);
         const ca = page + 1;
         if (ca === totalPage) {
-          setHasPage({ ...hasPage, next: false });
+          console.log("panthil malaviya ");
+          setHasPage({ prev: true, next: false });
           setPage(totalPage);
         } else {
           setHasPage({ ...hasPage, next: true });

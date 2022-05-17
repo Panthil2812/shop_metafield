@@ -5,10 +5,11 @@
   var collectionDiv = '';
   var ShopifyAnalytics;
   var shop_name = '';
-  const shopMeta = JSON.stringify(`{{ shop.metafields.appmixo_dynamic.appmixo_1 }}` || "{ }")
-  const json_shopMeta = JSON.stringify(shopMeta);
-  console.log("shopMeta panthi : ", json_shopMeta)
-  console.log("\n\nshopMeta  : ", JSON.parse(shopMeta))
+  const shopMeta = (`{{ shop.metafields.appmixo_dynamic.appmixo_1 }}` || "{ }")
+  const json_shopMeta = JSON.parse(shopMeta);
+  {% comment %} console.log("ufdibg : ",shopMeta , typeof shopMeta,shopMeta.country_code)
+  console.log("\n\nshopMeta  : ", json_shopMeta, typeof json_shopMeta) {% endcomment %}
+  console.log("shopMeta panthil 88: ", json_shopMeta.country_content)
 
 
   // const shopMeta = JSON.parse(`{{ shop.metafields.my_fields.cb_meta | json }}` || "{ }")
@@ -69,6 +70,7 @@
     fetchCountryData();
     const country_code = getCountryCode();
     console.log("Country Code : ",country_code);
+    console.log("Country Content  : ",json_shopMeta.country_content[country_code]);
     
         if (document.querySelectorAll(".dynamic_header_Drop")[0]) {
       document.querySelector(".dynamic_header_Drop").innerHTML = 'hello_header';

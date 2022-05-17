@@ -169,7 +169,7 @@ const AddContent = () => {
         cFlag: switchFlag,
         country_code: country,
         backgroundcolor: "",
-        content: content.getValue,
+        content: content.getValue.replaceAll('"', "'"),
       };
       // console.log("data : ", data);
       const response = await addMetafieldData(app, info);

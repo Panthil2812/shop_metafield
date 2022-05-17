@@ -192,7 +192,7 @@ export const getallMetaField = async (app) => {
     // .catch((err) => {
     //   // console.log("error", err);
     // });
-    return Promise.resolve(response.data.body.metafields[0].value);
+    return Promise.resolve(response?.data?.body?.metafields[0]?.value);
   } catch (err) {
     return Promise.reject(err);
   }

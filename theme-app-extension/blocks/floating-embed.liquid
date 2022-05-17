@@ -7,13 +7,11 @@
   var shop_name = '';
   const shopMeta = (`{{ shop.metafields.appmixo_dynamic.appmixo_1 }}` || "{ }")
   const json_shopMeta = JSON.parse(shopMeta);
-  {% comment %} console.log("ufdibg : ",shopMeta , typeof shopMeta,shopMeta.country_code)
-  console.log("\n\nshopMeta  : ", json_shopMeta, typeof json_shopMeta) {% endcomment %}
-  console.log("shopMeta panthil 88: ", json_shopMeta.country_content)
-
-
-  // const shopMeta = JSON.parse(`{{ shop.metafields.my_fields.cb_meta | json }}` || "{ }")
-
+  {% comment %} 
+    console.log("ufdibg : ",shopMeta , typeof shopMeta,shopMeta.country_code)
+    console.log("\n\nshopMeta  : ", json_shopMeta, typeof json_shopMeta) 
+    console.log("shopMeta panthil 88: ", json_shopMeta.country_content) 
+  {% endcomment %}
   fetchCountryData = async function (){
     fetch("https://appmixo.in/cdn-cgi/trace", {
       method: 'GET',
@@ -44,11 +42,6 @@
     return cookieData;
   }
   dynamicContent = async function () {
-
-    // document.cookie = "name=JashKPatel; SameSite=None; Secure";
-
-    
-
     if (typeof window.ShopifyAnalytics != "undefined") {
       ShopifyAnalytics = window.ShopifyAnalytics
     } else {
@@ -71,16 +64,14 @@
     const country_code = getCountryCode();
     console.log("Country Code : ",country_code);
     console.log("Country Content  : ",json_shopMeta.country_content[country_code]);
-    
+    const c_code = json_shopMeta.country_content[country_code];
         if (document.querySelectorAll(".dynamic_header_Drop")[0]) {
-      document.querySelector(".dynamic_header_Drop").innerHTML = 'hello_header';
+      document.querySelector(".dynamic_header_Drop").innerHTML = `<div>${c_code[0][1]}</div>`;
     }
 
     if (document.querySelectorAll(".dynamic_footer_Drop")[0]) {
-      document.querySelector(".dynamic_footer_Drop").innerHTML = 'hello_footer';
+      document.querySelector(".dynamic_footer_Drop").innerHTML = `<div>${c_code[1][1]}</div>`;
     }
-
-
     //   async function callDynamicContentScript(page, selectedVariant) {
 
     //     // if (page == "collection") {

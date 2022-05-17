@@ -64,13 +64,42 @@
     const country_code = getCountryCode();
     console.log("Country Code : ",country_code);
     console.log("Country Content  : ",json_shopMeta.country_content[country_code]);
-    const c_code = json_shopMeta.country_content[country_code];
+    const c_code = json_shopMeta?.country_content[country_code];
+    console.log("code : ",c_code? c_code.length : 0)
+    console.log("dugrffththeg dffgrfg")
+    const code_length = c_code? c_code.length : 0;  
+    let header = '<h1>header</h1>' 
+    let footer = '<h1>footer</h1>' 
+    if(code_length)
+    {
+      // country exite 
+      {% comment %} if(c_code[0]=== null && c_code[1]=== null && c_code[2]===null)
+      {
+         console.log("default ccccccccccccccccccccccccccccccccccccccccccccccccccc")
+      } {% endcomment %}
+      console.log("header_DROP : ", c_code[0]);
+      console.log("footer_DROP : ", c_code[1]);
+      header = c_code[0] ? c_code[0][1]:""  
+      footer = c_code[1] ? c_code[1][1]:"" 
+      
+    }
+    else{
+      const d_code = json_shopMeta.default;
+      console.log("Defualt : ",d_code)
+      header = d_code[0]?d_code[0][1]:""  
+      footer = d_code[1] ?d_code[1][1]:"" 
+    
+    }
+    console.log("fbyuf vifbh iuvbih duigbv")
+      {% comment %} const dd = `<h1>PANTHIL MALAVIYA</h1>`;
+      const header = c_code[0][1]?c_code[0][1]:dd;
+      const footer = c_code[1][1]?c_code[1][1]:dd; {% endcomment %}
         if (document.querySelectorAll(".dynamic_header_Drop")[0]) {
-      document.querySelector(".dynamic_header_Drop").innerHTML = `<div>${c_code[0][1]}</div>`;
+      document.querySelector(".dynamic_header_Drop").innerHTML = `<div>${header}</div>`;
     }
 
     if (document.querySelectorAll(".dynamic_footer_Drop")[0]) {
-      document.querySelector(".dynamic_footer_Drop").innerHTML = `<div>${c_code[1][1]}</div>`;
+      document.querySelector(".dynamic_footer_Drop").innerHTML = `<div>${footer}</div>`;
     }
     //   async function callDynamicContentScript(page, selectedVariant) {
 
@@ -108,7 +137,7 @@
         break;
 
       case 'interactive':
-        console.log("interactive 1.0")
+        console.log("interactive 1.2")
         dynamicContent();
         break;
 

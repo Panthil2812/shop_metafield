@@ -114,7 +114,7 @@ const Dashboard = () => {
     }
     let startIndex = (page - 1) * pagePerData;
     let endIndex = (page - 1) * pagePerData + pagePerData;
-    // console.log("page :", startIndex, endIndex);
+    console.log("page :", startIndex, endIndex);
     setcurrentpageDate(item.slice(startIndex, endIndex));
   }, [totalPage, page, item, deleteActive]);
 
@@ -162,14 +162,15 @@ const Dashboard = () => {
         }
       } else {
         //Next
-        // console.log("total page : ", totalPage);
+        console.log("total page : ", totalPage);
         const ca = page + 1;
         if (ca === totalPage) {
-          // console.log("panthil malaviya ");
-          setHasPage({ prev: true, next: false });
+          setHasPage({ ...hasPage, prev: true });
+          setHasPage({ ...hasPage, next: false });
           setPage(totalPage);
         } else {
-          setHasPage({ next: true, prev: true });
+          setHasPage({ ...hasPage, next: true });
+          setHasPage({ ...hasPage, prev: true });
           setPage(ca);
         }
       }
@@ -177,7 +178,7 @@ const Dashboard = () => {
   };
   const handleRirectAndShowContent = () => {
     window.open("https://" + window.shop, "_blank");
-    redirectPoint?.document?.write("<div>Panthil</div>");
+    redirectPoint.document.write("<div>Panthil</div>");
   };
   const deleteModel = () => {
     return (

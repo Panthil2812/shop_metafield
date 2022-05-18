@@ -11,15 +11,14 @@ import {
   Layout,
   Modal,
   TextContainer,
-  Image,
   Stack,
   Button,
   Heading,
-  Avatar,
   Filters,
   ResourceItem,
   Icon,
   ResourceList,
+  Banner,
   TextField,
   TextStyle,
   Pagination,
@@ -101,7 +100,10 @@ const Dashboard = () => {
     }
     return fData;
   };
-
+  const enableThemeAppExtension = () => {
+    const URL = `https://${window.shop}/admin/themes/current/editor?context=apps&activateAppId03c5b64c-6fb7-4d66-9436-f69cf5a4546c/floating-embed`;
+    window.open(URL, "_blank");
+  };
   useEffect(async () => {
     const response = await getallMetaField(app);
     const info = formatterData(JSON.parse(response));
@@ -232,7 +234,7 @@ const Dashboard = () => {
     <Page fullWidth>
       <Layout>
         <Layout.Section>
-          <Card sectioned>
+          {/* <Card sectioned>
             <Stack
               wrap={false}
               spacing="extraTight"
@@ -250,7 +252,18 @@ const Dashboard = () => {
                 </Button>
               </Stack.Item>
             </Stack>
-          </Card>
+          </Card> */}
+          <Banner
+            title='Click on "Manage Widget" To Enable/Disable The App'
+            action={{
+              content: "Manage Widget",
+              onAction: () => {
+                enableThemeAppExtension();
+              },
+            }}
+            // secondaryAction={{ content: 'Learn more' }}
+            status="info"
+          ></Banner>
         </Layout.Section>
         <Layout.Section>
           <div className="addcontentbutton">

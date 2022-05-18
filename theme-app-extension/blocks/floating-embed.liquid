@@ -6,9 +6,10 @@
   var ShopifyAnalytics;
   var shop_name = '';
   const shopMeta = (`{{ shop.metafields.appmixo_dynamic.appmixo_1 }}` || "{ }")
+  console.log("bfudinuidfbn ::::",shopMeta);
   const json_shopMeta = JSON.parse(shopMeta)
 
-  const dddd = window.location.search
+  const dddd = window.location?.search?.split("=")[1];
   console.log("DDDDDDDDDDD : ",dddd)
   {% comment %} 
     console.log("ufdibg : ",shopMeta , typeof shopMeta,shopMeta.country_code)
@@ -62,8 +63,11 @@
                 resolve();
             }, 1000));
         }
-
-    fetchCountryData();
+        if(dddd){
+          document.cookie = `location=${dddd}`;
+    }else{
+      fetchCountryData();
+    }
     const country_code = getCountryCode();
     console.log("Country Code : ",country_code);
     console.log("Country Content  : ",json_shopMeta.country_content[country_code]);

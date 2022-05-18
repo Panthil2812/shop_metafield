@@ -44,6 +44,7 @@ const Dashboard = () => {
   const [item, setItem] = useState([]);
   const [currentpageData, setcurrentpageDate] = useState([]);
   const [loadingFlag, setloadingFlag] = useState(false);
+  const [mloadingFlag, setMloadingFlag] = useState(true);
   const [deleteActive, setDeleteActive] = useState(false);
   const [queryValue, setQueryValue] = useState(null);
   const [actionData, setActionData] = useState({
@@ -116,6 +117,7 @@ const Dashboard = () => {
     let endIndex = (page - 1) * pagePerData + pagePerData;
     console.log("page :", startIndex, endIndex);
     setcurrentpageDate(item.slice(startIndex, endIndex));
+    setMloadingFlag(false);
   }, [totalPage, page, item, deleteActive]);
 
   useEffect(async () => {
@@ -264,7 +266,7 @@ const Dashboard = () => {
               renderItem={renderItem}
               filterControl={filterControl}
               // showHeader={true}
-              loading={false}
+              loading={mloadingFlag}
             />
             <br />
             <div className="pagination">

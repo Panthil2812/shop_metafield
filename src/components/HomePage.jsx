@@ -24,11 +24,11 @@ const HomePage = () => {
       content: "Support",
       panelID: "accepts-support-fitted-Ccontent-2",
     },
-    {
-      id: 2,
-      content: "Public Review",
-      panelID: "accepts-publicreview-fitted-Ccontent-2",
-    },
+    // {
+    //   id: 2,
+    //   content: "Public Review",
+    //   panelID: "accepts-publicreview-fitted-Ccontent-2",
+    // },
   ];
   const tabFunction = (tab) => {
     if (tab === 0) {

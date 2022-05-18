@@ -9,15 +9,16 @@
   console.log("bfudinuidfbn ::::",shopMeta);
   const json_shopMeta = JSON.parse(shopMeta)
 
-  const dddd = window.location?.search?.split("=")[1];
-  console.log("DDDDDDDDDDD : ",dddd)
+  const url_code = window.location?.search?.split("=")[1];
+  console.log("url_codeurl_codeDDD : ",url_code,Boolean(url_code))
   {% comment %} 
     console.log("ufdibg : ",shopMeta , typeof shopMeta,shopMeta.country_code)
     console.log("\n\nshopMeta  : ", json_shopMeta, typeof json_shopMeta) 
     console.log("shopMeta panthil 88: ", json_shopMeta.country_content) 
   {% endcomment %}
   fetchCountryData = async function (){
-    fetch("https://appmixo.in/cdn-cgi/trace", {
+  try{
+    const response = await fetch("https://appmixo.in/cdn-cgi/trace", {
       method: 'GET',
       redirect: 'follow'
     })
@@ -27,10 +28,17 @@
           let arr = ele.split("=");
            return {...obj,[arr[0]]:arr[1]}
           },{}).loc;
-          {% comment %} console.log("location : ",loc); {% endcomment %}
+          console.log("location api data panthil malaviya: ",loc);
           document.cookie = `location=${loc}`;
+          
       })
       .catch(error => console.log('error', error));
+
+    return Promise.resolve(response);
+  }catch(err)
+  {
+    return Promise.reject(err);
+  }
       {% comment %} const cookieData =document.cookie.split(";").reduce((obj,ele)=>{
         let arr=ele.split("=");
         return {...obj,[arr[0]]:arr[1]}}
@@ -57,16 +65,20 @@
 
     if (typeof window.Shopify != "undefined") {
             shop_name = Shopify.shop;
-        } else {
+    } else {
             await new Promise((resolve) => setTimeout(() => {
                 shop_name = Shopify.shop;
                 resolve();
             }, 1000));
         }
-        if(dddd){
-          document.cookie = `location=${dddd}`;
+    if(url_code){
+          console.log("url_codedubveruifbnvuv uwrburghuirbvuiirvurb")
+          document.cookie = `location=${url_code}`;
     }else{
-      fetchCountryData();
+      console.log("calling API : ")
+      const res = await fetchCountryData();
+     
+      console.log("calling end ....")
     }
     const country_code = getCountryCode();
     console.log("Country Code : ",country_code);
@@ -140,7 +152,7 @@
         break;
 
       case 'interactive':
-        console.log("interactive 1.3")
+        console.log("interactive 1.0.1")
         dynamicContent();
         break;
 

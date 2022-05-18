@@ -176,7 +176,8 @@ const Dashboard = () => {
       }
     }
   };
-  const handleRirectAndShowContent = () => {
+  const handleRirectAndShowContent = (country) => {
+    console.log("Country CODE :", country);
     window.open("https://" + window.shop, "_blank");
     redirectPoint.document.write("<div>Panthil</div>");
   };
@@ -338,7 +339,17 @@ const Dashboard = () => {
                 >
                   <Icon source={EditMajor} color="primary" />
                 </div>
-                <div onClick={handleRirectAndShowContent}>
+                <div
+                  onClick={() => {
+                    const country_code = Country ? Country : "Default";
+                    // console.log("country : ", Country);
+                    window.open(
+                      "https://" + window.shop + "?c_code=" + country_code,
+                      "_blank"
+                    );
+                    redirectPoint.document.write("<div>Panthil</div>");
+                  }}
+                >
                   <Icon source={ViewMajor} color="warning" />
                 </div>
                 <div

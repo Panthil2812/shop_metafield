@@ -11,7 +11,8 @@ import {
   Stack,
   Button,
 } from "@shopify/polaris";
-import Switch from "react-switch";
+import Toggle from "react-toggle";
+import "react-toggle/style.css";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import ReactFlagsSelect from "react-flags-select";
 import "./main.css";
@@ -228,14 +229,14 @@ const AddContent = () => {
             <div className="flex">
               <div className="react-country-switch">
                 <p>Default Country</p>
-                <Switch
-                  onChange={(nextChecked) => {
+                <Toggle
+                  onChange={(e) => {
                     setCountry(null);
-                    setSwitchFlag(nextChecked);
+                    setSwitchFlag(e.target.checked);
+                    // console.log("nextChecked : ", e.target.checked);
                   }}
                   checked={switchFlag}
-                  uncheckedIcon={false}
-                  checkedIcon={false}
+                  icons={false}
                   className="react-switch"
                 />
               </div>

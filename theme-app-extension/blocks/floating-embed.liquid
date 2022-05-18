@@ -6,7 +6,10 @@
   var ShopifyAnalytics;
   var shop_name = '';
   const shopMeta = (`{{ shop.metafields.appmixo_dynamic.appmixo_1 }}` || "{ }")
-  const json_shopMeta = JSON.parse(shopMeta);
+  const json_shopMeta = JSON.parse(shopMeta)
+
+  const dddd = window.location.search
+  console.log("DDDDDDDDDDD : ",dddd)
   {% comment %} 
     console.log("ufdibg : ",shopMeta , typeof shopMeta,shopMeta.country_code)
     console.log("\n\nshopMeta  : ", json_shopMeta, typeof json_shopMeta) 

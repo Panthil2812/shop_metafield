@@ -101,12 +101,14 @@ const Dashboard = () => {
     }
     return fData;
   };
+
   useEffect(async () => {
     const response = await getallMetaField(app);
     const info = formatterData(JSON.parse(response));
     setDisplayData(info);
     setTotalPage(Math.ceil(info.length / pagePerData));
     setItem(info);
+    setMloadingFlag(false);
   }, [deleteActive]);
 
   useEffect(async () => {
@@ -117,7 +119,6 @@ const Dashboard = () => {
     let endIndex = (page - 1) * pagePerData + pagePerData;
     console.log("page :", startIndex, endIndex);
     setcurrentpageDate(item.slice(startIndex, endIndex));
-    setMloadingFlag(false);
   }, [totalPage, page, item, deleteActive]);
 
   useEffect(async () => {

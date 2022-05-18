@@ -189,7 +189,6 @@ export const deleteMetaField = async (app, info) => {
     return Promise.reject(err);
   }
 };
-export const deletedDataupdateField = async (app, data) => {};
 export const getallMetaField = async (app) => {
   try {
     console.log("uhfbveuy ..............................");

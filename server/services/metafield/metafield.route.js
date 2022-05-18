@@ -12,7 +12,6 @@ applyAuthMiddleware(app);
 
 //create shop metafield
 router.post("/create-metafield-shop", verifyRequest(app), async (req, res) => {
-  console.log(req.body.value);
   const session = await Shopify.Utils.loadCurrentSession(req, res);
   const { Metafield } = await import(
     `@shopify/shopify-api/dist/rest-resources/${Shopify.Context.API_VERSION}/index.js`
@@ -20,9 +19,13 @@ router.post("/create-metafield-shop", verifyRequest(app), async (req, res) => {
   const metafield = new Metafield({ session: session });
   metafield.namespace = "appmixo_dynamic";
   metafield.key = "appmixo_1";
-  metafield.value = JSON.stringify(req.body.value);
+  const req_body = JSON.stringify(req.body.value);
+  console.log("panthil check create time metafield size : ", req_body.length);
+
+  metafield.value = req_body;
   // metafield.value_type = "string";
-  metafield.type = "string";
+  metafield.type = "single_line_text_field";
+
   const client = new Shopify.Clients.Rest(session.shop, session.accessToken);
   const test = await client.post({
     path: "metafields",
@@ -30,6 +33,7 @@ router.post("/create-metafield-shop", verifyRequest(app), async (req, res) => {
     type: DataType.JSON,
   });
   // console.log("Metafield :  .....", JSON.stringify(test, null, 2));
+  // const test = metafield;
   res.status(200).send(test);
 });
 

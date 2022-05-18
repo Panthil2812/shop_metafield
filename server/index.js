@@ -9,6 +9,8 @@ import { connectDB } from "./services/db/index.js";
 import applyAuthMiddleware from "./middleware/auth.js";
 import verifyRequest from "./middleware/verify-request.js";
 import MetafieldRouter from "./services/metafield/metafield.route.js";
+import bodyParser from "body-parser";
+
 const USE_ONLINE_TOKENS = true;
 const TOP_LEVEL_OAUTH_COOKIE = "shopify_top_level_oauth";
 
@@ -44,6 +46,14 @@ export async function createServer(
   isProd = process.env.NODE_ENV === "production"
 ) {
   const app = express();
+
+  app.use(
+    bodyParser.urlencoded({
+      parameterLimit: 100000,
+      limit: "50mb",
+      extended: true,
+    })
+  );
   app.set("top-level-oauth-cookie", TOP_LEVEL_OAUTH_COOKIE);
   app.set("active-shopify-shops", ACTIVE_SHOPIFY_SHOPS);
   app.set("use-online-tokens", USE_ONLINE_TOKENS);

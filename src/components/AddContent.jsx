@@ -175,10 +175,10 @@ const AddContent = () => {
       // console.log("data : ", data);
       const response = await addMetafieldData(app, info);
       console.log("res", response);
-      setloadingFlag(false);
       navigate("/");
       //  return Promise.resolve(response);
     }
+    setloadingFlag(false);
   };
   const onclickSaveMethod = () => {
     saveContent;

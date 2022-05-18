@@ -147,9 +147,26 @@ export const updateMetaField = async (app, data, info) => {
 export const deleteMetaField = async (app, info) => {
   try {
     const token = await getSessionToken(app);
-    const Data = JSON.parse(await getallMetaField(app));
+    let Data = JSON.parse(await getallMetaField(app));
     if (info.Country) {
       Data.country_content[info.Country][info.Display] = null;
+
+      const del_country = Data.country_content[info.Country];
+      console.log("DEL_COUNTRY : ", del_country);
+      if (
+        del_country[0] === null &&
+        del_country[1] === null &&
+        del_country[2] === null
+      ) {
+        console.log(
+          "ALL COUNTRY CONTENT : ",
+          del_country,
+          Data.country_content
+        );
+        const c_code = info.Country;
+        delete Data.country_content[c_code];
+        console.log("DELETE COUNTRY CONTENT : ", Data.country_content);
+      }
     } else {
       // console.log("Default Before: ", Data.default);
       Data.default[info.Display] = null;

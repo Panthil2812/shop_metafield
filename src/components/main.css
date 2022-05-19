@@ -88,15 +88,30 @@
 }
 
 .color-picker-btn .color-showbx {
-  width: 20px;
+  width: 40px;
   height: 20px;
   border-radius: 2px;
 }
 
 .color-picker-btn p {
-  margin-left: 8px;
+  margin-left: 18px;
 }
 
 .color-picker {
-  margin-left: 8px;
+  margin-left: 25px;
+}
+.color-picker p {
+  margin-bottom: 4px;
+}
+.select-container {
+  width: 100%;
+}
+.select-container p {
+  margin-bottom: 4px;
+}
+.form-label p {
+  margin-bottom: 4px;
+}
+.second-form-container {
+  display: flex;
 }

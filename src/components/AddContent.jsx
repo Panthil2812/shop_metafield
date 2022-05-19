@@ -232,34 +232,34 @@ const AddContent = () => {
       >
         <Card sectioned>
           <FormLayout>
-            <TextField
-              label="Name"
-              value={storeName}
-              onChange={(value) => {
-                setStoreName(value);
-              }}
-              autoComplete="off"
-            />
-            <InlineError
-              message={errorMessage.store ? "Name is required" : ""}
-              fieldID="myFieldID"
-            />
-            <div className="flex" style={{ justifyContent: "space-between" }}>
-              <Select
-                style={{ width: "100%" }}
-                label="Display Content"
-                options={options}
-                placeholder={"Select display content"}
+            <div className="form-label">
+              <p>Name</p>
+              <TextField
+                value={storeName}
                 onChange={(value) => {
-                  setOption(value);
-                  // console.log(value);
+                  setStoreName(value);
                 }}
-                value={option}
+                autoComplete="off"
               />
               <InlineError
-                message={errorMessage.option ? "Select Option is required" : ""}
+                message={errorMessage.store ? "Name is required" : ""}
                 fieldID="myFieldID"
               />
+            </div>
+
+            <div className="second-form-container">
+              <div className="select-container">
+                <p>Display Content</p>
+                <Select
+                  options={options}
+                  placeholder={"Select display content"}
+                  onChange={(value) => {
+                    setOption(value);
+                    // console.log(value);
+                  }}
+                  value={option}
+                />
+              </div>
               <div className="color-picker">
                 <p>Background Color</p>
                 <Popover
@@ -273,6 +273,10 @@ const AddContent = () => {
                   <ColorPicker onChange={setColor} color={color} />
                 </Popover>
               </div>
+              <InlineError
+                message={errorMessage.option ? "Select Option is required" : ""}
+                fieldID="myFieldID"
+              />
             </div>
             <div className="flex">
               <div className="react-country-switch">

@@ -6,8 +6,8 @@ import {
   hsbToHex,
   Select,
   Frame,
-  Toast,
   FormLayout,
+  Toast,
   TextField,
   PageActions,
   InlineError,
@@ -183,7 +183,6 @@ const AddContent = () => {
       (content.getValue !== "" || content.getValue !== "<p><br></p>")
     );
   };
-
   const myfunction = () => {
     console.log(content);
     document.getElementById("panthil").innerHTML = content.getValue;
@@ -202,16 +201,15 @@ const AddContent = () => {
         backgroundcolor: hsbToHex(color),
         content: content.getValue.replaceAll('"', "'"),
       };
-      // console.log("data : ", data);
       const response = await addMetafieldData(app, info);
       console.log("res", response);
-      navigate("/");
-      //  return Promise.resolve(response);
+      const pageFlag = Location.state ? 1 : 0;
+      console.log("pageFlag", pageFlag);
+      navigate("/", {
+        state: { page: pageFlag },
+      });
     }
     setloadingFlag(false);
-  };
-  const onclickSaveMethod = () => {
-    saveContent;
   };
   return (
     <AppProvider
@@ -229,6 +227,11 @@ const AddContent = () => {
       <Page
         breadcrumbs={[{ content: "Products", url: "/" }]}
         title="Add New Country Content"
+        primaryAction={{
+          content: "Save",
+          loading: loadingFlag,
+          onAction: saveContent,
+        }}
       >
         <Card sectioned>
           <FormLayout>
@@ -273,11 +276,11 @@ const AddContent = () => {
                   <ColorPicker onChange={setColor} color={color} />
                 </Popover>
               </div>
-              <InlineError
-                message={errorMessage.option ? "Select Option is required" : ""}
-                fieldID="myFieldID"
-              />
             </div>
+            <InlineError
+              message={errorMessage.option ? "Select Option is required" : ""}
+              fieldID="myFieldID"
+            />
             <div className="flex">
               <div className="react-country-switch">
                 <p>Default Country</p>
@@ -343,24 +346,14 @@ const AddContent = () => {
             fieldID="myFieldID"
           />
         </Card>
-        {/* <Button
-          primary
-          onClick={() => {
-            window.location.replace("/");
-          }}
-        >
-          ADD CONTENT
-        </Button> */}
-        {/* <Link to="/" className="text_decoration"> */}
+
         <PageActions
           primaryAction={{
-            // url: completed ? "/" : "",
             content: "Save",
             loading: loadingFlag,
             onAction: saveContent,
           }}
         />
-        {/* </Link> */}
       </Page>
     </AppProvider>
   );

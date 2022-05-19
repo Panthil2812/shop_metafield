@@ -91,6 +91,7 @@
   width: 40px;
   height: 20px;
   border-radius: 2px;
+  border: 1px solid rgb(153 158 164);
 }
 
 .color-picker-btn p {
@@ -114,4 +115,8 @@
 }
 .second-form-container {
   display: flex;
+}
+.loading {
+  display: flex;
+  justify-content: center;
 }

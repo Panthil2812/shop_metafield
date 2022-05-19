@@ -1,12 +1,12 @@
-import React, { useCallback, useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { DeleteMajor, EditMajor, ViewMajor } from "@shopify/polaris-icons";
-import ReactFlagsSelect, { Ma } from "react-flags-select";
 import { getallMetaField, deleteMetaField } from "../function/allFunction";
 import "./main.css";
 import Countries from "../function/countries";
 import {
   Card,
+  Spinner,
   Page,
   Layout,
   Modal,
@@ -30,6 +30,7 @@ import { useAppBridge } from "@shopify/app-bridge-react";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const Location = useLocation();
   const [displayData, setDisplayData] = useState([]);
   const app = useAppBridge();
   const [appOption, setAppOption] = useState(true);
@@ -56,15 +57,18 @@ const Dashboard = () => {
     Content: "",
     BackgroundColor: "",
   });
-  const [pagePerData, setPagePerData] = useState(5);
+  const [pagePerData, setPagePerData] = useState(10);
   const [toastFlag, settoastFlag] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [getLoader, setGetLoader] = useState(true);
+
   const toggleToastFlag = () => {
-    setActive((toastFlag) => !toastFlag);
+    settoastFlag((toastFlag) => !toastFlag);
   };
   const toastMarkup = toastFlag ? (
-    <Toast content={toastMessage} onDismiss={toggleToastFlag} duration={3000} />
+    <Toast content={toastMessage} onDismiss={toggleToastFlag} duration={2000} />
   ) : null;
+
   const resourceName = {
     singular: "Country Content",
     plural: "Country Content",
@@ -112,15 +116,22 @@ const Dashboard = () => {
   };
   useEffect(async () => {
     const response = await getallMetaField(app);
+
     if (response) {
       const info = formatterData(JSON.parse(response));
       setDisplayData(info);
       setTotalPage(Math.ceil(info.length / pagePerData));
       setItem(info);
-      setMloadingFlag(false);
-    } else {
-      setMloadingFlag(false);
     }
+    setGetLoader(false);
+    if (Location?.state) {
+      setToastMessage(
+        Location.state.page ? "Successfully Edited" : "Successfully Added"
+      );
+      settoastFlag(true);
+      Location.state = null;
+    }
+    // setMloadingFlag(false);
   }, [deleteActive]);
 
   useEffect(async () => {
@@ -131,18 +142,18 @@ const Dashboard = () => {
     let endIndex = (page - 1) * pagePerData + pagePerData;
     console.log("page :", startIndex, endIndex);
     setcurrentpageDate(item.slice(startIndex, endIndex));
-  }, [totalPage, page, item, deleteActive]);
+  }, [page, item]);
 
   useEffect(async () => {
     const temp = displayData.filter(
       (e) =>
-        e.Name.toLowerCase().includes(queryValue.toLowerCase()) ||
-        e.fullCountry.toLowerCase().includes(queryValue.toLowerCase())
+        e.Name?.toLowerCase().includes(queryValue?.toLowerCase()) ||
+        e.fullCountry?.toLowerCase().includes(queryValue?.toLowerCase())
     );
     setItem(temp);
     setPage(1);
     // setTotalPage(temp.length / pagePerData);
-  }, [queryValue, deleteActive]);
+  }, [queryValue]);
   const filterControl = (
     <Filters
       queryValue={queryValue}
@@ -245,25 +256,6 @@ const Dashboard = () => {
       <Page>
         <Layout>
           <Layout.Section>
-            {/* <Card sectioned>
-            <Stack
-              wrap={false}
-              spacing="extraTight"
-              distribution="trailing"
-              alignment="center"
-            >
-              <Stack.Item fill>
-                <TextContainer spacing="loose">
-                  <Heading>Nice work on building a Shopify app 🎉</Heading>
-                </TextContainer>
-              </Stack.Item>
-              <Stack.Item>
-                <Button primary onClick={appEDoption}>
-                  {appOption ? "Enabled" : "Disabled"}
-                </Button>
-              </Stack.Item>
-            </Stack>
-          </Card> */}
             <Banner
               title='Click on "Manage Widget" To Enable/Disable The App'
               action={{
@@ -284,52 +276,59 @@ const Dashboard = () => {
             </div>
           </Layout.Section>
           <Layout.Section>
-            <Card>
-              {item.length === 0 ? (
-                <>
-                  <EmptyState
-                    heading="Manage your Country Content"
-                    action={{
-                      content: "Add Content",
-                      onAction: () => {
-                        navigate("/addcontent");
-                      },
-                    }}
-                    image="https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"
-                  >
-                    <p>
-                      Track and receive your incoming inventory from suppliers.
-                    </p>
-                  </EmptyState>
-                </>
-              ) : (
-                <>
-                  <ResourceList
-                    resourceName={resourceName}
-                    items={items}
-                    renderItem={renderItem}
-                    filterControl={filterControl}
-                    // showHeader={true}
-                    loading={mloadingFlag}
-                  />
-                  <br />
-                  <div className="pagination">
-                    <Pagination
-                      label={page}
-                      hasPrevious={hasPage.prev}
-                      onPrevious={() => {
-                        handleChangePage(0);
+            {getLoader ? (
+              <div className="loading">
+                <Spinner />
+              </div>
+            ) : (
+              <Card>
+                {item.length === 0 ? (
+                  <>
+                    <EmptyState
+                      heading="Manage your Country Content"
+                      action={{
+                        content: "Add Content",
+                        onAction: () => {
+                          navigate("/addcontent");
+                        },
                       }}
-                      hasNext={hasPage.next}
-                      onNext={() => {
-                        handleChangePage(1);
-                      }}
+                      image="https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"
+                    >
+                      <p>
+                        Track and receive your incoming inventory from
+                        suppliers.
+                      </p>
+                    </EmptyState>
+                  </>
+                ) : (
+                  <>
+                    <ResourceList
+                      resourceName={resourceName}
+                      items={items}
+                      renderItem={renderItem}
+                      filterControl={filterControl}
+                      // showHeader={true}
+                      // loading={mloadingFlag}
                     />
                     <br />
-                  </div>
-                </>
-              )}
-            </Card>
+                    <div className="pagination">
+                      <Pagination
+                        label={page}
+                        hasPrevious={hasPage.prev}
+                        onPrevious={() => {
+                          handleChangePage(0);
+                        }}
+                        hasNext={hasPage.next}
+                        onNext={() => {
+                          handleChangePage(1);
+                        }}
+                      />
+                      <br />
+                    </div>
+                  </>
+                )}
+              </Card>
+            )}
           </Layout.Section>
           {deleteModel()}
         </Layout>

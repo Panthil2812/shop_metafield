@@ -3,13 +3,16 @@ import {
   AppProvider,
   Page,
   Card,
+  hsbToHex,
   Select,
   FormLayout,
   TextField,
   PageActions,
   InlineError,
   Stack,
+  Popover,
   Button,
+  ColorPicker,
 } from "@shopify/polaris";
 import Toggle from "react-toggle";
 import "react-toggle/style.css";
@@ -57,6 +60,13 @@ const AddContent = () => {
     { label: "Footer", value: "1" },
     { label: "Product page", value: "2" },
   ];
+  const [color, setColor] = useState({
+    hue: 1,
+    brightness: 1,
+    saturation: 0,
+  });
+  console.log("color: ", hsbToHex(color));
+  const [showPicker, setShowPicker] = useState(false);
   const [loadingFlag, setloadingFlag] = useState(false);
   const [storeName, setStoreName] = useState(
     Location.state ? Location.state.Name : ""
@@ -86,7 +96,19 @@ const AddContent = () => {
     country: false,
     content: false,
   });
-
+  const activator = (
+    <Button
+      onClick={() => {
+        setShowPicker(!showPicker);
+      }}
+      disclosure
+    >
+      <div className="color-picker-btn">
+        <div className="color-showbx" style={{ background: hsbToHex(color) }} />
+        <p>{hsbToHex(color)}</p>
+      </div>
+    </Button>
+  );
   const validationContent = () => {
     // console.log("validationContent");
 
@@ -169,7 +191,7 @@ const AddContent = () => {
         option: parseInt(option),
         cFlag: switchFlag,
         country_code: country,
-        backgroundcolor: "",
+        backgroundcolor: hsbToHex(color),
         content: content.getValue.replaceAll('"', "'"),
       };
       // console.log("data : ", data);
@@ -243,6 +265,7 @@ const AddContent = () => {
               <ReactFlagsSelect
                 // placeholder="Write something awesome"
                 selected={country}
+                searchable={true}
                 onSelect={(code) => {
                   // console.log(code);
 
@@ -252,6 +275,19 @@ const AddContent = () => {
                 selectedSize={12}
                 className="react-flages-select"
               />
+              <div className="color-picker">
+                {/* <p>Button color</p> */}
+                <Popover
+                  active={showPicker}
+                  autofocusTarget="first-node"
+                  activator={activator}
+                  onClose={() => {
+                    setShowPicker(false);
+                  }}
+                >
+                  <ColorPicker onChange={setColor} color={color} />
+                </Popover>
+              </div>
             </div>
             <InlineError
               message={errorMessage.country ? "Select Country is required" : ""}
@@ -279,7 +315,12 @@ const AddContent = () => {
               }}
             />
           </div>
-          <div id="panthil"></div>
+          <div
+            id="panthil"
+            style={{
+              backgroundColor: hsbToHex(color),
+            }}
+          ></div>
           <InlineError
             message={errorMessage.content ? "Content is required" : ""}
             fieldID="myFieldID"

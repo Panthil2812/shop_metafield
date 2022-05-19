@@ -32,6 +32,8 @@
   /* width: 1086px; */
   padding-top: 20px;
   margin: 0 auto;
+  z-index: 99;
+  position: relative;
 }
 
 .ql-editor {
@@ -79,7 +81,4 @@
   padding-top: 3px;
   padding-bottom: 2px;
   font-size: 16px;
-}
-.Polaris-Page div {
-  z-index: 99;
 }

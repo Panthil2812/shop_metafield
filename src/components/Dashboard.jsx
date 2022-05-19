@@ -13,8 +13,11 @@ import {
   TextContainer,
   Stack,
   Button,
+  Frame,
   Heading,
+  EmptyState,
   Filters,
+  Toast,
   ResourceItem,
   Icon,
   ResourceList,
@@ -23,7 +26,7 @@ import {
   TextStyle,
   Pagination,
 } from "@shopify/polaris";
-import { Toast, useAppBridge } from "@shopify/app-bridge-react";
+import { useAppBridge } from "@shopify/app-bridge-react";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -53,7 +56,15 @@ const Dashboard = () => {
     Content: "",
     BackgroundColor: "",
   });
-  const [pagePerData, setPagePerData] = useState(10);
+  const [pagePerData, setPagePerData] = useState(5);
+  const [toastFlag, settoastFlag] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const toggleToastFlag = () => {
+    setActive((toastFlag) => !toastFlag);
+  };
+  const toastMarkup = toastFlag ? (
+    <Toast content={toastMessage} onDismiss={toggleToastFlag} duration={3000} />
+  ) : null;
   const resourceName = {
     singular: "Country Content",
     plural: "Country Content",
@@ -205,6 +216,8 @@ const Dashboard = () => {
               setDeleteActive(false);
               setPage(1);
               setQueryValue("");
+              setToastMessage("Successfully Deleted");
+              settoastFlag(true);
             },
             // },
           }}
@@ -228,10 +241,11 @@ const Dashboard = () => {
   };
   const items = currentpageData;
   return (
-    <Page fullWidth>
-      <Layout>
-        <Layout.Section>
-          {/* <Card sectioned>
+    <Frame>
+      <Page>
+        <Layout>
+          <Layout.Section>
+            {/* <Card sectioned>
             <Stack
               wrap={false}
               spacing="extraTight"
@@ -250,55 +264,78 @@ const Dashboard = () => {
               </Stack.Item>
             </Stack>
           </Card> */}
-          <Banner
-            title='Click on "Manage Widget" To Enable/Disable The App'
-            action={{
-              content: "Manage Widget",
-              onAction: () => {
-                enableThemeAppExtension();
-              },
-            }}
-            // secondaryAction={{ content: 'Learn more' }}
-            status="info"
-          ></Banner>
-        </Layout.Section>
-        <Layout.Section>
-          <div className="addcontentbutton">
-            <Link to="/addcontent" className="text_decoration">
-              <Button primary>ADD CONTENT</Button>
-            </Link>
-          </div>
-        </Layout.Section>
-        <Layout.Section>
-          <Card>
-            <ResourceList
-              resourceName={resourceName}
-              items={items}
-              renderItem={renderItem}
-              filterControl={filterControl}
-              // showHeader={true}
-              loading={mloadingFlag}
-            />
-            <br />
-            <div className="pagination">
-              <Pagination
-                label={page}
-                hasPrevious={hasPage.prev}
-                onPrevious={() => {
-                  handleChangePage(0);
-                }}
-                hasNext={hasPage.next}
-                onNext={() => {
-                  handleChangePage(1);
-                }}
-              />
-              <br />
+            <Banner
+              title='Click on "Manage Widget" To Enable/Disable The App'
+              action={{
+                content: "Manage Widget",
+                onAction: () => {
+                  enableThemeAppExtension();
+                },
+              }}
+              // secondaryAction={{ content: 'Learn more' }}
+              status="info"
+            ></Banner>
+          </Layout.Section>
+          <Layout.Section>
+            <div className="addcontentbutton">
+              <Link to="/addcontent" className="text_decoration">
+                <Button primary>Add Content</Button>
+              </Link>
             </div>
-          </Card>
-        </Layout.Section>
-        {deleteModel()}
-      </Layout>
-    </Page>
+          </Layout.Section>
+          <Layout.Section>
+            <Card>
+              {item.length === 0 ? (
+                <>
+                  <EmptyState
+                    heading="Manage your Country Content"
+                    action={{
+                      content: "Add Content",
+                      onAction: () => {
+                        navigate("/addcontent");
+                      },
+                    }}
+                    image="https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"
+                  >
+                    <p>
+                      Track and receive your incoming inventory from suppliers.
+                    </p>
+                  </EmptyState>
+                </>
+              ) : (
+                <>
+                  <ResourceList
+                    resourceName={resourceName}
+                    items={items}
+                    renderItem={renderItem}
+                    filterControl={filterControl}
+                    // showHeader={true}
+                    loading={mloadingFlag}
+                  />
+                  <br />
+                  <div className="pagination">
+                    <Pagination
+                      label={page}
+                      hasPrevious={hasPage.prev}
+                      onPrevious={() => {
+                        handleChangePage(0);
+                      }}
+                      hasNext={hasPage.next}
+                      onNext={() => {
+                        handleChangePage(1);
+                      }}
+                    />
+                    <br />
+                  </div>
+                </>
+              )}
+            </Card>
+          </Layout.Section>
+          {deleteModel()}
+        </Layout>
+        {toastMarkup}
+      </Page>
+    </Frame>
   );
   function renderItem(item, _, index) {
     const { id, Name, Country, Display, Content, BackgroundColor } = item;

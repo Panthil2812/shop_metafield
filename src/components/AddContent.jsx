@@ -5,6 +5,8 @@ import {
   Card,
   hsbToHex,
   Select,
+  Frame,
+  Toast,
   FormLayout,
   TextField,
   PageActions,
@@ -21,8 +23,7 @@ import "react-toggle/style.css";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import ReactFlagsSelect from "react-flags-select";
 import "./main.css";
-import axios from "axios";
-import { Toast, useAppBridge } from "@shopify/app-bridge-react";
+import { useAppBridge } from "@shopify/app-bridge-react";
 import { userLoggedInFetch } from "../App";
 import SunEditor from "suneditor-react";
 import "suneditor/dist/css/suneditor.min.css";
@@ -57,7 +58,7 @@ const AddContent = () => {
     );
   };
   const options = [
-    { label: "Select display content", value: "10" },
+    // { label: "Select display content", value: "10" },
     { label: "Header", value: "0" },
     { label: "Footer", value: "1" },
     { label: "Product page", value: "2" },
@@ -243,18 +244,36 @@ const AddContent = () => {
               message={errorMessage.store ? "Name is required" : ""}
               fieldID="myFieldID"
             />
-            <Select
-              options={options}
-              onChange={(value) => {
-                setOption(value);
-                // console.log(value);
-              }}
-              value={option}
-            />
-            <InlineError
-              message={errorMessage.option ? "Select Option is required" : ""}
-              fieldID="myFieldID"
-            />
+            <div className="flex" style={{ justifyContent: "space-between" }}>
+              <Select
+                style={{ width: "100%" }}
+                label="Display Content"
+                options={options}
+                placeholder={"Select display content"}
+                onChange={(value) => {
+                  setOption(value);
+                  // console.log(value);
+                }}
+                value={option}
+              />
+              <InlineError
+                message={errorMessage.option ? "Select Option is required" : ""}
+                fieldID="myFieldID"
+              />
+              <div className="color-picker">
+                <p>Background Color</p>
+                <Popover
+                  active={showPicker}
+                  autofocusTarget="first-node"
+                  activator={activator}
+                  onClose={() => {
+                    setShowPicker(false);
+                  }}
+                >
+                  <ColorPicker onChange={setColor} color={color} />
+                </Popover>
+              </div>
+            </div>
             <div className="flex">
               <div className="react-country-switch">
                 <p>Default Country</p>
@@ -282,19 +301,6 @@ const AddContent = () => {
                 selectedSize={12}
                 className="react-flages-select"
               />
-              <div className="color-picker">
-                {/* <p>Button color</p> */}
-                <Popover
-                  active={showPicker}
-                  autofocusTarget="first-node"
-                  activator={activator}
-                  onClose={() => {
-                    setShowPicker(false);
-                  }}
-                >
-                  <ColorPicker onChange={setColor} color={color} />
-                </Popover>
-              </div>
             </div>
             <InlineError
               message={errorMessage.country ? "Select Country is required" : ""}

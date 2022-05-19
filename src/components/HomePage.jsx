@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { Tabs } from "@shopify/polaris";
+import { Tabs, Page } from "@shopify/polaris";
 // import { Dashboard } from "./Dashboard";
 import Support from "./Support";
 import Publicreview from "./Publicreview";
@@ -41,10 +41,12 @@ const HomePage = () => {
   };
   return (
     <>
-      <Tabs tabs={tabs} selected={selected} onSelect={handleTabChange} fitted>
-        {/* <Card.Section>{tabFunction(tabs[selected].id)}</Card.Section> */}
-      </Tabs>
-      {tabFunction(selected)}
+      <Page>
+        <Tabs tabs={tabs} selected={selected} onSelect={handleTabChange} fitted>
+          {/* <Card.Section>{tabFunction(tabs[selected].id)}</Card.Section> */}
+        </Tabs>
+        {tabFunction(selected)}
+      </Page>
     </>
   );
 };

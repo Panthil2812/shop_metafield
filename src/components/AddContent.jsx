@@ -201,63 +201,69 @@ const AddContent = () => {
         title="Add New Country Content"
       >
         <Card sectioned>
-          <FormLayout>
-            <TextField
-              label="Store name"
-              value={storeName}
-              onChange={(value) => {
-                setStoreName(value);
-              }}
-              autoComplete="off"
-            />
-            <InlineError
-              message={errorMessage.store ? "Store name is required" : ""}
-              fieldID="myFieldID"
-            />
-            <Select
-              options={options}
-              onChange={(value) => {
-                setOption(value);
-                // console.log(value);
-              }}
-              value={option}
-            />
-            <InlineError
-              message={errorMessage.option ? "Select Option is required" : ""}
-              fieldID="myFieldID"
-            />
-            <div className="flex">
-              <div className="react-country-switch">
-                <p>Default Country</p>
-                <Toggle
-                  onChange={(e) => {
-                    setCountry(null);
-                    setSwitchFlag(e.target.checked);
-                    // console.log("nextChecked : ", e.target.checked);
+          <div className="formlayout">
+            <FormLayout>
+              <TextField
+                label="Name"
+                className="formlayout"
+                value={storeName}
+                onChange={(value) => {
+                  setStoreName(value);
+                }}
+                autoComplete="off"
+              />
+              <InlineError
+                message={errorMessage.store ? "Name is required" : ""}
+                fieldID="myFieldID"
+              />
+              <Select
+                className="formlayout"
+                options={options}
+                onChange={(value) => {
+                  setOption(value);
+                  // console.log(value);
+                }}
+                value={option}
+              />
+              <InlineError
+                message={errorMessage.option ? "Select Option is required" : ""}
+                fieldID="myFieldID"
+              />
+              <div className="flex">
+                <div className="react-country-switch">
+                  <p>Default Country</p>
+                  <Toggle
+                    onChange={(e) => {
+                      setCountry(null);
+                      setSwitchFlag(e.target.checked);
+                      // console.log("nextChecked : ", e.target.checked);
+                    }}
+                    checked={switchFlag}
+                    icons={false}
+                    className="react-switch"
+                  />
+                </div>
+                <ReactFlagsSelect
+                  // placeholder="Write something awesome"
+                  selected={country}
+                  onSelect={(code) => {
+                    // console.log(code);
+
+                    setCountry(code);
                   }}
-                  checked={switchFlag}
-                  icons={false}
-                  className="react-switch"
+                  disabled={switchFlag}
+                  selectedSize={12}
+                  className="react-flages-select"
                 />
               </div>
-              <ReactFlagsSelect
-                // placeholder="Write something awesome"
-                selected={country}
-                onSelect={(code) => {
-                  // console.log(code);
-
-                  setCountry(code);
-                }}
-                disabled={switchFlag}
-                selectedSize={12}
-                className="react-flages-select"
+              <InlineError
+                message={
+                  errorMessage.country ? "Select Country is required" : ""
+                }
+                fieldID="myFieldID"
               />
-            </div>
-            <InlineError
-              message={errorMessage.country ? "Select Country is required" : ""}
-              fieldID="myFieldID"
-            />
-          </FormLayout>
+            </FormLayout>
+          </div>
           <div className="text-editor">
             {/* <Editor contents={content.contents} getValue={content.getValue} /> */}
             <SunEditor

@@ -53,12 +53,7 @@ const Dashboard = () => {
     Content: "",
     BackgroundColor: "",
   });
-  const pagePerData = 5;
-  // const handleQueryValueRemove = useCallback(() => setQueryValue(null), []);
-  // const handleClearAll = useCallback(() => {
-  //   handleQueryValueRemove();
-  // }, [handleQueryValueRemove]);
-
+  const [pagePerData, setPagePerData] = useState(10);
   const resourceName = {
     singular: "Country Content",
     plural: "Country Content",

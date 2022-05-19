@@ -170,12 +170,10 @@ const Dashboard = () => {
         console.log("total page : ", totalPage);
         const ca = page + 1;
         if (ca === totalPage) {
-          setHasPage({ ...hasPage, prev: true });
-          setHasPage({ ...hasPage, next: false });
+          setHasPage({ next: false, prev: true });
           setPage(totalPage);
         } else {
-          setHasPage({ ...hasPage, next: true });
-          setHasPage({ ...hasPage, prev: true });
+          setHasPage({ prev: true, next: true });
           setPage(ca);
         }
       }

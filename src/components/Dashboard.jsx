@@ -101,11 +101,15 @@ const Dashboard = () => {
   };
   useEffect(async () => {
     const response = await getallMetaField(app);
-    const info = formatterData(JSON.parse(response));
-    setDisplayData(info);
-    setTotalPage(Math.ceil(info.length / pagePerData));
-    setItem(info);
-    setMloadingFlag(false);
+    if (response) {
+      const info = formatterData(JSON.parse(response));
+      setDisplayData(info);
+      setTotalPage(Math.ceil(info.length / pagePerData));
+      setItem(info);
+      setMloadingFlag(false);
+    } else {
+      setMloadingFlag(false);
+    }
   }, [deleteActive]);
 
   useEffect(async () => {

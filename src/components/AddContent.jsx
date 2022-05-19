@@ -12,9 +12,11 @@ import {
   Stack,
   Popover,
   Button,
+  rgbToHsb,
   ColorPicker,
 } from "@shopify/polaris";
 import Toggle from "react-toggle";
+import hexRgb from "hex-rgb";
 import "react-toggle/style.css";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import ReactFlagsSelect from "react-flags-select";
@@ -60,11 +62,16 @@ const AddContent = () => {
     { label: "Footer", value: "1" },
     { label: "Product page", value: "2" },
   ];
-  const [color, setColor] = useState({
-    hue: 1,
-    brightness: 1,
-    saturation: 0,
-  });
+  const [color, setColor] = useState(
+    Location.state
+      ? rgbToHsb(hexRgb(Location?.state?.BackgroundColor))
+      : {
+          hue: 1,
+          brightness: 1,
+          saturation: 0,
+        }
+  );
+  // rgbToHsb(hexRgb(Location?.state?.BackgroundColor))
   console.log("color: ", hsbToHex(color));
   const [showPicker, setShowPicker] = useState(false);
   const [loadingFlag, setloadingFlag] = useState(false);

@@ -1552,6 +1552,11 @@
   dependencies:
     "function-bind" "^1.1.1"
 
+"hex-rgb@^5.0.0":
+  "integrity" "sha512-NQO+lgVUCtHxZ792FodgW0zflK+ozS9X9dwGp9XvvmPlH7pyxd588cn24TD3rmPm/N0AIRXF10Otah8yKqGw4w=="
+  "resolved" "https://registry.npmjs.org/hex-rgb/-/hex-rgb-5.0.0.tgz"
+  "version" "5.0.0"
+
 "hexoid@1.0.0":
   "integrity" "sha512-QFLV0taWQOZtvIRIAdBChesmogZrtuXvVWsFHZTk2SU+anspqZ2vMnoLg7IE1+Uk16N19APic1BuF8bC8c2m5g=="
   "resolved" "https://registry.npmjs.org/hexoid/-/hexoid-1.0.0.tgz"

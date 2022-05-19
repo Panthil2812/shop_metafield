@@ -8,50 +8,47 @@
   const shopMeta = (`{{ shop.metafields.appmixo_dynamic.appmixo_1 }}` || "{ }")
   console.log("bfudinuidfbn ::::",shopMeta);
   const json_shopMeta = JSON.parse(shopMeta)
-
   const url_code = window.location?.search?.split("=")[1];
   console.log("url_codeurl_codeDDD : ",url_code,Boolean(url_code))
-  {% comment %} 
-    console.log("ufdibg : ",shopMeta , typeof shopMeta,shopMeta.country_code)
-    console.log("\n\nshopMeta  : ", json_shopMeta, typeof json_shopMeta) 
-    console.log("shopMeta panthil 88: ", json_shopMeta.country_content) 
-  {% endcomment %}
-  fetchCountryData = async function (){
-  try{
-    const response = await fetch("https://appmixo.in/cdn-cgi/trace", {
-      method: 'GET',
-      redirect: 'follow'
-    })
-      .then(response => response.text())
-      .then(result => {
-        const loc = result.split('\n').reduce((obj,ele)=>{
-          let arr = ele.split("=");
-           return {...obj,[arr[0]]:arr[1]}
-          },{}).loc;
-          console.log("location api data panthil malaviya: ",loc);
-          document.cookie = `location=${loc}`;
-          
-      })
-      .catch(error => console.log('error', error));
+  let header = '' 
+    let footer = '' 
+    let product = ''
+    let h_color = ''
+    let f_color = ''
+    let p_color = ''
 
-    return Promise.resolve(response);
-  }catch(err)
-  {
-    return Promise.reject(err);
+   fetchCountryData = async function(){
+      try{
+        const response = await fetch("https://appmixo.in/cdn-cgi/trace", {
+          method: 'GET',
+          redirect: 'follow'
+        })
+          .then(response => response.text())
+          .then(async(result) => {
+            const loc =await result.split('\n').reduce((obj,ele)=>{
+              let arr = ele.split("=");
+              return {...obj,[arr[0]]:arr[1]}
+              },{}).loc;
+              console.log("location api data panthil malaviya: ",loc);
+              document.cookie = `location=${loc}`;
+              
+          })
+          .catch(error => console.log('error', error));
+
+        return Promise.resolve(response);
+      }catch(err)
+      {
+        return Promise.reject(err);
+      }
   }
-      {% comment %} const cookieData =document.cookie.split(";").reduce((obj,ele)=>{
-        let arr=ele.split("=");
-        return {...obj,[arr[0]]:arr[1]}}
-        ,{}).location;
-      console.log("location in cookie : ",cookieData); {% endcomment %}
-  }
-  getCountryCode = async =()=>{
-    const cookieData =document.cookie.split(";").reduce((obj,ele)=>{
+
+   getCountryCode =async function() {
+    const cookieData =await document.cookie.split(";").reduce((obj,ele)=>{
       let arr=ele.split("=");
       return {...obj,[arr[0]]:arr[1]}}
       ,{})[" location"];
     console.log("location in cookie : ",cookieData);
-    return cookieData;
+    return Promise.resolve(cookieData);
   }
   dynamicContent = async function () {
     if (typeof window.ShopifyAnalytics != "undefined") {
@@ -71,25 +68,33 @@
                 resolve();
             }, 1000));
         }
+
+
+
+
+    const check_cookie = await getCountryCode();
+    console.log("cookie check",check_cookie,Boolean(check_cookie));
     if(url_code){
-          console.log("url_codedubveruifbnvuv uwrburghuirbvuiirvurb")
-          document.cookie = `location=${url_code}`;
+      console.log("url_codedubveruifbnvuv uwrburghuirbvuiirvurb")
+      document.cookie = `location=${url_code}`;
+      console.log("1000")
+      {% comment %} displayCountryCode(await getCountryCode()) {% endcomment %}
+    }else if (check_cookie){
+       console.log("alert not call api ")
     }else{
       console.log("calling API : ")
       const res = await fetchCountryData();
-     
       console.log("calling end ....")
+      console.log("3000")
+      {% comment %} displayCountryCode(await  getCountryCode()) {% endcomment %}
     }
-    const country_code = getCountryCode();
+    const country_code = await getCountryCode(); 
     console.log("Country Code : ",country_code);
     console.log("Country Content  : ",json_shopMeta.country_content[country_code]);
     const c_code = json_shopMeta?.country_content[country_code];
     console.log("code : ",c_code? c_code.length : 0)
     console.log("dugrffththeg dffgrfg")
     const code_length = c_code? c_code.length : 0;  
-    let header = '' 
-    let footer = '' 
-    let product = ''
     if(code_length)
     {
       // country exite 
@@ -98,23 +103,29 @@
       header = c_code[0] ? c_code[0][1]:""  
       footer = c_code[1] ? c_code[1][1]:"" 
       product = c_code[2] ? c_code[2][1]:""
+      h_color = c_code[0] ? c_code[0][2]:"#ffffff"
+      f_color= c_code[1] ? c_code[1][2]:"#ffffff" 
+      p_color = c_code[2] ? c_code[2][2]:"#ffffff"
     }
     else{
       const d_code = json_shopMeta.default;
       console.log("Defualt : ",d_code)
-      header = d_code[0]?d_code[0][1]:""  
-      footer = d_code[1] ?d_code[1][1]:"" 
+      console.log("header_DROP : ", d_code[0]);
+      console.log("footer_DROP : ", d_code[1]);
+      header = d_code[0] ? d_code[0][1]:""  
+      footer = d_code[1] ? d_code[1][1]:"" 
       product = d_code[2] ? d_code[2][1]:""
-    
+      h_color = d_code[0] ? d_code[0][2]:"#ffffff"
+      f_color= d_code[1] ? d_code[1][2]:"#ffffff"
+      p_color = d_code[2] ? d_code[2][2]:"#ffffff"
     }
-    console.log("fbyuf vifbh iuvbih duigbv")
-     
+    {% comment %} console.log(header,h_color); {% endcomment %}
         if (document.querySelectorAll(".dynamic_header_Drop")[0]) {
-      document.querySelector(".dynamic_header_Drop").innerHTML = `<div>${header}</div>`;
+    document.querySelector(".dynamic_header_Drop").innerHTML = `<div style="background-color:${h_color};padding: 1px;">${header}</div>`;
     }
 
     if (document.querySelectorAll(".dynamic_footer_Drop")[0]) {
-      document.querySelector(".dynamic_footer_Drop").innerHTML = `<div>${footer}</div>`;
+      document.querySelector(".dynamic_footer_Drop").innerHTML = `<div style="background-color:${f_color};padding: 1px;">${footer}</div>`;
     }
     //   async function callDynamicContentScript(page, selectedVariant) {
 

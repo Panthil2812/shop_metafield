@@ -233,120 +233,123 @@ const AddContent = () => {
           onAction: saveContent,
         }}
       >
-        <Card sectioned>
-          <FormLayout>
-            <div className="form-label">
-              <p>Name</p>
-              <TextField
-                value={storeName}
-                onChange={(value) => {
-                  setStoreName(value);
-                }}
-                autoComplete="off"
-              />
+        <div className="mb">
+          <Card sectioned>
+            <FormLayout>
+              <div className="form-label">
+                <p>Name</p>
+                <TextField
+                  value={storeName}
+                  onChange={(value) => {
+                    setStoreName(value);
+                  }}
+                  autoComplete="off"
+                />
+                <InlineError
+                  message={errorMessage.store ? "Name is required" : ""}
+                  fieldID="myFieldID"
+                />
+              </div>
+
+              <div className="second-form-container">
+                <div className="select-container">
+                  <p>Display Content</p>
+                  <Select
+                    options={options}
+                    placeholder={"Select display content"}
+                    onChange={(value) => {
+                      setOption(value);
+                      // console.log(value);
+                    }}
+                    value={option}
+                  />
+                </div>
+                <div className="color-picker">
+                  <p>Background Color</p>
+                  <Popover
+                    active={showPicker}
+                    autofocusTarget="first-node"
+                    activator={activator}
+                    onClose={() => {
+                      setShowPicker(false);
+                    }}
+                  >
+                    <ColorPicker onChange={setColor} color={color} />
+                  </Popover>
+                </div>
+              </div>
               <InlineError
-                message={errorMessage.store ? "Name is required" : ""}
+                message={errorMessage.option ? "Select Option is required" : ""}
                 fieldID="myFieldID"
               />
-            </div>
+              <div className="flex">
+                <div className="react-country-switch">
+                  <p>Default Country</p>
+                  <Toggle
+                    onChange={(e) => {
+                      setCountry(null);
+                      setSwitchFlag(e.target.checked);
+                      // console.log("nextChecked : ", e.target.checked);
+                    }}
+                    checked={switchFlag}
+                    icons={false}
+                    className="react-switch"
+                  />
+                </div>
+                <ReactFlagsSelect
+                  // placeholder="Write something awesome"
+                  selected={country}
+                  searchable={true}
+                  onSelect={(code) => {
+                    // console.log(code);
 
-            <div className="second-form-container">
-              <div className="select-container">
-                <p>Display Content</p>
-                <Select
-                  options={options}
-                  placeholder={"Select display content"}
-                  onChange={(value) => {
-                    setOption(value);
-                    // console.log(value);
+                    setCountry(code);
                   }}
-                  value={option}
+                  disabled={switchFlag}
+                  selectedSize={12}
+                  className="react-flages-select"
                 />
               </div>
-              <div className="color-picker">
-                <p>Background Color</p>
-                <Popover
-                  active={showPicker}
-                  autofocusTarget="first-node"
-                  activator={activator}
-                  onClose={() => {
-                    setShowPicker(false);
-                  }}
-                >
-                  <ColorPicker onChange={setColor} color={color} />
-                </Popover>
-              </div>
-            </div>
-            <InlineError
-              message={errorMessage.option ? "Select Option is required" : ""}
-              fieldID="myFieldID"
-            />
-            <div className="flex">
-              <div className="react-country-switch">
-                <p>Default Country</p>
-                <Toggle
-                  onChange={(e) => {
-                    setCountry(null);
-                    setSwitchFlag(e.target.checked);
-                    // console.log("nextChecked : ", e.target.checked);
-                  }}
-                  checked={switchFlag}
-                  icons={false}
-                  className="react-switch"
-                />
-              </div>
-              <ReactFlagsSelect
-                // placeholder="Write something awesome"
-                selected={country}
-                searchable={true}
-                onSelect={(code) => {
-                  // console.log(code);
-
-                  setCountry(code);
+              <InlineError
+                message={
+                  errorMessage.country ? "Select Country is required" : ""
+                }
+                fieldID="myFieldID"
+              />
+            </FormLayout>
+            <div className="text-editor">
+              {/* <Editor contents={content.contents} getValue={content.getValue} /> */}
+              <SunEditor
+                // ref={refContainer}
+                name="my-editor"
+                enableToolbar={true}
+                showToolbar={true}
+                placeholder="Email body content here..."
+                setOptions={editorOptions}
+                // appendContents={contents}
+                setContents={content.contents}
+                height={220}
+                onChange={(value) => {
+                  console.log(value);
+                  setContent((content) => ({
+                    ...content,
+                    getValue: value,
+                  }));
                 }}
-                disabled={switchFlag}
-                selectedSize={12}
-                className="react-flages-select"
               />
             </div>
+            <div
+              id="panthil"
+              style={{
+                backgroundColor: hsbToHex(color),
+              }}
+            ></div>
             <InlineError
-              message={errorMessage.country ? "Select Country is required" : ""}
+              message={errorMessage.content ? "Content is required" : ""}
               fieldID="myFieldID"
             />
-          </FormLayout>
-          <div className="text-editor">
-            {/* <Editor contents={content.contents} getValue={content.getValue} /> */}
-            <SunEditor
-              // ref={refContainer}
-              name="my-editor"
-              enableToolbar={true}
-              showToolbar={true}
-              placeholder="Email body content here..."
-              setOptions={editorOptions}
-              // appendContents={contents}
-              setContents={content.contents}
-              height={220}
-              onChange={(value) => {
-                console.log(value);
-                setContent((content) => ({
-                  ...content,
-                  getValue: value,
-                }));
-              }}
-            />
-          </div>
-          <div
-            id="panthil"
-            style={{
-              backgroundColor: hsbToHex(color),
-            }}
-          ></div>
-          <InlineError
-            message={errorMessage.content ? "Content is required" : ""}
-            fieldID="myFieldID"
-          />
-        </Card>
-
+          </Card>
+        </div>
         {/* <PageActions
           primaryAction={{
             content: "Save",

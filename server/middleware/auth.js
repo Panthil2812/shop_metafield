@@ -92,7 +92,6 @@ export default function applyAuthMiddleware(app) {
           ...shop,
           app_status: APP_STATUS.INSTALLED,
           access_token: session.accessToken,
-          metafield_id: 1,
           access_scope: session.scope,
         },
       });

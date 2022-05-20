@@ -18,17 +18,6 @@ const ShopSchema = mongoose.Schema({
     required: true,
     unique: true,
   },
-  metafield_id: {
-    type: String,
-    trim: true,
-    required: true,
-    unique: true,
-  },
-  sf_access_token: {
-    type: String,
-    trim: true,
-    unique: true,
-  },
   phone: {
     type: String,
     trim: true,
@@ -105,12 +94,6 @@ const ShopSchema = mongoose.Schema({
     type: String,
     trim: true,
   },
-  emails: [
-    {
-      email: String,
-      insertedAt: Number,
-    },
-  ],
 });
 
 const Shop = mongoose.models.shop || mongoose.model("shop", ShopSchema);

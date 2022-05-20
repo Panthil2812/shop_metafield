@@ -86,8 +86,9 @@ const AddContent = () => {
         : Location.state.Display === "Footer"
         ? "1"
         : "2"
-      : "10"
+      : ""
   );
+
   const [country, setCountry] = useState(
     Location.state ? Location.state.Country : null
   );

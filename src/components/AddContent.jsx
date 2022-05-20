@@ -347,13 +347,13 @@ const AddContent = () => {
           />
         </Card>
 
-        <PageActions
+        {/* <PageActions
           primaryAction={{
             content: "Save",
             loading: loadingFlag,
             onAction: saveContent,
           }}
-        />
+        /> */}
       </Page>
     </AppProvider>
   );

@@ -1,0 +1,182 @@
+<script>
+
+  var page = '';
+  var div = '';
+  var collectionDiv = '';
+  var ShopifyAnalytics;
+  var shop_name = '';
+  const shopMeta = (`{{ shop.metafields.appmixo_dynamic.appmixo_1 }}` || "{ }")
+  console.log("bfudinuidfbn ::::",shopMeta);
+  const json_shopMeta = JSON.parse(shopMeta)
+  const url_code = window.location?.search?.split("=")[1];
+  console.log("url_codeurl_codeDDD : ",url_code,Boolean(url_code))
+  let header = '' 
+    let footer = '' 
+    let product = ''
+    let h_color = ''
+    let f_color = ''
+    let p_color = ''
+
+   fetchCountryData = async function(){
+      try{
+        const response = await fetch("https://appmixo.in/cdn-cgi/trace", {
+          method: 'GET',
+          redirect: 'follow'
+        })
+          .then(response => response.text())
+          .then(async(result) => {
+            const loc =await result.split('\n').reduce((obj,ele)=>{
+              let arr = ele.split("=");
+              return {...obj,[arr[0]]:arr[1]}
+              },{}).loc;
+              console.log("location api data panthil malaviya: ",loc);
+              document.cookie = `location=${loc}`;
+              
+          })
+          .catch(error => console.log('error', error));
+
+        return Promise.resolve(response);
+      }catch(err)
+      {
+        return Promise.reject(err);
+      }
+  }
+
+   getCountryCode =async function() {
+    const cookieData =await document.cookie.split(";").reduce((obj,ele)=>{
+      let arr=ele.split("=");
+      return {...obj,[arr[0]]:arr[1]}}
+      ,{})[" location"];
+    console.log("location in cookie : ",cookieData);
+    return Promise.resolve(cookieData);
+  }
+  dynamicContent = async function () {
+    if (typeof window.ShopifyAnalytics != "undefined") {
+      ShopifyAnalytics = window.ShopifyAnalytics
+    } else {
+      await new Promise((resolve) => setTimeout(() => {
+        ShopifyAnalytics = window.ShopifyAnalytics;
+        resolve()
+      }, 1000));
+    }
+
+    if (typeof window.Shopify != "undefined") {
+            shop_name = Shopify.shop;
+    } else {
+            await new Promise((resolve) => setTimeout(() => {
+                shop_name = Shopify.shop;
+                resolve();
+            }, 1000));
+        }
+
+
+
+
+    const check_cookie = await getCountryCode();
+    console.log("cookie check",check_cookie,Boolean(check_cookie));
+    if(url_code){
+      console.log("url_codedubveruifbnvuv uwrburghuirbvuiirvurb")
+      document.cookie = `location=${url_code}`;
+      console.log("1000")
+      {% comment %} displayCountryCode(await getCountryCode()) {% endcomment %}
+    }else if (check_cookie){
+       console.log("alert not call api ")
+    }else{
+      console.log("calling API : ")
+      const res = await fetchCountryData();
+      console.log("calling end ....")
+      console.log("3000")
+      {% comment %} displayCountryCode(await  getCountryCode()) {% endcomment %}
+    }
+    const country_code = await getCountryCode(); 
+    console.log("Country Code : ",country_code);
+    console.log("Country Content  : ",json_shopMeta.country_content[country_code]);
+    const c_code = json_shopMeta?.country_content[country_code];
+    console.log("code : ",c_code? c_code.length : 0)
+    console.log("dugrffththeg dffgrfg")
+    const code_length = c_code? c_code.length : 0;  
+    if(code_length)
+    {
+      // country exite 
+      console.log("header_DROP : ", c_code[0]);
+      console.log("footer_DROP : ", c_code[1]);
+      header = c_code[0] ? c_code[0][1]:""  
+      footer = c_code[1] ? c_code[1][1]:"" 
+      product = c_code[2] ? c_code[2][1]:""
+      h_color = c_code[0] ? c_code[0][2]:"#ffffff"
+      f_color= c_code[1] ? c_code[1][2]:"#ffffff" 
+      p_color = c_code[2] ? c_code[2][2]:"#ffffff"
+    }
+    else{
+      const d_code = json_shopMeta.default;
+      console.log("Defualt : ",d_code)
+      console.log("header_DROP : ", d_code[0]);
+      console.log("footer_DROP : ", d_code[1]);
+      header = d_code[0] ? d_code[0][1]:""  
+      footer = d_code[1] ? d_code[1][1]:"" 
+      product = d_code[2] ? d_code[2][1]:""
+      h_color = d_code[0] ? d_code[0][2]:"#ffffff"
+      f_color= d_code[1] ? d_code[1][2]:"#ffffff"
+      p_color = d_code[2] ? d_code[2][2]:"#ffffff"
+    }
+    {% comment %} console.log(header,h_color); {% endcomment %}
+        if (document.querySelectorAll(".dynamic_header_Drop")[0]) {
+    document.querySelector(".dynamic_header_Drop").innerHTML = `<div style="background-color:${h_color};padding: 1px;">${header}</div>`;
+    }
+
+    if (document.querySelectorAll(".dynamic_footer_Drop")[0]) {
+      document.querySelector(".dynamic_footer_Drop").innerHTML = `<div style="background-color:${f_color};padding: 1px;">${footer}</div>`;
+    }
+    //   async function callDynamicContentScript(page, selectedVariant) {
+
+    //     // if (page == "collection") {
+
+
+    //       if (document.querySelectorAll(".dynamic_content_div")[0]) {
+    //         collectionDiv =
+    //           `<div style="background-color:black;"></div>`
+    //       }
+
+    //       if (document.querySelectorAll(".dynamic_content_div")[0]) {
+    //         document.querySelector(".dynamic_content_div").innerHTML = collectionDiv;
+    //       } else if (document.querySelectorAll(".dynamic_header_Drop")[0]) {
+    //         document.querySelector(".dynamic_header_Drop").inneHTrML = collectionDiv;
+    //       } 
+    //     // }
+    //   }
+
+    //   function set_dynamic_content_div_product(div, value, currency) {
+
+    //     if (document.querySelectorAll(".dynamic_header_Drop")[0]) { //manual product drop
+    //       document.querySelector(".dynamic_header_Drop").innerHTML = div;
+    //     }
+    //   }
+    // }
+  }
+
+  document.addEventListener("readystatechange", function () {
+    console.log("Dynamic content1")
+
+    switch (event.target.readyState) {
+      case 'loading':
+        console.log("event.target.readystate", event.target.readyState);
+        break;
+
+      case 'interactive':
+        console.log("interactive 1.0.1")
+        dynamicContent();
+        break;
+
+      case 'complete':
+        break;
+    }
+  })
+</script>
+
+{% schema %}
+{
+"name": "Dynamic-Content",
+"target": "body",
+"settings": []
+}
+{% endschema %}

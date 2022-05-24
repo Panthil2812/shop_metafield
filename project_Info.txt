@@ -1,21 +1,11 @@
-Metafield Default Country Content : 
-{
-    namespace : "appmixo_dynamic",
-    key : "appmixo_default",
-    value : {
-        default: [["name","content","backgroundColor"],
-               ["name","content","backgroundColor"],
-                ["name","content","backgroundColor"]]
-    },
-    owner_resource:"shop",
-    type : "json",
-}
-
 Metafield Country Content : 
 {
     namespace : "appmixo_dynamic",
     key : "appmixo_0",  (appmixo_1,appmixo_2,appmixo_3,...)
     value : {
+         "Default": [["name","content","backgroundColor"],
+               ["name","content","backgroundColor"],
+                ["name","content","backgroundColor"]],
             "country_code":[["name","content","backgroundColor"],
                ["name","content","backgroundColor"],
                 ["name","content","backgroundColor"]],
@@ -26,28 +16,6 @@ Metafield Country Content :
     owner_resource:"shop",
     type : "json",
 }
-
-Main Task List
- 
- [1]  create any metafield using One method and pass country data  (DONE)
-
- [2]  add content in default metafield using method  (DONE)
- 
- [3]  create one algorithm for add country metafield with space free (DONE)
- 
- [4]  Add country content in metafield using algorithm (DONE)
- 
- [5]  Get all country and default metafield data formatting in method reutrn array objct
- 
- [6]  Delete default data in default metafield
- 
- [7]  Delete country in country metafield  
- 
- [8]  update default in default metafield  (DONE)
- 
- [9]  update country in country metafield  (DONE)
- 
- [10] Done 
 
 
 

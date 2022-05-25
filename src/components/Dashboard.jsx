@@ -101,7 +101,8 @@ const Dashboard = () => {
     }
     let startIndex = (page - 1) * pagePerData;
     let endIndex = (page - 1) * pagePerData + pagePerData;
-    // console.log("page :", startIndex, endIndex);
+    console.log("DATA : ", item);
+    console.log("page :", startIndex, endIndex);
     setcurrentpageDate(item.slice(startIndex, endIndex));
   }, [page, item]);
 

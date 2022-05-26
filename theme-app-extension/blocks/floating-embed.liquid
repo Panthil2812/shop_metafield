@@ -61,26 +61,38 @@
       }
   }
   const dynamicContent = async ()=>{
-    const data = getContent(await CountryCodeFromUrl());
-        console.log("DYNAMIC CONTENT COUNTRY CODE : ",data);
-         
-         if(data)
-         {
-          const h_color = data[1][0] ? data[1][0][2]:"#fff"
-          const header = data[1][0] ? data[1][0][1]:""
- 
-          const f_color = data[1][1] ? data[1][1][2]:"#fff"
-          const footer = data[1][1] ? data[1][1][1]:""
-          if (document.querySelectorAll(".dynamic_header_Drop")[0]) {
-           document.querySelector(".dynamic_header_Drop").innerHTML = `<div style="background-color:${h_color};padding: 1px;">${header}</div>`;
-           }
-           if (document.querySelectorAll(".dynamic_footer_Drop")[0]) {
-             document.querySelector(".dynamic_footer_Drop").innerHTML = `<div style="background-color:${f_color};padding: 1px;">${footer}</div>`;
-           } 
+          const c_code = await CountryCodeFromUrl();
+          console.log("code : ",c_code);
+          const country_content = getContent();
+          console.log("DYNAMIC CONTENT COUNTRY CODE : ",country_content);
+          const  c_data= country_content.find((e)=>{return ((e[0] === c_code))}) 
+          let data = null;
+
+          if(c_data){
+            console.log("Country content : ",c_data);
+            data = c_data;
+          }else{
+            const d_data = country_content.find((e)=>{return ((e[0] === "Default"))}) 
+            console.log("Default  content : ",d_data);
+            data = d_data;
+          }        
+          if(data)
+          {
+              const h_color = data[1][0] ? data[1][0][2]:"#fff"
+              const header = data[1][0] ? data[1][0][1]:""
+    
+              const f_color = data[1][1] ? data[1][1][2]:"#fff"
+              const footer = data[1][1] ? data[1][1][1]:""
+              if (document.querySelectorAll(".dynamic_header_Drop")[0]) {
+              document.querySelector(".dynamic_header_Drop").innerHTML = `<div style="background-color:${h_color};padding: 1px;">${header}</div>`;
+              }
+              if (document.querySelectorAll(".dynamic_footer_Drop")[0]) {
+                document.querySelector(".dynamic_footer_Drop").innerHTML = `<div style="background-color:${f_color};padding: 1px;">${footer}</div>`;
+              } 
         }
   }
   
-  const getContent = (c_code) =>{
+  const getContent = () =>{
     let ALL_CONTENT = [];
     let vv =null;
     {% for metafield in shop.metafields.appmixo_dynamic %}
@@ -92,8 +104,7 @@
 
       }   
     {% endfor %}   
-     
-     return ALL_CONTENT.find((e)=>{return ((e[0] === c_code))});
+     return ALL_CONTENT ;
   }
   
   document.addEventListener("readystatechange", async() => {

@@ -206,7 +206,7 @@ const Dashboard = () => {
         >
           <Modal.Section>
             <TextContainer>
-              <p>Are you sure you want to delete this content?</p>
+              <p>Are you sure you want to delete this dynamic content?</p>
             </TextContainer>
           </Modal.Section>
         </Modal>
@@ -245,10 +245,10 @@ const Dashboard = () => {
               </div>
             ) : (
               <Card>
-                {item.length === 0 ? (
+                {displayData.length === 0 ? (
                   <>
                     <EmptyState
-                      heading="Manage your Country Content"
+                      heading="Manage your dynamic content country wise"
                       action={{
                         content: "Add Content",
                         onAction: () => {
@@ -258,8 +258,8 @@ const Dashboard = () => {
                       image="https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"
                     >
                       <p>
-                        Track and receive your incoming inventory from
-                        suppliers.
+                        Click on "Add Content" button to create your first
+                        dynamic content
                       </p>
                     </EmptyState>
                   </>

@@ -30,7 +30,7 @@ import {
   Get_All_Shop_Metafields,
   Del_Country_Metafield,
 } from "../function/allFunction";
-const Dashboard = () => {
+const Dashboard = (props) => {
   const navigate = useNavigate();
   const Location = useLocation();
   const [displayData, setDisplayData] = useState([]);
@@ -225,6 +225,12 @@ const Dashboard = () => {
                 content: "Manage Widget",
                 onAction: () => {
                   enableThemeAppExtension();
+                },
+              }}
+              secondaryAction={{
+                content: "More Info",
+                onAction: () => {
+                  props.handleTabChange(1);
                 },
               }}
               // secondaryAction={{ content: 'Learn more' }}

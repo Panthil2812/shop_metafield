@@ -3,6 +3,7 @@ import WEBHOOKS from "./webhooks.utils.js";
 
 export const addWebhookHandlers = () => {
   WEBHOOKS.map(({ path, topic, webhookHandler }) => {
+    console.log("topic", topic);
     Shopify.Webhooks.Registry.addHandler(topic, {
       path,
       webhookHandler,

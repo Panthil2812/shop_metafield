@@ -10,6 +10,7 @@ import applyAuthMiddleware from "./middleware/auth.js";
 import verifyRequest from "./middleware/verify-request.js";
 import MetafieldRouter from "./services/metafield/metafield.route.js";
 import bodyParser from "body-parser";
+import { addWebhookHandlers } from "./webhooks/index.js";
 
 const USE_ONLINE_TOKENS = true;
 const TOP_LEVEL_OAUTH_COOKIE = "shopify_top_level_oauth";
@@ -33,12 +34,8 @@ Shopify.Context.initialize({
 const ACTIVE_SHOPIFY_SHOPS = {};
 global.ACTIVE_SHOPIFY_SHOPS = ACTIVE_SHOPIFY_SHOPS;
 
-Shopify.Webhooks.Registry.addHandler("APP_UNINSTALLED", {
-  path: "/webhooks",
-  webhookHandler: async (topic, shop, body) => {
-    delete ACTIVE_SHOPIFY_SHOPS[shop];
-  },
-});
+//Add webhook handlers
+addWebhookHandlers();
 
 // export for test use only
 export async function createServer(

@@ -2,15 +2,13 @@ import React, { useCallback, useState } from "react";
 import { Tabs, Page } from "@shopify/polaris";
 // import { Dashboard } from "./Dashboard";
 import Support from "./Support";
-import Publicreview from "./Publicreview";
 import Dashboard from "./Dashboard";
 const HomePage = () => {
   const [selected, setSelected] = useState(0);
 
-  const handleTabChange = useCallback(
-    (selectedTabIndex) => setSelected(selectedTabIndex),
-    []
-  );
+  const handleTabChange = (selectedTabIndex) => {
+    setSelected(selectedTabIndex);
+  };
 
   const tabs = [
     {
@@ -32,11 +30,9 @@ const HomePage = () => {
   ];
   const tabFunction = (tab) => {
     if (tab === 0) {
-      return <Dashboard />;
+      return <Dashboard handleTabChange={handleTabChange} />;
     } else if (tab === 1) {
       return <Support />;
-    } else if (tab === 2) {
-      return <Publicreview />;
     }
   };
   return (

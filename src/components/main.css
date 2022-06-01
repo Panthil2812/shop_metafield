@@ -122,3 +122,6 @@
   display: flex;
   justify-content: center;
 }
+.support-card {
+  padding: 5px 10px 0px 20px;
+}

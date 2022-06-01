@@ -2,6 +2,7 @@ import React from "react";
 import {
   Banner,
   Page,
+  Button,
   Tabs,
   Toast,
   Modal,
@@ -17,6 +18,20 @@ export default function Support() {
   return (
     <Page fullWidth={false}>
       <Layout>
+        <Layout.Section>
+          <Card
+            title="Support"
+            primaryFooterAction={{
+              content: "Contact Us",
+              onAction: () =>
+                window.open("mailto:hello@appmixo.com", "__blank"),
+            }}
+          >
+            <p className="support-card">
+              If you want to ask any questions or need any help contact us.
+            </p>
+          </Card>
+        </Layout.Section>
         <Layout.Section>
           <Card title="Theme app extension Enable/Disable" sectioned>
             <p>Go to our App dashboard and click on "Manage Widget"</p>

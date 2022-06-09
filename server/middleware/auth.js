@@ -8,9 +8,7 @@ import {
   createShopifyGraphqlClient,
 } from "../services/shopify/index.js";
 import { DBShopServices } from "../services/db/index.js";
-import { SessionService } from "../services/session/index.js";
 import { APP_STATUS } from "../constants/index.js";
-import axios from "axios";
 export default function applyAuthMiddleware(app) {
   app.get("/auth", async (req, res) => {
     if (!req.signedCookies[app.get("top-level-oauth-cookie")]) {

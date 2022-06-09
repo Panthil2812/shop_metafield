@@ -1,5 +1,6 @@
 import { Shopify } from "@shopify/shopify-api";
-
+import getRawBody from "raw-body";
+import crypto from "crypto";
 const TEST_GRAPHQL_QUERY = `
 {
   shop {
@@ -77,3 +78,27 @@ export default function verifyRequest(app, { returnHeader = true } = {}) {
     }
   };
 }
+export const verifyWebhook = async (req, res, next) => {
+  try {
+    console.log("verifyWebhook call ");
+    const hmac = req.get("X-Shopify-Hmac-Sha256");
+    console.log(" hmac : ", hmac);
+
+    const body = await getRawBody(req);
+    // req.body = { ...JSON.parse(body) };
+    // console.log("body : ", JSON.parse(body));
+    const digest = crypto
+      .createHmac("sha256", process.env.SHOPIFY_API_SECRET)
+      .update(body, "utf8", "hex")
+      .digest("base64");
+    console.log("digest: ", digest);
+    if (digest !== hmac) {
+      console.log("webhook verification failed");
+      return res.status(401).send("hmac validation failed");
+    }
+    return next();
+  } catch (error) {
+    console.log(error);
+    return res.status(401).send("hmac validation failed");
+  }
+};

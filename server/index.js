@@ -1,4 +1,3 @@
-// @ts-check
 import { resolve } from "path";
 import express from "express";
 import cookieParser from "cookie-parser";
@@ -11,7 +10,7 @@ import verifyRequest from "./middleware/verify-request.js";
 import MetafieldRouter from "./services/metafield/metafield.route.js";
 import bodyParser from "body-parser";
 import { addWebhookHandlers } from "./webhooks/index.js";
-
+import { verifyWebhook } from "./middleware/verify-request.js";
 const USE_ONLINE_TOKENS = true;
 const TOP_LEVEL_OAUTH_COOKIE = "shopify_top_level_oauth";
 
@@ -89,7 +88,20 @@ export async function createServer(
       res.status(500).send(error.message);
     }
   });
+  app.post("/customers-data-request", verifyWebhook, async (req, res) => {
+    console.log("customers-data-request");
+    return res.sendStatus(200);
+  });
 
+  app.post("/customer-redact", verifyWebhook, async (req, res) => {
+    console.log("ctx----customers-redact");
+    return res.sendStatus(200);
+  });
+
+  app.post("/shop-redact", verifyWebhook, async (req, res) => {
+    console.log("ctx---shop-redact");
+    return res.sendStatus(200);
+  });
   app.use(express.json());
 
   app.use((req, res, next) => {

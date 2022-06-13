@@ -3,29 +3,79 @@ Metafield Country Content :
     namespace : "appmixo_dynamic",
     key : "appmixo_0",  (appmixo_1,appmixo_2,appmixo_3,...)
     value : {
-         "Default": [["name","content","backgroundColor"],
-               ["name","content","backgroundColor"],
-                ["name","content","backgroundColor"]],
-            "country_code":[["name","content","backgroundColor"],
-               ["name","content","backgroundColor"],
-                ["name","content","backgroundColor"]],
-            "country_code":[["name","content","backgroundColor"],
-               ["name","content","backgroundColor"],
-                ["name","content","backgroundColor"]],
+            "Default": [[ "name"  ,  "content"  ,  "backgroundColor"  ,  "timestamp"],
+               [ "name"  ,  "content"  ,  "backgroundColor"  ,  "timestamp"],
+                [ "name"  ,  "content"  ,  "backgroundColor"  ,  "timestamp"]],
+
+            "country_code":[[ "name"  ,  "content"  ,  "backgroundColor"  ,  "timestamp"],
+               [ "name"  ,  "content"  ,  "backgroundColor"  ,  "timestamp"],
+                [ "name"  ,  "content"  ,  "backgroundColor"  ,  "timestamp"]],
+          
+            "country_code":[[ "name"  ,  "content"  ,  "backgroundColor"  ,  "timestamp"],
+               [ "name"  ,  "content"  ,  "backgroundColor"  ,  "timestamp"],
+                [ "name"  ,  "content"  ,  "backgroundColor"  ,  "timestamp"]],
     },
     owner_resource:"shop",
     type : "json",
 }
 
 
-// "scripts": {
-//   "build": "npm run build:client",
-//   "build:client": "vite build --outDir dist/client",
-//   "debug": "node --inspect-brk server/index.js",
-//   "dev": "cross-env NODE_ENV=development nodemon server/index.js --watch ./server",
-//   "prepare": "husky install",
-//   "preserve": "npm run build",
-//   "serve": "cross-env NODE_ENV=production node server/index.js",
-//   "start": "npm run serve",
-//   "test": "vitest --reporter=verbose"
-// },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

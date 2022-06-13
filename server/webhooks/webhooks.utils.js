@@ -10,7 +10,9 @@ const WEBHOOKS = [
   {
     path: WEBHOOK_PATH,
     topic: WEBHOOK_TOPICS.SHOP_UPDATE,
-    webhookHandler: (topic, shop, body) => console.log({ shop, body, topic }),
+    webhookHandler: (topic, shop, body) => {
+      console.log("");
+    },
   },
 ];
 

@@ -77484,6 +77484,14 @@ body{height: min-content; overflow: hidden;}
                   option: y,
                   switch: g,
                   country_code: E,
+                  old_option: t.state
+                    ? t.state.Display === "Header"
+                      ? "0"
+                      : t.state.Display === "Footer"
+                      ? "1"
+                      : ""
+                    : "",
+                  old_country_code: t.state ? t.state.Country : "",
                   backgroundcolor: wa(l),
                   content: h.getValue.replaceAll('"', "'"),
                 },

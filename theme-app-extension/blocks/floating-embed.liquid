@@ -84,10 +84,17 @@
               const f_color = data[1][1] ? data[1][1][2]:"#fff"
               const footer = data[1][1] ? data[1][1][1]:""
               if (document.querySelectorAll(".dynamic_header_Drop")[0]) {
-              document.querySelector(".dynamic_header_Drop").innerHTML = `<div style="background-color:${h_color};padding: 1px;">${header}</div>`;
+                console.log("div conditions true");
+                document.querySelector(".dynamic_header_Drop").innerHTML = `<div style="background-color:${h_color};padding: 1px;">${header}</div>`;
+              }else if(document.getElementsByTagName("header")[0]){
+                  document.getElementsByTagName("header")[0].insertAdjacentHTML('afterend',`<div style="background-color:${h_color};padding: 1px;">${header}</div>`);
               }
+              
               if (document.querySelectorAll(".dynamic_footer_Drop")[0]) {
+                console.log("div conditions true");
                 document.querySelector(".dynamic_footer_Drop").innerHTML = `<div style="background-color:${f_color};padding: 1px;">${footer}</div>`;
+              }else if (document.getElementsByTagName("footer")[0]) {
+                document.getElementsByTagName("footer")[0].insertAdjacentHTML('beforebegin',`<div style="background-color:${f_color};padding: 1px;">${footer}</div>`);
               } 
         }
   }
@@ -117,7 +124,7 @@
         break;
 
       case 'interactive':
-        console.log("interactive 0.8.0")
+        console.log("interactive 1.0.2")
        
         dynamicContent();
         break;

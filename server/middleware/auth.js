@@ -7,6 +7,7 @@ import {
   createShopifyRestClient,
   createShopifyGraphqlClient,
 } from "../services/shopify/index.js";
+import { verifyWebhook } from "../middleware/verify-request.js";
 import { DBShopServices } from "../services/db/index.js";
 import { APP_STATUS } from "../constants/index.js";
 export default function applyAuthMiddleware(app) {

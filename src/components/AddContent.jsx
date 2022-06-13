@@ -130,6 +130,14 @@ const AddContent = () => {
       option: option,
       switch: switchFlag,
       country_code: country,
+      old_option: Location.state
+        ? Location.state.Display === "Header"
+          ? "0"
+          : Location.state.Display === "Footer"
+          ? "1"
+          : ""
+        : "",
+      old_country_code: Location.state ? Location.state.Country : "",
       backgroundcolor: hsbToHex(color),
       content: content.getValue.replaceAll('"', "'"),
     };

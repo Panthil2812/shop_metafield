@@ -74,7 +74,7 @@ export default function Support() {
               onClick={() => {
                 window.open(img1);
               }}
-            />
+            ></img>
           </Card>
         </Layout.AnnotatedSection>
 
@@ -90,7 +90,7 @@ export default function Support() {
               onClick={() => {
                 window.open(img2);
               }}
-            />
+            ></img>
           </Card>
         </Layout.AnnotatedSection>
 
@@ -106,7 +106,7 @@ export default function Support() {
               onClick={() => {
                 window.open(img3);
               }}
-            />
+            ></img>
           </Card>
         </Layout.AnnotatedSection>
       </Layout>

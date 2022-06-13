@@ -80,3 +80,25 @@ export const Del_Country_Metafield = async (app, info) => {
     return Promise.reject(error);
   }
 };
+
+// ---------------- EXTER WORK IN PROGRESS ----------------
+export const test_matefield = async (app) => {
+  try {
+    const token = await getSessionToken(app);
+    console.log("ADD CONTENT IN DEFAULT METAFIELD ....");
+    const response = await axios.post(
+      "/test",
+      {},
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    console.log("ADDED CONTENT IN DEFAULT METAFIELD ....");
+    // console.log("ADDED CONTENT : ", response);
+    return Promise.resolve(response);
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};

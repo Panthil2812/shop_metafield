@@ -4,34 +4,18 @@ import "dotenv/config";
 import applyAuthMiddleware from "../../middleware/auth.js";
 import verifyRequest from "../../middleware/verify-request.js";
 import Countries from "./countries.js";
+import path from "path";
 const app = express();
 const router = express.Router();
 app.use(express.json());
 applyAuthMiddleware(app);
-
-
-
-router.get("/privacypolicy", async (req, res) => {
-  try {
-    // console.log("arr", fData);
-    return res
-      .status(200)
-      .send(
-        `<div id="root"><div class="App"><div class="privacy-policy-container" style="width: 90%; max-width: 1170px; margin: 0px auto; background: rgb(255, 255, 255); box-shadow: rgba(0, 0, 0, 0.2) 0px 6px 60px; padding: 20px; border-top: 5px solid rgb(34, 34, 34); line-height: 25px; text-align: left;"><h1 style="margin: 0px 0px 10px; font-weight: 700; font-size: 28px; letter-spacing: 0.5px;">Privacy Policy</h1><p>Country wise Dynamic Content App is owned And operated By AppMixo™ Lab LLP, which provides the SERVICE.</p><p>This page is used to inform application visitors regarding our policies with the collection, use, and disclosure of Personal Information if anyone decided to use our Service, the Country wise Dynamic Content App.</p><p>If you choose to use our Service, then you agree to the collection and use of information in relation with this policy. The Personal Information that we collect are used for providing and improving the Service. We will not use or share your information with anyone except as described in this Privacy Policy.</p><p>We understand that you value your privacy, and we want to help make your experience with our Services satisfying and safe. This Privacy Policy may be updated from time to time. For example, we may update this Privacy Policy to reflect changes to our information collection and use practices.</p><hr style="margin: 40px 0px;"><h2 style="margin: 0px 0px 10px; font-weight: 700; font-size: 28px; letter-spacing: 0.5px;"> Information Collection and Use</h2><p>For a better experience while using our Service, collection and use of information in this Policy, we refer to our collection and use of “Personal Information.” “Personal Information,” as used in this Policy, is personally identifiable information, which is information that directly identifies an individual, such as first and last name, mailing address, email address, IP addresses, demographics, passwords or other online contact information, or telephone number. We collect Personal Information, as well as non-personally identifiable information.  The information that we collect will be used to contact or identify you.</p><hr style="margin: 40px 0px;"><h2 style="margin: 0px 0px 10px; font-weight: 700; font-size: 28px; letter-spacing: 0.5px;"> Log Data</h2><p>We want to inform you that whenever you visit our Service, we collect information that your browser sends to us that is called Log Data. This Log Data may include information such as your computer’s Internet Protocol ("IP") address, browser version, pages of our Service that you visit, the time and date of your visit, the time spent on those pages, and other statistics.</p><hr style="margin: 40px 0px;"><h2 style="margin: 0px 0px 10px; font-weight: 700; font-size: 28px; letter-spacing: 0.5px;"> Service Providers</h2><p>We may employ third-party companies and individuals due to the following reasons:</p><ul style="list-style: disc; padding-left: 21px;"><li>To facilitate our Service;</li><li>To provide the Service on our behalf;</li><li>To perform Service-related services; or</li><li>To assist us in analyzing how our Service is used.</li></ul><p>We want to inform our Service users that these third parties have access to your Personal Information. The reason is to perform the tasks assigned to them on our behalf. However, they are obligated not to disclose or use the information for any other purpose.</p><hr style="margin: 40px 0px;"><h2 style="margin: 0px 0px 10px; font-weight: 700; font-size: 28px; letter-spacing: 0.5px;"> Security</h2><p>We value your trust in providing us your Personal Information, thus we are striving to use commercially acceptable means of protecting it. But remember that no method of transmission over the internet, or method of electronic storage is 100% secure and reliable, and we cannot guarantee its absolute security.</p><hr style="margin: 40px 0px;"><h2 style="margin: 0px 0px 10px; font-weight: 700; font-size: 28px; letter-spacing: 0.5px;"> Links to Other Sites</h2><p>Our Service may contain links to other sites. If you click on a third-party link, you will be directed to that site. Note that these external sites are not operated by us. Therefore, we strongly advise you to review the Privacy Policy of these websites. We have no control over, and assume no responsibility for the content, privacy policies, or practices of any third-party sites or services.</p><p>Children’s Privacy</p><p>Our Services do not address anyone under the age of 13. We do not knowingly collect personal identifiable information from children under 13. In the case we discover that a child under 13 has provided us with personal information, we immediately delete this from our servers. If you are a parent or guardian and you are aware that your child has provided us with personal information, please contact us so that we will be able to do necessary actions.</p><hr style="margin: 40px 0px;"><h2 style="margin: 0px 0px 10px; font-weight: 700; font-size: 28px; letter-spacing: 0.5px;"> Changes to This Privacy Policy</h2><p>We may update our Privacy Policy from time to time. Thus, we advise you to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page. These changes are effective immediately, after they are posted on this page.</p><hr style="margin: 40px 0px;"><h2 style="margin: 0px 0px 10px; font-weight: 700; font-size: 28px; letter-spacing: 0.5px;"> Contact Us</h2><p>If you have any questions or suggestions about our Privacy Policy, do not hesitate to contact us.</p></div></div></div>`
-      );
-  } catch (error) {
-    return res.status(200).send({
-      success: false,
-      data: error.message,
-    });
-  }
-});
-
+const __dirname = path.resolve();
+const limit = 1000;
 //create shop default metafield
 router.post("/add-default-metafield", verifyRequest(app), async (req, res) => {
   try {
-    const session = await Shopify.Utils.loadCurrentSession(req, res);
-    // console.log("BODY DATA : ", req.body.value);
+    console.log("add-default-metafield  calling .......");
+    const session = await Shopify.Utils.loadCurrentSession(req, res, false);
     const info = req.body.value;
     const D_data = await Get_Metafield(session, "appmixo_default");
     let value = null;
@@ -41,36 +25,44 @@ router.post("/add-default-metafield", verifyRequest(app), async (req, res) => {
         info.name,
         info.content,
         info.backgroundcolor,
+        Date.now(),
       ];
       value = {
         default: default_Data,
       };
-      console.log("CREATE METAFIELD ....");
     } else {
       let get_d_data = JSON.parse(D_data[0]?.value)?.default;
-      get_d_data[info.option] = [info.name, info.content, info.backgroundcolor];
+      get_d_data[info.option] = [
+        info.name,
+        info.content,
+        info.backgroundcolor,
+        Date.now(),
+      ];
       value = {
         default: get_d_data,
       };
-      console.log("UPDATE METAFIELD ....");
     }
     const test = await Add_Content_Metafield(
       session,
       "appmixo_default",
       JSON.stringify(value)
     );
-    res.status(200).json({ success: true });
-  } catch (err) {
-    res.status(200).json({ success: false });
+
+    console.log("add-default-metafield  successfully .......");
+    res.status(200).json({ success: true, data: test });
+  } catch (error) {
+    console.log("add-default-metafield  error .......", error.message);
+    return res.status(500).json({ success: false, data: error.message });
   }
 });
+
 //create shop Country metafield
 router.post("/add-country-metafield", verifyRequest(app), async (req, res) => {
   try {
-    const session = await Shopify.Utils.loadCurrentSession(req, res);
+    console.log("add-country-metafield calling .......");
+    const session = await Shopify.Utils.loadCurrentSession(req, res, false);
     const info = req.body.value;
-    const C_call_data = await Get_Metafield(session, "");
-    const country_data = C_call_data.filter((e) => e.key != "appmixo_default");
+    const country_data = await Get_Metafield(session, "");
     const country_metafield_length = country_data.length;
     if (country_metafield_length === 0) {
       //first value into metafield and create first metafield object
@@ -79,11 +71,12 @@ router.post("/add-country-metafield", verifyRequest(app), async (req, res) => {
         info.name,
         info.content,
         info.backgroundcolor,
+        Date.now(),
       ];
       const value = {
         [info.country_code]: Country_Data,
       };
-      console.log("VALUE LENGTH : ", JSON.stringify(value).length);
+      // console.log("VALUE LENGTH : ", JSON.stringify(value).length);
       const add_content = await Add_Content_Metafield(
         session,
         `appmixo_${country_metafield_length}`,
@@ -91,17 +84,14 @@ router.post("/add-country-metafield", verifyRequest(app), async (req, res) => {
       );
       // console.log("RESPONSE VALUE : ", add_content);
     } else {
-      const country_content = await Find_Country_Content_In_Metafield(
-        country_data,
-        info.country_code
-      );
-      if (!country_content) {
+      if (info.old_country_code == "" && info.old_option == "") {
         //create new country in metafield
         let Country_Data = new Array(3).fill(null);
         Country_Data[info.option] = [
           info.name,
           info.content,
           info.backgroundcolor,
+          Date.now(),
         ];
         // console.log("CREATE NEW FILED FOR COUNTRY CONTENT ");
         const res = await Create_New_Country_Metafield(
@@ -112,27 +102,40 @@ router.post("/add-country-metafield", verifyRequest(app), async (req, res) => {
         );
       } else {
         // update existing country content
-        const d_res = await Edit_Content_Metafield(
-          session,
-          country_content.key,
-          country_content.content,
-          info.country_code,
-          info
-        );
+
+        const d_res = await Edit_Content_Metafield(session, info);
         // console.log("UPDATE COUNTRY CONTENT : ", d_res);
       }
     }
+    console.log("add-country-metafield successfully .......");
+
     res.status(200).json({ success: true });
-  } catch (err) {
-    res.status(200).json({ success: false });
+  } catch (error) {
+    console.log("add-country-metafield  error .......", error.message);
+    return res.status(500).json({ success: false, data: error.message });
+  }
+});
+
+// html content call from privacypolicy api
+router.get("/privacypolicy", async (req, res) => {
+  try {
+    console.log("privacypolicy calling .......");
+    return res.status(200).sendFile("./src/assets/privacypolicy.html", {
+      root: __dirname,
+    });
+  } catch (error) {
+    console.log("privacypolicy error .......", error.message);
+    return res.status(500).json({ success: false, data: error.message });
   }
 });
 
 //get all metafield object to fomatting list in array object
 router.get("/get-all-shop-metafields", verifyRequest(app), async (req, res) => {
   try {
+    console.log("get-all-shop-metafields calling .......");
+
     let fData = [];
-    const session = await Shopify.Utils.loadCurrentSession(req, res);
+    const session = await Shopify.Utils.loadCurrentSession(req, res, false);
     const result = await Get_Metafield(session, "");
     // console.log("result: " + JSON.stringify(result));
     // console.log("panthil");
@@ -151,23 +154,23 @@ router.get("/get-all-shop-metafields", verifyRequest(app), async (req, res) => {
               Display: index ? (index === 1 ? "Footer" : "Products") : "Header",
               Content: data[1],
               BackgroundColor: data[2],
+              timestamp: data[3],
             });
           }
         });
       });
     });
+    console.log("get-all-shop-metafields successfully ........");
 
     // console.log("arr", fData);
     return res.status(200).send(
       fData.sort(function (a, b) {
-        return a.fullCountry.localeCompare(b.fullCountry);
+        return b.timestamp - a.timestamp;
       })
     );
   } catch (error) {
-    return res.status(200).send({
-      success: false,
-      data: error.message,
-    });
+    console.log("get-all-shop-metafields error .......", error.message);
+    return res.status(500).json({ success: false, data: error.message });
   }
 });
 
@@ -177,35 +180,45 @@ router.post(
   verifyRequest(app),
   async (req, res) => {
     try {
-      const session = await Shopify.Utils.loadCurrentSession(req, res);
+      console.log("del-country-content-metafield calling .......");
+
+      const session = await Shopify.Utils.loadCurrentSession(req, res, false);
       const info = req.body.value;
-      const C_call_data = await Get_Metafield(session, info.metafield_key);
-      const country_content = JSON.parse(C_call_data[0].value);
-      country_content[info.Country][info.Display] = null;
-      const del_country = country_content[info.Country];
-      console.log("DEL_COUNTRY : ", del_country);
-      if (
-        del_country[0] === null &&
-        del_country[1] === null &&
-        del_country[2] === null
-      ) {
-        delete country_content[info.Country];
-      }
-      console.log("final country", country_content);
-      const saved_country = await Add_Content_Metafield(
-        session,
-        info.metafield_key,
-        JSON.stringify(country_content)
-      );
-      return res.status(200).send("panthil");
+      const delete_res = await Delete_country_content_metafield(session, info);
+      console.log("del-country-content-metafield successfully .......");
+
+      return res.status(200).send(delete_res);
     } catch (error) {
-      return res.status(200).send({
-        success: false,
-        data: error.message,
-      });
+      console.log("del-country-content-metafield error .......", error.message);
+      return res.status(500).json({ success: false, data: error.message });
     }
   }
 );
+const Delete_country_content_metafield = async (session, info) => {
+  try {
+    const C_call_data = await Get_Metafield(session, info.metafield_key);
+    const country_content = JSON.parse(C_call_data[0].value);
+    country_content[info.Country][info.Display] = null;
+    const del_country = country_content[info.Country];
+    // console.log("DEL_COUNTRY : ", del_country);
+    if (
+      del_country[0] === null &&
+      del_country[1] === null &&
+      del_country[2] === null
+    ) {
+      delete country_content[info.Country];
+    }
+    // console.log("final country", country_content);
+    const saved_country = await Add_Content_Metafield(
+      session,
+      info.metafield_key,
+      JSON.stringify(country_content)
+    );
+    return Promise.resolve(saved_country);
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
 // Default contetn add in metafield_default
 const Default_Content_Metafield = async (session, value) => {
   try {
@@ -247,7 +260,7 @@ const Add_Content_Metafield = async (session, key, value) => {
     });
     return Promise.resolve(test?.body?.metafield);
   } catch (error) {
-    console.log("ERROR ADD_CONTENT_METAFILED : ", error.message);
+    // console.log("ERROR ADD_CONTENT_METAFILED : ", error.message);
     return Promise.reject(error);
   }
 };
@@ -266,40 +279,43 @@ const Find_Country_Content_In_Metafield = async (c_data, c_code) => {
       return Promise.resolve(0);
     }
   } catch (error) {
-    console.log("ERROR FIND_COUNTRY_CONTENT_IN_METAFIELD : ", error.message);
+    // console.log("ERROR FIND_COUNTRY_CONTENT_IN_METAFIELD : ", error.message);
     return Promise.reject(error);
   }
 };
 // Delete the country from the metafield
-const Edit_Content_Metafield = async (session, key, old_data, c_code, info) => {
+const Edit_Content_Metafield = async (session, info) => {
   try {
     const Get_One_Metafield = await Get_Metafield(session, "");
-    const country_data = Get_One_Metafield.filter(
-      (e) => e.key === key && e.key != "appmixo_default"
-    );
-
-    const value = JSON.parse(country_data[0].value);
-    delete value[c_code];
-    const res = await Add_Content_Metafield(
-      session,
-      key,
-      JSON.stringify(value)
-    );
-    old_data[info.option] = [info.name, info.content, info.backgroundcolor];
-    console.log("update content metadata : ", old_data);
-    if (key === "appmixo_default") {
-      Get_One_Metafield = Get_One_Metafield.filter(
-        (e) => e.key != "appmixo_default"
-      );
-    }
-
-    const update_content = await Create_New_Country_Metafield(
-      session,
+    const old_data = await Find_Country_Content_In_Metafield(
       Get_One_Metafield,
-      old_data,
-      c_code
+      info.old_country_code
     );
-    return Promise.resolve(update_content);
+    const d_data = {
+      metafield_key: old_data.key,
+      Display: info.old_option,
+      Country: info.old_country_code,
+    };
+    const update_content = await Delete_country_content_metafield(
+      session,
+      d_data
+    );
+    const country_data = await Get_Metafield(session, "");
+    let Country_Data = new Array(3).fill(null);
+    Country_Data[info.option] = [
+      info.name,
+      info.content,
+      info.backgroundcolor,
+      Date.now(),
+    ];
+    // console.log("CREATE NEW FILED FOR COUNTRY CONTENT ");
+    const res = await Create_New_Country_Metafield(
+      session,
+      country_data,
+      Country_Data,
+      info.country_code
+    );
+    return Promise.resolve(res);
   } catch (error) {
     return Promise.reject(error.message);
   }
@@ -312,13 +328,11 @@ const Create_New_Country_Metafield = async (session, c_data, info, c_code) => {
     for (let i in c_data) {
       const m_len = c_data[i]?.value?.length + JSON.stringify(info)?.length;
       // console.log("Metafield ", c_code[i].key, "  length : ", m_len);
-      if (m_len < 1000) {
-        //add contetn in this metafield
+      if (m_len < limit) {
+        //add content in this metafield
         const country_content = JSON.parse(c_data[i].value);
         country_content[c_code] = info;
-        console.log(
-          "PROCESSED RUNING STATE FOR INSERT VALUE IN METAFIELD ...."
-        );
+        // console.log("PROCESSED RUNING STATE FOR INSERT VALUE IN METAFIELD ....");
         res = await Add_Content_Metafield(
           session,
           c_data[i].key,
@@ -329,7 +343,7 @@ const Create_New_Country_Metafield = async (session, c_data, info, c_code) => {
       }
     }
     if (!status) {
-      console.log("CREATE NEW METAFIELD");
+      // console.log("CREATE NEW METAFIELD");
       res = await Add_Content_Metafield(
         session,
         `appmixo_${c_data.length}`,
@@ -338,7 +352,7 @@ const Create_New_Country_Metafield = async (session, c_data, info, c_code) => {
     }
     return Promise.resolve(res);
   } catch (error) {
-    console.log("ERROR", error);
+    // console.log("ERROR", error);
     return Promise.reject(error);
   }
 };
@@ -362,4 +376,116 @@ const Get_Metafield = async (session, key) => {
     return Promise.reject(error);
   }
 };
+
+//exter function for all test metafields
+router.post("/all_delete_metafields", verifyRequest(app), async (req, res) => {
+  try {
+    console.log("all_delete_metafields calling .......");
+
+    const session = await Shopify.Utils.loadCurrentSession(req, res, false);
+
+    // console.log("method panthil:", ddd);
+    const fff = await all_delete_metafields(session);
+    console.log("all_delete_metafields successfully .......");
+
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    console.log("all_delete_metafields error .......", error.message);
+    return res.status(500).json({ success: false, data: error.message });
+  }
+});
+
+// create multiple metafields calling one api
+router.post(
+  "/multiple_create_metafields",
+  verifyRequest(app),
+  async (req, res) => {
+    try {
+      console.log("multiple_create_metafields calling .......");
+
+      const session = await Shopify.Utils.loadCurrentSession(req, res, false);
+      for (let i = 0; i < 1000; i++) {
+        const test = await Add_Metafield(
+          session,
+          (Math.random() + i * 100).toString(36).substring(7)
+        );
+        // console.log("loop ", i);
+      }
+
+      console.log("multiple_create_metafields successfully .......");
+      res.status(200).json({ success: true });
+    } catch (error) {
+      console.log("multiple_create_metafields error .......", error.message);
+      return res.status(500).json({ success: false, data: error.message });
+    }
+  }
+);
+
+// delete all metafields from store
+const all_delete_metafields = async (session) => {
+  try {
+    const { Metafield } = await import(
+      `@shopify/shopify-api/dist/rest-resources/${Shopify.Context.API_VERSION}/index.js`
+    );
+    const id = await get_any_one_matefield(session);
+    for (let i = 0; i < id.length; i++) {
+      await Metafield.delete({
+        session: session,
+        id: id[i],
+      });
+      // console.log("loop ", i);
+    }
+    const ddd = await get_any_one_matefield(session);
+    if (ddd) {
+      return all_delete_metafields(session);
+    } else {
+      return Promise.resolve(1);
+    }
+  } catch (error) {}
+};
+
+// add metafield any type
+const Add_Metafield = async (session, key) => {
+  try {
+    const client = new Shopify.Clients.Rest(session.shop, session.accessToken);
+    const test = await client.post({
+      path: "metafields",
+      data: {
+        metafield: {
+          namespace: (Math.random() + key.length * 100)
+            .toString(36)
+            .substring(7),
+          key,
+          value: 25,
+          type: "number_integer",
+        },
+      },
+      type: DataType.JSON,
+    });
+    return Promise.resolve(test?.body?.metafield);
+  } catch (error) {
+    // console.log("ERROR ADD_CONTENT_METAFILED : ", error.message);
+    return Promise.reject(error);
+  }
+};
+
+// get first 50 metafield data from all metafields
+const get_any_one_matefield = async (session) => {
+  try {
+    const client = new Shopify.Clients.Rest(session.shop, session.accessToken);
+
+    const test = await client.get({
+      path: `metafields`,
+      type: DataType.JSON,
+    });
+    const id = await test.body.metafields.map((e) => {
+      return e.id;
+    });
+    // console.log("method :", id);
+    return Promise.resolve(id);
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
 export default router;

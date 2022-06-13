@@ -15,7 +15,7 @@ const limit = 1000;
 router.post("/add-default-metafield", verifyRequest(app), async (req, res) => {
   try {
     console.log("add-default-metafield  calling .......");
-    const session = await Shopify.Utils.loadCurrentSession(req, res);
+    const session = await Shopify.Utils.loadCurrentSession(req, res, false);
     const info = req.body.value;
     const D_data = await Get_Metafield(session, "appmixo_default");
     let value = null;
@@ -60,7 +60,7 @@ router.post("/add-default-metafield", verifyRequest(app), async (req, res) => {
 router.post("/add-country-metafield", verifyRequest(app), async (req, res) => {
   try {
     console.log("add-country-metafield calling .......");
-    const session = await Shopify.Utils.loadCurrentSession(req, res);
+    const session = await Shopify.Utils.loadCurrentSession(req, res, false);
     const info = req.body.value;
     const country_data = await Get_Metafield(session, "");
     const country_metafield_length = country_data.length;
@@ -135,7 +135,7 @@ router.get("/get-all-shop-metafields", verifyRequest(app), async (req, res) => {
     console.log("get-all-shop-metafields calling .......");
 
     let fData = [];
-    const session = await Shopify.Utils.loadCurrentSession(req, res);
+    const session = await Shopify.Utils.loadCurrentSession(req, res, false);
     const result = await Get_Metafield(session, "");
     // console.log("result: " + JSON.stringify(result));
     // console.log("panthil");
@@ -182,7 +182,7 @@ router.post(
     try {
       console.log("del-country-content-metafield calling .......");
 
-      const session = await Shopify.Utils.loadCurrentSession(req, res);
+      const session = await Shopify.Utils.loadCurrentSession(req, res, false);
       const info = req.body.value;
       const delete_res = await Delete_country_content_metafield(session, info);
       console.log("del-country-content-metafield successfully .......");
@@ -382,7 +382,7 @@ router.post("/all_delete_metafields", verifyRequest(app), async (req, res) => {
   try {
     console.log("all_delete_metafields calling .......");
 
-    const session = await Shopify.Utils.loadCurrentSession(req, res);
+    const session = await Shopify.Utils.loadCurrentSession(req, res, false);
 
     // console.log("method panthil:", ddd);
     const fff = await all_delete_metafields(session);
@@ -403,7 +403,7 @@ router.post(
     try {
       console.log("multiple_create_metafields calling .......");
 
-      const session = await Shopify.Utils.loadCurrentSession(req, res);
+      const session = await Shopify.Utils.loadCurrentSession(req, res, false);
       for (let i = 0; i < 1000; i++) {
         const test = await Add_Metafield(
           session,

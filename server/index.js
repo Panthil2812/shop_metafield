@@ -4,7 +4,6 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import { Shopify, ApiVersion } from "@shopify/shopify-api";
 import "dotenv/config";
-import { SessionService } from "./services/session/index.js";
 import { connectDB } from "./services/db/index.js";
 import applyAuthMiddleware from "./middleware/auth.js";
 import verifyRequest from "./middleware/verify-request.js";
@@ -12,11 +11,13 @@ import MetafieldRouter from "./services/metafield/metafield.route.js";
 import bodyParser from "body-parser";
 import { addWebhookHandlers } from "./webhooks/index.js";
 import { verifyWebhook } from "./middleware/verify-request.js";
+import CustomSessionStorage from "./services/session/index.js";
 const USE_ONLINE_TOKENS = false;
 const TOP_LEVEL_OAUTH_COOKIE = "shopify_top_level_oauth";
 
 const PORT = parseInt(process.env.PORT || "8081", 10);
 const isTest = process.env.NODE_ENV === "test" || !!process.env.VITE_TEST_BUILD;
+const sessionStorage = new CustomSessionStorage();
 
 Shopify.Context.initialize({
   API_KEY: process.env.SHOPIFY_API_KEY,
@@ -26,7 +27,12 @@ Shopify.Context.initialize({
   API_VERSION: ApiVersion.April22,
   IS_EMBEDDED_APP: true,
   // This should be replaced with your preferred storage strategy
-  SESSION_STORAGE: new Shopify.Session.MemorySessionStorage(),
+  // SESSION_STORAGE: new Shopify.Session.MemorySessionStorage(),
+  SESSION_STORAGE: new Shopify.Session.CustomSessionStorage(
+    sessionStorage.storeCallback,
+    sessionStorage.loadCallback,
+    sessionStorage.deleteCallback
+  ),
 });
 
 // Storing the currently active shops in memory will force them to re-login when your server restarts. You should
@@ -177,10 +183,8 @@ export async function createServer(
 if (!isTest) {
   // connectDB();
   connectDB().then(() => {
-    SessionService.loadSessions().then(() =>
-      createServer().then(({ app }) =>
-        app.listen(PORT, () => console.log(`Server listening on PORT: ${PORT}`))
-      )
+    createServer().then(({ app }) =>
+      app.listen(PORT, () => console.log(`Server listening on PORT: ${PORT}`))
     );
   });
 }

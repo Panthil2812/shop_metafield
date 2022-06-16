@@ -14,13 +14,27 @@ export default function verifyRequest(app, { returnHeader = true } = {}) {
 
     console.log(session);
     let shop = req.query.shop;
-
+    // console.log("shop : ", shop);
+    // console.log(
+    //   "session shop condition : ",
+    //   session.shop,
+    //   "======\n",
+    //   shop,
+    //   "======\n",
+    //   session.shop !== shop
+    // );
     if (session && shop && session.shop !== shop) {
       // The current request is for a different shop. Redirect gracefully.
+      console.log("first consdition");
       return res.redirect(`/auth?shop=${shop}`);
     }
 
-    if (session?.isActive()) {
+    if (
+      Shopify.Context.SCOPES.equals(session?.scope) &&
+      session?.accessToken &&
+      (!session?.expires || session?.expires >= new Date())
+    ) {
+      console.log("panthil malaviya .......");
       try {
         // make a request to make sure oauth has succeeded, retry otherwise
         const client = new Shopify.Clients.Graphql(

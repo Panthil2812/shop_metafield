@@ -40405,7 +40405,8 @@ For more information, please visit: https://go.apollo.dev/c/docs`)
             (U(n.state.page ? "Successfully Edited" : "Successfully Added"),
             B(!0),
             (n.state = null)),
-          g(!1);
+          g(!1),
+          m(1);
       }, [b]),
         s.exports.useEffect(async () => {
           o > f && c(He(Ee({}, a), { next: !0 }));
@@ -40413,7 +40414,7 @@ For more information, please visit: https://go.apollo.dev/c/docs`)
             J = (f - 1) * F + F;
           console.log("DATA : ", v),
             console.log("page :", Q, J),
-            E(v.slice(Q, J));
+            E(v == null ? void 0 : v.slice(Q, J));
         }, [f, v]),
         s.exports.useEffect(async () => {
           const Q = r.filter((J) => {

@@ -55,7 +55,7 @@ export default function applyAuthMiddleware(app) {
         res,
         req.query
       );
-      console.log("accessToken lala  :   ", session.accessToken);
+      console.log("accessToken   :   ", session.accessToken);
       const host = req.query.host;
 
       //Register webhooks

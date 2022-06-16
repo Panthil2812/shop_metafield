@@ -102,6 +102,6 @@ const ShopSchema = mongoose.Schema({
   ],
 });
 
-const Shop = mongoose.models.shop || mongoose.model("shop", ShopSchema);
+const Shop = mongoose.model("country_wise_content_shops", ShopSchema);
 
 export default Shop;

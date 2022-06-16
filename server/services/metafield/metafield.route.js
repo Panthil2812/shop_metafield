@@ -55,67 +55,6 @@ router.post("/add-default-metafield", verifyRequest(app), async (req, res) => {
     return res.status(500).json({ success: false, data: error.message });
   }
 });
-
-//create shop Country metafield
-router.post("/add-country-metafield", verifyRequest(app), async (req, res) => {
-  try {
-    console.log("add-country-metafield calling .......");
-    const session = await Shopify.Utils.loadCurrentSession(req, res, false);
-    const info = req.body.value;
-    const country_data = await Get_Metafield(session, "");
-    const country_metafield_length = country_data.length;
-    if (country_metafield_length === 0) {
-      //first value into metafield and create first metafield object
-      let Country_Data = new Array(3).fill(null);
-      Country_Data[info.option] = [
-        info.name,
-        info.content,
-        info.backgroundcolor,
-        Date.now(),
-      ];
-      const value = {
-        [info.country_code]: Country_Data,
-      };
-      // console.log("VALUE LENGTH : ", JSON.stringify(value).length);
-      const add_content = await Add_Content_Metafield(
-        session,
-        `appmixo_${country_metafield_length}`,
-        JSON.stringify(value)
-      );
-      // console.log("RESPONSE VALUE : ", add_content);
-    } else {
-      if (info.old_country_code == "" && info.old_option == "") {
-        //create new country in metafield
-        let Country_Data = new Array(3).fill(null);
-        Country_Data[info.option] = [
-          info.name,
-          info.content,
-          info.backgroundcolor,
-          Date.now(),
-        ];
-        // console.log("CREATE NEW FILED FOR COUNTRY CONTENT ");
-        const res = await Create_New_Country_Metafield(
-          session,
-          country_data,
-          Country_Data,
-          info.country_code
-        );
-      } else {
-        // update existing country content
-
-        const d_res = await Edit_Content_Metafield(session, info);
-        // console.log("UPDATE COUNTRY CONTENT : ", d_res);
-      }
-    }
-    console.log("add-country-metafield successfully .......");
-
-    res.status(200).json({ success: true });
-  } catch (error) {
-    console.log("add-country-metafield  error .......", error.message);
-    return res.status(500).json({ success: false, data: error.message });
-  }
-});
-
 // html content call from privacypolicy api
 router.get("/privacypolicy", async (req, res) => {
   try {
@@ -183,17 +122,186 @@ router.post(
       console.log("del-country-content-metafield calling .......");
 
       const session = await Shopify.Utils.loadCurrentSession(req, res, false);
+      console.log(0);
       const info = req.body.value;
+      console.log(0);
       const delete_res = await Delete_country_content_metafield(session, info);
+      console.log(0);
       console.log("del-country-content-metafield successfully .......");
 
       return res.status(200).send(delete_res);
     } catch (error) {
-      console.log("del-country-content-metafield error .......", error.message);
+      console.log("del-country-content-metafield error .......", error);
       return res.status(500).json({ success: false, data: error.message });
     }
   }
 );
+//create shop Country metafield
+router.post("/add-country-metafield", verifyRequest(app), async (req, res) => {
+  try {
+    console.log("add-country-metafield calling .......");
+    const session = await Shopify.Utils.loadCurrentSession(req, res, false);
+    console.log("add session : ", session);
+    const info = req.body.value;
+    const country_data = await Get_Metafield(session, "");
+    const country_metafield_length = country_data.length;
+    if (country_metafield_length === 0) {
+      //first value into metafield and create first metafield object
+      let Country_Data = new Array(3).fill(null);
+      Country_Data[info.option] = [
+        info.name,
+        info.content,
+        info.backgroundcolor,
+        Date.now(),
+      ];
+      const value = {
+        [info.country_code]: Country_Data,
+      };
+      // console.log("VALUE LENGTH : ", JSON.stringify(value).length);
+      const add_content = await Add_Content_Metafield(
+        session,
+        `appmixo_${country_metafield_length}`,
+        JSON.stringify(value)
+      );
+      // console.log("RESPONSE VALUE : ", add_content);
+    } else {
+      const country_content = await Find_Country_Content_In_Metafield(
+        country_data,
+        info.country_code
+      );
+      // console.log("ff\n", info);
+      if (info.old_country_code === "" && !country_content) {
+        //create new country in metafield
+        if (info.old_country_code != info.country_code) {
+          let Country_Data = new Array(3).fill(null);
+          Country_Data[info.option] = [
+            info.name,
+            info.content,
+            info.backgroundcolor,
+            Date.now(),
+          ];
+          // console.log("CREATE NEW FILED FOR COUNTRY CONTENT ");
+          const res = await Create_New_Country_Metafield(
+            session,
+            country_data,
+            Country_Data,
+            info.country_code
+          );
+        }
+      } else {
+        if (info.old_option === "" && info.old_country_code === "") {
+          const dd = await Already_Create_Content_Metafield(
+            session,
+            country_content,
+            info
+          );
+        } else {
+          if (info.old_country_code === info.country_code) {
+            const dd = await Already_Create_Content_Metafield(
+              session,
+              country_content,
+              info
+            );
+          } else if (info.old_country_code !== info.country_code) {
+            console.log(
+              "both country_code not same",
+              info.old_country_code,
+              info.old_option
+            );
+            const old_country_content = await Find_Country_Content_In_Metafield(
+              country_data,
+              info.old_country_code
+            );
+            const C_call_data = await Get_Metafield(
+              session,
+              old_country_content.key
+            );
+            const del_country_content = JSON.parse(C_call_data[0].value);
+            del_country_content[info.old_country_code][info.old_option] = null;
+            const del_country = del_country_content[info.old_country_code];
+            console.log("DEL_COUNTRY : ", del_country);
+            if (
+              del_country[0] === null &&
+              del_country[1] === null &&
+              del_country[2] === null
+            ) {
+              delete del_country_content[info.Country];
+            }
+            console.log("final country", country_content);
+            const saved_country = await Add_Content_Metafield(
+              session,
+              old_country_content.key,
+              JSON.stringify(del_country_content)
+            );
+            console.log("fuisdvniu");
+            const dd = await Already_Create_Content_Metafield(
+              session,
+              country_content,
+              info
+            );
+          }
+        }
+      }
+    }
+    console.log("add-country-metafield successfully .......");
+
+    res.status(200).json({ success: true, data: "1" });
+  } catch (error) {
+    console.log("add-country-metafield  error .......", error.message);
+    return res.status(500).json({ success: false, data: error.message });
+  }
+});
+// already create country edit in metafields
+const Already_Create_Content_Metafield = async (session, c_data, info) => {
+  if (c_data) {
+    const C_call_data = await Get_Metafield(session, c_data.key);
+    const country_content = JSON.parse(C_call_data[0].value);
+    let temp = country_content[info.country_code];
+    console.log("temp Before :", temp);
+    if (info.old_option !== "" && info.old_option !== info.option) {
+      console.log("option change detected");
+      temp[info.old_option] = null;
+    }
+    temp[info.option] = [
+      info.name,
+      info.content,
+      info.backgroundcolor,
+      Date.now(),
+    ];
+    delete country_content[info.country_code];
+    const saved_country = await Add_Content_Metafield(
+      session,
+      c_data.key,
+      JSON.stringify(country_content)
+    );
+    const country_data = await Get_Metafield(session, "");
+    // console.log("CREATE NEW FILED FOR COUNTRY CONTENT ");
+    const res = await Create_New_Country_Metafield(
+      session,
+      country_data,
+      temp,
+      info.country_code
+    );
+  } else {
+    const country_data = await Get_Metafield(session, "");
+    let Country_Data = new Array(3).fill(null);
+    Country_Data[info.option] = [
+      info.name,
+      info.content,
+      info.backgroundcolor,
+      Date.now(),
+    ];
+    // console.log("CREATE NEW FILED FOR COUNTRY CONTENT ");
+    const res = await Create_New_Country_Metafield(
+      session,
+      country_data,
+      Country_Data,
+      info.country_code
+    );
+  }
+};
+
+// delete country using option and update in metafields
 const Delete_country_content_metafield = async (session, info) => {
   try {
     const C_call_data = await Get_Metafield(session, info.metafield_key);
@@ -281,43 +389,6 @@ const Find_Country_Content_In_Metafield = async (c_data, c_code) => {
   } catch (error) {
     // console.log("ERROR FIND_COUNTRY_CONTENT_IN_METAFIELD : ", error.message);
     return Promise.reject(error);
-  }
-};
-// Delete the country from the metafield
-const Edit_Content_Metafield = async (session, info) => {
-  try {
-    const Get_One_Metafield = await Get_Metafield(session, "");
-    const old_data = await Find_Country_Content_In_Metafield(
-      Get_One_Metafield,
-      info.old_country_code
-    );
-    const d_data = {
-      metafield_key: old_data.key,
-      Display: info.old_option,
-      Country: info.old_country_code,
-    };
-    const update_content = await Delete_country_content_metafield(
-      session,
-      d_data
-    );
-    const country_data = await Get_Metafield(session, "");
-    let Country_Data = new Array(3).fill(null);
-    Country_Data[info.option] = [
-      info.name,
-      info.content,
-      info.backgroundcolor,
-      Date.now(),
-    ];
-    // console.log("CREATE NEW FILED FOR COUNTRY CONTENT ");
-    const res = await Create_New_Country_Metafield(
-      session,
-      country_data,
-      Country_Data,
-      info.country_code
-    );
-    return Promise.resolve(res);
-  } catch (error) {
-    return Promise.reject(error.message);
   }
 };
 // create new country enter in metafield

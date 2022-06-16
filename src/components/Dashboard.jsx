@@ -93,6 +93,7 @@ const Dashboard = (props) => {
       Location.state = null;
     }
     setMloadingFlag(false);
+    setPage(1);
   }, [deleteActive]);
 
   useEffect(async () => {
@@ -103,7 +104,7 @@ const Dashboard = (props) => {
     let endIndex = (page - 1) * pagePerData + pagePerData;
     console.log("DATA : ", item);
     console.log("page :", startIndex, endIndex);
-    setcurrentpageDate(item.slice(startIndex, endIndex));
+    setcurrentpageDate(item?.slice(startIndex, endIndex));
   }, [page, item]);
 
   useEffect(async () => {

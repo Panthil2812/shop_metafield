@@ -77662,7 +77662,7 @@ body{height: min-content; overflow: hidden;}
         i18n: LV,
         children: M(Cl.Provider, {
           config: {
-            apiKey: "964ed8769221472c81e90a4e21284fa7",
+            apiKey: "5cea00a85b27e38fbac46ff5ad66314e",
             host: new URL(location).searchParams.get("host"),
             forceRedirect: !0,
           },

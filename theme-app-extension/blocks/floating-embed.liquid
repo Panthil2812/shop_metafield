@@ -86,8 +86,12 @@
               if (document.querySelectorAll(".dynamic_header_Drop")[0]) {
                 console.log("div conditions true");
                 document.querySelector(".dynamic_header_Drop").innerHTML = `<div style="background-color:${h_color};padding: 1px;">${header}</div>`;
-              }else if(document.getElementsByTagName("header")[0]){
-                  document.getElementsByTagName("header")[0].insertAdjacentHTML('afterend',`<div style="background-color:${h_color};padding: 1px;">${header}</div>`);
+              }else if(document.getElementsByTagName("sticky-header")[0]){
+                console.log("sticky-header");
+                  document.getElementsByTagName("sticky-header")[0].insertAdjacentHTML('afterend',`<div style="background-color:${h_color};padding: 1px;">${header}</div>`);
+              }else{
+                console.log("header");
+                document.getElementsByTagName("header")[0].insertAdjacentHTML('afterend',`<div style="background-color:${h_color};padding: 1px;">${header}</div>`);
               }
               
               if (document.querySelectorAll(".dynamic_footer_Drop")[0]) {
@@ -124,7 +128,7 @@
         break;
 
       case 'interactive':
-        console.log("interactive 0.11.0")
+        console.log("interactive 0.11.1")
        
         dynamicContent();
         break;

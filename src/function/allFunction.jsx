@@ -53,6 +53,7 @@ export const Get_All_Shop_Metafields = async (app, info) => {
     const value = await axios.get("/get-all-shop-metafields", {
       headers: {
         Authorization: "Bearer " + token,
+        "ngrok-skip-browser-warning": false,
       },
     });
     return Promise.resolve(value?.data);

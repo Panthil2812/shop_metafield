@@ -19,9 +19,8 @@ Metafield Country Content :
     type : "json",
 }
 
-
-
-
+In this project create country wise content display own position like hreader , footer and products page.
+ 
 
 
 

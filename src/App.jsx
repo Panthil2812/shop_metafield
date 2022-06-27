@@ -71,15 +71,15 @@ export function userLoggedInFetch(app) {
   };
 }
 // "scripts": {
-//   "build": "npm run build:client",
-//   "build:client": "vite build --outDir dist/client",
-//   "debug": "node --inspect-brk server/index.js",
-//   "dev": "cross-env NODE_ENV=development nodemon server/index.js --watch ./server",
-//   "prepare": "husky install",
-//   "preserve": "npm run build",
-//   "serve": "cross-env NODE_ENV=production node server/index.js",
-//   "start": "npm run serve",
-//   "test": "vitest --reporter=verbose"
+// "build": "npm run build:client",
+// "build:client": "vite build --outDir dist/client",
+// "debug": "node --inspect-brk server/index.js",
+// "dev": "cross-env NODE_ENV=development nodemon server/index.js --watch ./server",
+// "prepare": "husky install",
+// "preserve": "npm run build",
+// "serve": "cross-env NODE_ENV=production node server/index.js",
+// "start": "npm run serve",
+// "test": "vitest --reporter=verbose"
 // },
 
 // Heroku env live

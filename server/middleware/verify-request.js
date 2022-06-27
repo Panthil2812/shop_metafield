@@ -10,6 +10,7 @@ const TEST_GRAPHQL_QUERY = `
 
 export default function verifyRequest(app, { returnHeader = true } = {}) {
   return async (req, res, next) => {
+    console.log("panthil");
     const session = await Shopify.Utils.loadCurrentSession(req, res, false);
 
     console.log(session);
@@ -89,6 +90,7 @@ export default function verifyRequest(app, { returnHeader = true } = {}) {
     }
   };
 }
+
 export const verifyWebhook = async (req, res, next) => {
   try {
     console.log("verifyWebhook call ");

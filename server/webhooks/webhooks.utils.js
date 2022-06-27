@@ -11,7 +11,7 @@ const WEBHOOKS = [
     path: WEBHOOK_PATH,
     topic: WEBHOOK_TOPICS.SHOP_UPDATE,
     webhookHandler: (topic, shop, body) => {
-      console.log("");
+      console.log("00000000000000000000000000000000000000");
     },
   },
 ];

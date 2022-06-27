@@ -40341,7 +40341,10 @@ For more information, please visit: https://go.apollo.dev/c/docs`)
         const n = await Pl.getSessionToken(e);
         console.log("GET ALL SHOP METAFIELDS ....");
         const r = await bc.get("/get-all-shop-metafields", {
-          headers: { Authorization: "Bearer " + n },
+          headers: {
+            Authorization: "Bearer " + n,
+            "ngrok-skip-browser-warning": !1,
+          },
         });
         return Promise.resolve(r == null ? void 0 : r.data);
       } catch (n) {
@@ -77659,7 +77662,7 @@ body{height: min-content; overflow: hidden;}
         i18n: LV,
         children: M(Cl.Provider, {
           config: {
-            apiKey: "5cea00a85b27e38fbac46ff5ad66314e",
+            apiKey: "964ed8769221472c81e90a4e21284fa7",
             host: new URL(location).searchParams.get("host"),
             forceRedirect: !0,
           },

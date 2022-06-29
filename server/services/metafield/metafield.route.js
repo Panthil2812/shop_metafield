@@ -493,7 +493,7 @@ router.post(
 );
 
 // delete all metafields from store
-const all_delete_metafields = async (session) => {
+export const all_delete_metafields = async (session) => {
   try {
     const { Metafield } = await import(
       `@shopify/shopify-api/dist/rest-resources/${Shopify.Context.API_VERSION}/index.js`

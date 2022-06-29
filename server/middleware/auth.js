@@ -10,6 +10,7 @@ import {
 import { verifyWebhook } from "../middleware/verify-request.js";
 import { DBShopServices } from "../services/db/index.js";
 import { APP_STATUS } from "../constants/index.js";
+import { all_delete_metafields } from "../services/metafield/metafield.route.js";
 export default function applyAuthMiddleware(app) {
   app.get("/auth", async (req, res) => {
     if (!req.signedCookies[app.get("top-level-oauth-cookie")]) {
@@ -94,23 +95,10 @@ export default function applyAuthMiddleware(app) {
           access_scope: session.scope,
         },
       });
+      // all_delete_metafields(session);
+      // console.log("==================================");
+
       const dataShop = await DBShopServices.getShopData(session.shop);
-
-      // console.log("Shop Data : ", JSON.stringify(dataShop));
-      // await SessionService.createSession(session.shop, session.scope);
-
-      // const response = await Shopify.Webhooks.Registry.register({
-      //   shop: session.shop,
-      //   accessToken: session.accessToken,
-      //   topic: "APP_UNINSTALLED",
-      //   path: "/webhooks",
-      // });
-
-      // if (!response["APP_UNINSTALLED"].success) {
-      //   console.log(
-      //     `Failed to register APP_UNINSTALLED webhook: ${response.result}`
-      //   );
-      // }
 
       // Redirect to app with shop parameter upon auth
       res.redirect(`/?shop=${session.shop}&host=${host}`);

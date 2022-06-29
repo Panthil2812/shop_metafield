@@ -86,9 +86,9 @@
               if (document.querySelectorAll(".dynamic_header_Drop")[0]) {
                 console.log("div conditions true");
                 document.querySelectorAll(".dynamic_header_Drop").innerHTML = `<div style="background-color:${h_color};padding: 1px;">${header}</div>`;
-              }else if(document.querySelectorAll("shopify-section-header")[0]){
+              }else if(document.querySelectorAll("#shopify-section-header")[0]){
                 console.log("main div header");
-                document.querySelectorAll("shopify-section-header")[0].insertAdjacentHTML('afterend',`<div style="background-color:${h_color};padding: 1px;">${header}</div>`);
+                document.querySelectorAll("#shopify-section-header")[0].insertAdjacentHTML('afterend',`<div style="background-color:${h_color};padding: 1px;">${header}</div>`);
               }
               {% comment %} else if(document.getElementsByTagName("sticky-header")[0]){
                 console.log("sticky-header");
@@ -97,9 +97,9 @@
               if (document.querySelectorAll(".dynamic_footer_Drop")[0]) {
                 console.log("div conditions true");
                 document.querySelectorAll(".dynamic_footer_Drop").innerHTML = `<div style="background-color:${f_color};padding: 1px;">${footer}</div>`;
-              }else if (document.querySelectorAll("shopify-section-footer")[0]) {
+              }else if (document.querySelectorAll("#shopify-section-footer")[0]) {
                 console.log("main div footer");
-                document.querySelectorAll("shopify-section-footer")[0].insertAdjacentHTML('beforebegin',`<div style="background-color:${f_color};padding: 1px;">${footer}</div>`);
+                document.querySelectorAll("#shopify-section-footer")[0].insertAdjacentHTML('beforebegin',`<div style="background-color:${f_color};padding: 1px;">${footer}</div>`);
               } 
         }
   }
@@ -129,7 +129,7 @@
         break;
 
       case 'interactive':
-        console.log("interactive 0.12.0")
+        console.log("interactive 0.14.0")
        
         dynamicContent();
         break;

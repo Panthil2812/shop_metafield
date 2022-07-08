@@ -1,135 +1,155 @@
-
-
-
-<script>
-  const fetchCountryData = async ()=>{
-    let location = null;
-    const response =await fetch("https://appmixo.in/cdn-cgi/trace", {
-      method: 'GET',
-      redirect: 'follow'
-    })
-      .then(response => response.text())
-      .then(async(result) => {
-        location = await (result.split('\n').reduce((obj,ele)=>{
-          let arr = ele.split("=");
-          return {...obj,[arr[0]]:arr[1]}
-          },{}).loc);
-         
+<script id=`${time()}`>
+  ( () => {
+    console.log("panthil_aapmixo1");
+    const fetchCountryData = async ()=>{
+      let cookie_location = null;
+      const response =await fetch("https://appmixo.in/cdn-cgi/trace", {
+        method: 'GET',
+        redirect: 'follow'
       })
-      .catch((error) => {
-          console.log('error', error)
-      });
-    if(location)
-    {
-      return location;
-    }else{
-      return "location";
-    }  
-  }
-  const CountryCodeFromUrl =async () =>{
-      try{
-
-        if(window.location.search)
-        {
-          document.cookie = `location=${window.location?.search?.split("=")[1]}`
-        }else{
-          
-            const cookie_d = document.cookie.split(";").reduce((obj,ele)=>{
-              let arr=ele.split("=");
-              return {...obj,[arr[0]]:arr[1]} },{})[" location"];
-              if(cookie_d && cookie_d.length<8)
-              {
-                console.log("cookie true")  
-                console.log("CountryCodeFromUrl : " ,cookie_d);
-                document.cookie = `location=${cookie_d}`;
-
-              }else{
-                console.log("cookie false");
-                const code = await fetchCountryData();
-                console.log("CountryCodeFromUrl : " ,code);
-                document.cookie = `location=${code}`;
-
-              }
-        } 
-        return (document.cookie.split(";").reduce((obj,ele)=>{ let arr=ele.split("=");  return {...obj,[arr[0]]:arr[1]} },{})[" location"]);
-      }catch(e) {
-          CountryCodeFromUrl();
-      }
-  }
-  const dynamicContent = async ()=>{
-          const c_code = await CountryCodeFromUrl();
-          console.log("code : ",c_code);
-          const country_content = getContent();
-          console.log("DYNAMIC CONTENT COUNTRY CODE : ",country_content);
-          const  c_data= country_content.find((e)=>{return ((e[0] === c_code))}) 
-          let data = null;
-
-          if(c_data){
-            console.log("Country content : ",c_data);
-            data = c_data;
-          }else{
-            const d_data = country_content.find((e)=>{return ((e[0] === "Default"))}) 
-            console.log("Default  content : ",d_data);
-            data = d_data;
-          }        
-          if(data)
-          {
-              const h_color = data[1][0] ? data[1][0][2]:"#fff"
-              const header = data[1][0] ? data[1][0][1]:""
-    
-              const f_color = data[1][1] ? data[1][1][2]:"#fff"
-              const footer = data[1][1] ? data[1][1][1]:""
-              if (document.querySelectorAll(".dynamic_header_Drop")[0]) {
-                console.log("div conditions true");
-                document.querySelectorAll(".dynamic_header_Drop").innerHTML = `<div style="background-color:${h_color};padding: 1px;">${header}</div>`;
-              }else if(document.querySelectorAll("#shopify-section-header")[0]){
-                console.log("main div header");
-                document.querySelectorAll("#shopify-section-header")[0].insertAdjacentHTML('afterend',`<div style="background-color:${h_color};padding: 1px;">${header}</div>`);
-              }
-              
-              if (document.querySelectorAll(".dynamic_footer_Drop")[0]) {
-                console.log("div conditions true");
-                document.querySelectorAll(".dynamic_footer_Drop").innerHTML = `<div style="background-color:${f_color};padding: 1px;">${footer}</div>`;
-              }else if (document.querySelectorAll("#shopify-section-footer")[0]) {
-                console.log("main div footer");
-                document.querySelectorAll("#shopify-section-footer")[0].insertAdjacentHTML('beforebegin',`<div style="background-color:${f_color};padding: 1px;">${footer}</div>`);
-              } 
-        }
-  }
-  
-  const getContent = () =>{
-    let ALL_CONTENT = [];
-    let vv =null;
-    {% for metafield in shop.metafields.appmixo_dynamic %}
-      {% assign variable = 'appmixo_' | append: forloop.index0 %}
-      vv= {{ shop.metafields.appmixo_dynamic[ variable ] }} 
-      for (const [key, value] of Object.entries(vv)) {
-         ALL_CONTENT.push([key,value]);
-
-      }   
-    {% endfor %}   
-     return ALL_CONTENT ;
-  }
-  
-  document.addEventListener("readystatechange", async() => {
-    console.log("Dynamic content11")
-
-    switch (event.target.readyState) {
-      case 'loading':
-        console.log("event.target.readystate", event.target.readyState);
-
-        break;
-
-      case 'interactive':
-        console.log("interactive 0.14.0")
-       
-        dynamicContent();
-        break;
-
-      case 'complete':
-        break;
+        .then(response => response.text())
+        .then(async(result) => {
+          cookie_location = await (result.split('\n').reduce((obj,ele)=>{
+            let arr = ele.split("=");
+            return {...obj,[arr[0]]:arr[1]}
+            },{}).loc);
+            {% comment %} console.log("location api data : ",location); {% endcomment %}
+            {% comment %} document.cookie = `location=${loc}`; {% endcomment %}
+        })
+        .catch((error) => {
+            console.log('error', error)
+        });
+      if(cookie_location)
+      {
+        {% comment %} console.log("location api outside : ",location) {% endcomment %}
+        return cookie_location;
+      }else{
+        {% comment %} console.log("location api Default" ) {% endcomment %}
+        return "location";
+      }  
     }
-  })
+    const CountryCodeFromUrl =async () =>{
+        try{
+          const searchParams = new URLSearchParams(window.location.search);
+          if(searchParams.has("c_code"))
+          {
+            console.log("got the search", searchParams.get("c_code"))
+            setCookie("ams_location",searchParams.get("c_code"),1);
+          }else{
+            console.log("not got the search", searchParams.get("c_code"))
+  
+              const cookie_d = document.cookie.split("; ").reduce((obj,ele)=>{
+                let arr=ele.split("=");
+                return {...obj,[arr[0]]:arr[1]} },{})["ams_location"];
+                if(cookie_d && cookie_d.length<8)
+                {
+                  console.log("cookie true")  
+                  console.log("CountryCodeFromUrl : " ,cookie_d);
+                  setCookie("ams_location",cookie_d,1);
+                }else{
+                  console.log("cookie false");
+                  const code = await fetchCountryData();
+                  console.log("CountryCodeFromUrl : " ,code);
+                  setCookie("ams_location",code,1)
+  
+                }
+              {% comment %} console.log("byufsgvggyukgyuk   :  ", cookie_d); {% endcomment %}
+          } 
+          return (document.cookie.split("; ").reduce((obj,ele)=>{
+            let arr=ele.split("=");
+            return {...obj,[arr[0]]:arr[1]} },{})["ams_location"]);
+        }catch(e) {
+            CountryCodeFromUrl();
+        }
+    }
+  
+    function setCookie(cname, cvalue, exdays) {
+      const d = new Date();
+      d.setTime(d.getTime() + (exdays*24*60*60*1000));
+      let expires = "expires="+ d.toUTCString();
+      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+    const dynamicContent = async () =>{
+            console.log("dynamicContent");
+            const country_content =  getContent();
+            console.log("DYNAMIC CONTENT COUNTRY CODE : ",country_content);
+            const c_code = await CountryCodeFromUrl();
+            console.log("code : ",c_code);
+            const  c_data= country_content.find((e)=>{return ((e[0] === c_code))}) 
+            let data = null;
+  
+            if(c_data){
+              console.log("Country content : ",c_data);
+              data = c_data;
+            }else{
+              const d_data = country_content.find((e)=>{return ((e[0] === "Default"))}) 
+              console.log("Default  content : ",d_data);
+              data = d_data;
+            }        
+            if(data)
+            {
+                const h_color = data[1][0] ? data[1][0][2]:"#fff"
+                const header = data[1][0] ? data[1][0][1]:""
+      
+                const f_color = data[1][1] ? data[1][1][2]:"#fff"
+                const footer = data[1][1] ? data[1][1][1]:""
+                if (document.querySelectorAll(".dynamic_header_Drop")[0]) {
+                  console.log("div conditions true");
+                  document.querySelectorAll(".dynamic_header_Drop")[0].innerHTML = `<div style="background-color:${h_color};padding: 1px;">${header}</div>`;
+                }else if(document.querySelectorAll("#shopify-section-header")[0]){
+                  console.log("main div header");
+                  document.querySelectorAll("#shopify-section-header")[0].insertAdjacentHTML('afterend',`<div style="background-color:${h_color};padding: 1px;">${header}</div>`);
+                }
+                if (document.querySelectorAll(".dynamic_footer_Drop")[0]) {
+                  console.log("div conditions true");
+                  document.querySelectorAll(".dynamic_footer_Drop")[0].innerHTML = `<div style="background-color:${f_color};padding: 1px;">${footer}</div>`;
+                }else if (document.querySelectorAll("#shopify-section-footer")[0]) {
+                  console.log("main div footer");
+                  document.querySelectorAll("#shopify-section-footer")[0].insertAdjacentHTML('beforebegin',`<div style="background-color:${f_color};padding: 1px;">${footer}</div>`);
+                } 
+          } 
+    }
+    
+    const getContent = () =>{
+      let ALL_CONTENT = [];
+      let vv =null;
+      console.time("metafields")
+      {% comment %} console.log("06-07-2022 - 2",JSON.stringify(shop.metafields.appmixo_dynamic)); {% endcomment %}
+      {% for metafield in shop.metafields.appmixo_dynamic %}
+        {% assign variable = 'appmixo_' | append: forloop.index0 %}
+        vv= {{ shop.metafields.appmixo_dynamic[ variable ] }} 
+        for (const [key, value] of Object.entries(vv)) {
+           console.log(` ${key} : ${value[0]} `);
+           ALL_CONTENT.push([key,value]);
+  
+        }   
+      {% endfor %} 
+       console.log("ALL CONTENT : ", ALL_CONTENT);  
+      console.timeEnd("metafields")
+       return ALL_CONTENT;
+    }
+    
+    document.addEventListener("readystatechange", async() => {
+      console.log("Dynamic content11")
+  
+      switch (event.target.readyState) {
+        case 'loading':
+          console.log("event.target.readystate", event.target.readyState);
+  
+          break;
+  
+        case 'interactive':
+          console.log("interactive 0.03.0")
+          console.time("final")
+          dynamicContent();
+          console.timeEnd("final")
+          break;
+  
+        case 'complete':
+          break;
+      }
+    })
+} )();
 </script>
 
 {% schema %}

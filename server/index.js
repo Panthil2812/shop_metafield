@@ -4,28 +4,35 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import { Shopify, ApiVersion } from "@shopify/shopify-api";
 import "dotenv/config";
-import { SessionService } from "./services/session/index.js";
 import { connectDB } from "./services/db/index.js";
 import applyAuthMiddleware from "./middleware/auth.js";
 import verifyRequest from "./middleware/verify-request.js";
 import MetafieldRouter from "./services/metafield/metafield.route.js";
 import bodyParser from "body-parser";
-
-const USE_ONLINE_TOKENS = true;
+import { addWebhookHandlers } from "./webhooks/index.js";
+import { verifyWebhook } from "./middleware/verify-request.js";
+import CustomSessionStorage from "./services/session/index.js";
+const USE_ONLINE_TOKENS = false;
 const TOP_LEVEL_OAUTH_COOKIE = "shopify_top_level_oauth";
 
 const PORT = parseInt(process.env.PORT || "8081", 10);
 const isTest = process.env.NODE_ENV === "test" || !!process.env.VITE_TEST_BUILD;
+const sessionStorage = new CustomSessionStorage();
 
 Shopify.Context.initialize({
   API_KEY: process.env.SHOPIFY_API_KEY,
   API_SECRET_KEY: process.env.SHOPIFY_API_SECRET,
-  SCOPES: process.env.SCOPES.split(","),
+  SCOPES: process.env.SCOPES.split(",") || "",
   HOST_NAME: process.env.HOST.replace(/https:\/\//, ""),
   API_VERSION: ApiVersion.April22,
   IS_EMBEDDED_APP: true,
   // This should be replaced with your preferred storage strategy
-  SESSION_STORAGE: new Shopify.Session.MemorySessionStorage(),
+  // SESSION_STORAGE: new Shopify.Session.MemorySessionStorage(),
+  SESSION_STORAGE: new Shopify.Session.CustomSessionStorage(
+    sessionStorage.storeCallback,
+    sessionStorage.loadCallback,
+    sessionStorage.deleteCallback
+  ),
 });
 
 // Storing the currently active shops in memory will force them to re-login when your server restarts. You should
@@ -33,12 +40,8 @@ Shopify.Context.initialize({
 const ACTIVE_SHOPIFY_SHOPS = {};
 global.ACTIVE_SHOPIFY_SHOPS = ACTIVE_SHOPIFY_SHOPS;
 
-Shopify.Webhooks.Registry.addHandler("APP_UNINSTALLED", {
-  path: "/webhooks",
-  webhookHandler: async (topic, shop, body) => {
-    delete ACTIVE_SHOPIFY_SHOPS[shop];
-  },
-});
+//Add webhook handlers
+addWebhookHandlers();
 
 // export for test use only
 export async function createServer(
@@ -75,7 +78,7 @@ export async function createServer(
   });
 
   app.get("/products-count", verifyRequest(app), async (req, res) => {
-    const session = await Shopify.Utils.loadCurrentSession(req, res, true);
+    const session = await Shopify.Utils.loadCurrentSession(req, res, false);
     const { Product } = await import(
       `@shopify/shopify-api/dist/rest-resources/${Shopify.Context.API_VERSION}/index.js`
     );
@@ -92,7 +95,20 @@ export async function createServer(
       res.status(500).send(error.message);
     }
   });
+  app.post("/customers-data-request", verifyWebhook, async (req, res) => {
+    // console.log("customers-data-request");
+    return res.sendStatus(200);
+  });
 
+  app.post("/customer-redact", verifyWebhook, async (req, res) => {
+    // console.log("ctx----customers-redact");
+    return res.sendStatus(200);
+  });
+
+  app.post("/shop-redact", verifyWebhook, async (req, res) => {
+    // console.log("ctx---shop-redact");
+    return res.sendStatus(200);
+  });
   app.use(express.json());
 
   app.use((req, res, next) => {
@@ -167,10 +183,8 @@ export async function createServer(
 if (!isTest) {
   // connectDB();
   connectDB().then(() => {
-    SessionService.loadSessions().then(() =>
-      createServer().then(({ app }) =>
-        app.listen(PORT, () => console.log(`Server listening on PORT: ${PORT}`))
-      )
+    createServer().then(({ app }) =>
+      app.listen(PORT, () => console.log(`Server listening on PORT: ${PORT}`))
     );
   });
 }

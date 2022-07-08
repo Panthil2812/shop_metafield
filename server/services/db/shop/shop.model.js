@@ -94,8 +94,14 @@ const ShopSchema = mongoose.Schema({
     type: String,
     trim: true,
   },
+  emails: [
+    {
+      email: String,
+      insertedAt: Number,
+    },
+  ],
 });
 
-const Shop = mongoose.models.shop || mongoose.model("shop", ShopSchema);
+const Shop = mongoose.model("country_wise_content_shops", ShopSchema);
 
 export default Shop;

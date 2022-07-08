@@ -20,6 +20,7 @@ import {
 import Toggle from "react-toggle";
 import hexRgb from "hex-rgb";
 import "react-toggle/style.css";
+import validation_form from "../function/validationForm.jsx";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import ReactFlagsSelect from "react-flags-select";
 import "./main.css";
@@ -27,7 +28,7 @@ import { useAppBridge } from "@shopify/app-bridge-react";
 import { userLoggedInFetch } from "../App";
 import SunEditor from "suneditor-react";
 import "suneditor/dist/css/suneditor.min.css";
-import { addMetafieldData } from "../function/allFunction";
+import { Add_Content_Metafield } from "../function/allFunction";
 const editorOptions = {
   imageUrlInput: false,
   buttonList: [
@@ -46,8 +47,6 @@ const editorOptions = {
 const AddContent = () => {
   const navigate = useNavigate();
   const Location = useLocation();
-  // console.log("asdfghfefgegdefdegdgdsgdfgbdgdgdfdfgdsgdg    :", );
-
   const app = useAppBridge();
   const fetch = userLoggedInFetch(app);
   const CustomLinkComponent = ({ children, url, ...rest }) => {
@@ -61,7 +60,7 @@ const AddContent = () => {
     // { label: "Select display content", value: "10" },
     { label: "Header", value: "0" },
     { label: "Footer", value: "1" },
-    { label: "Product page", value: "2" },
+    // { label: "Product page", value: "2" },
   ];
   const [color, setColor] = useState(
     Location.state
@@ -73,7 +72,7 @@ const AddContent = () => {
         }
   );
   // rgbToHsb(hexRgb(Location?.state?.BackgroundColor))
-  console.log("color: ", hsbToHex(color));
+  // console.log("color: ", hsbToHex(color));
   const [showPicker, setShowPicker] = useState(false);
   const [loadingFlag, setloadingFlag] = useState(false);
   const [storeName, setStoreName] = useState(
@@ -85,26 +84,28 @@ const AddContent = () => {
         ? "0"
         : Location.state.Display === "Footer"
         ? "1"
-        : "2"
+        : ""
       : ""
   );
-
   const [country, setCountry] = useState(
-    Location.state ? Location.state.Country : null
+    Location.state ? Location.state.Country : ""
   );
   const [content, setContent] = useState({
     contents: Location.state ? Location.state.Content : "",
     getValue: "",
   });
   const [switchFlag, setSwitchFlag] = useState(
-    Location.state ? (Location.state.Country ? false : true) : false
+    Location.state
+      ? Location.state.Country != "Default"
+        ? false
+        : true
+      : false
   );
-  const [errorMessage, setErrorMessage] = useState({
-    store: false,
-    option: false,
-    country: false,
-    content: false,
-  });
+  const [errorContent, setErrorContent] = useState(false);
+  const [errorStore, setErrorStore] = useState(false);
+  const [errorOption, setErrorOption] = useState(false);
+  const [errorCountry, setErrorCountry] = useState(false);
+  const [error, setError] = useState(false);
   const activator = (
     <Button
       onClick={() => {
@@ -118,94 +119,42 @@ const AddContent = () => {
       </div>
     </Button>
   );
-  const validationContent = () => {
-    // console.log("validationContent");
-
-    if (storeName === "") {
-      setErrorMessage((errorMessage) => ({
-        ...errorMessage,
-        store: true,
-      }));
-    } else {
-      setErrorMessage((errorMessage) => ({
-        ...errorMessage,
-        store: false,
-      }));
-    }
-    if (option === "Select display content" || option === "10") {
-      setErrorMessage((errorMessage) => ({
-        ...errorMessage,
-        option: true,
-      }));
-    } else {
-      setErrorMessage((errorMessage) => ({
-        ...errorMessage,
-        option: false,
-      }));
-    }
-    if (!switchFlag) {
-      if (country === null) {
-        setErrorMessage((errorMessage) => ({
-          ...errorMessage,
-          country: true,
-        }));
-      } else {
-        setErrorMessage((errorMessage) => ({
-          ...errorMessage,
-          country: false,
-        }));
-      }
-    } else {
-      setErrorMessage((errorMessage) => ({
-        ...errorMessage,
-        country: false,
-      }));
-    }
-    if (content.getValue === "" || content.getValue === "<p><br></p>") {
-      setErrorMessage((errorMessage) => ({
-        ...errorMessage,
-        content: true,
-      }));
-    } else {
-      setErrorMessage((errorMessage) => ({
-        ...errorMessage,
-        content: false,
-      }));
-    }
-    // console.log("end");
-    // return errorDisplayCheck();
-  };
-  const errorValidtion = () => {
-    return (
-      storeName !== "" &&
-      option !== "Select display content" &&
-      option !== "10" &&
-      ((!switchFlag && country !== null) || switchFlag) &&
-      (content.getValue !== "" || content.getValue !== "<p><br></p>")
-    );
-  };
   const myfunction = () => {
-    console.log(content);
+    // console.log(content);
     document.getElementById("panthil").innerHTML = content.getValue;
   };
   const saveContent = async () => {
     setloadingFlag(true);
-    // myfunction();
-    validationContent();
-    if (errorValidtion()) {
-      console.log("form validation is true");
-      const info = {
-        name: storeName,
-        option: parseInt(option),
-        cFlag: switchFlag,
-        country_code: country,
-        backgroundcolor: hsbToHex(color),
-        content: content.getValue.replaceAll('"', "'"),
-      };
-      const response = await addMetafieldData(app, info);
-      console.log("res", response);
+    const info = {
+      name: storeName,
+      option: option,
+      switch: switchFlag,
+      country_code: country,
+      old_option: Location.state
+        ? Location.state.Display === "Header"
+          ? "0"
+          : Location.state.Display === "Footer"
+          ? "1"
+          : ""
+        : "",
+      old_country_code: Location.state ? Location.state.Country : "",
+      backgroundcolor: hsbToHex(color),
+      content: content.getValue.replaceAll('"', "'"),
+    };
+    const val_status = validation_form(info);
+    setErrorStore(val_status[0]);
+    setErrorOption(val_status[1]);
+    setErrorCountry(val_status[2]);
+    setErrorContent(val_status[3]);
+    if (val_status[0] || val_status[1] || val_status[2] || val_status[3]) {
+      console.log("error");
+    } else {
+      console.log("call api");
+      info.country_code = switchFlag ? "Default" : country;
+      info.option = parseInt(option);
+      // console.log(info);
+      let response = await Add_Content_Metafield(app, info);
       const pageFlag = Location.state ? 1 : 0;
-      console.log("pageFlag", pageFlag);
       navigate("/", {
         state: { page: pageFlag },
       });
@@ -247,20 +196,19 @@ const AddContent = () => {
                   autoComplete="off"
                 />
                 <InlineError
-                  message={errorMessage.store ? "Name is required" : ""}
+                  message={errorStore ? "Name is required" : ""}
                   fieldID="myFieldID"
                 />
               </div>
 
               <div className="second-form-container">
                 <div className="select-container">
-                  <p>Display Content</p>
+                  <p>Display Content At</p>
                   <Select
                     options={options}
                     placeholder={"Select display content"}
                     onChange={(value) => {
                       setOption(value);
-                      // console.log(value);
                     }}
                     value={option}
                   />
@@ -280,7 +228,7 @@ const AddContent = () => {
                 </div>
               </div>
               <InlineError
-                message={errorMessage.option ? "Select Option is required" : ""}
+                message={errorOption ? "Select Option is required" : ""}
                 fieldID="myFieldID"
               />
               <div className="flex">
@@ -288,9 +236,8 @@ const AddContent = () => {
                   <p>Default Country</p>
                   <Toggle
                     onChange={(e) => {
-                      setCountry(null);
+                      setCountry("");
                       setSwitchFlag(e.target.checked);
-                      // console.log("nextChecked : ", e.target.checked);
                     }}
                     checked={switchFlag}
                     icons={false}
@@ -303,7 +250,6 @@ const AddContent = () => {
                   searchable={true}
                   onSelect={(code) => {
                     // console.log(code);
-
                     setCountry(code);
                   }}
                   disabled={switchFlag}
@@ -312,9 +258,7 @@ const AddContent = () => {
                 />
               </div>
               <InlineError
-                message={
-                  errorMessage.country ? "Select Country is required" : ""
-                }
+                message={errorCountry ? "Select Country is required" : ""}
                 fieldID="myFieldID"
               />
             </FormLayout>
@@ -325,13 +269,13 @@ const AddContent = () => {
                 name="my-editor"
                 enableToolbar={true}
                 showToolbar={true}
-                placeholder="Email body content here..."
+                placeholder="Enter your dynamic content here"
                 setOptions={editorOptions}
                 // appendContents={contents}
                 setContents={content.contents}
                 height={220}
                 onChange={(value) => {
-                  console.log(value);
+                  // console.log(value);
                   setContent((content) => ({
                     ...content,
                     getValue: value,
@@ -346,7 +290,7 @@ const AddContent = () => {
               }}
             ></div>
             <InlineError
-              message={errorMessage.content ? "Content is required" : ""}
+              message={errorContent ? "Content is required" : ""}
               fieldID="myFieldID"
             />
           </Card>

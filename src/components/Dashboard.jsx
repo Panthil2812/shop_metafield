@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { DeleteMajor, EditMajor, ViewMajor } from "@shopify/polaris-icons";
-import { getallMetaField, deleteMetaField } from "../function/allFunction";
 import "./main.css";
 import Countries from "../function/countries";
 import {
@@ -27,8 +26,11 @@ import {
   Pagination,
 } from "@shopify/polaris";
 import { useAppBridge } from "@shopify/app-bridge-react";
-
-const Dashboard = () => {
+import {
+  Get_All_Shop_Metafields,
+  Del_Country_Metafield,
+} from "../function/allFunction";
+const Dashboard = (props) => {
   const navigate = useNavigate();
   const Location = useLocation();
   const [displayData, setDisplayData] = useState([]);
@@ -54,8 +56,6 @@ const Dashboard = () => {
     Name: "",
     Country: "",
     Display: "",
-    Content: "",
-    BackgroundColor: "",
   });
   const [pagePerData, setPagePerData] = useState(10);
   const [toastFlag, settoastFlag] = useState(false);
@@ -73,55 +73,16 @@ const Dashboard = () => {
     singular: "Country Content",
     plural: "Country Content",
   };
-  const formatterData = (info) => {
-    const fData = [];
-    if (info) {
-      const d_data = info.default;
-      d_data.map((data, index) => {
-        if (data) {
-          fData.push({
-            id: (Math.random() + 1).toString(36).substring(7),
-            Name: data[0],
-            Country: "",
-            fullCountry: "Default",
-            Display: index ? (index === 1 ? "Footer" : "Products") : "Header",
-            Content: data[1],
-            BackgroundColor: data[2],
-          });
-        }
-      });
-
-      const c_data = info.country_content;
-      Object.keys(c_data).map((key) => {
-        c_data[key].map((data, index) => {
-          if (data) {
-            fData.push({
-              id: (Math.random() + 1).toString(36).substring(7),
-              Name: data[0],
-              Country: key,
-              fullCountry: Countries[key],
-              Display: index ? (index === 1 ? "Footer" : "Products") : "Header",
-              Content: data[1],
-              BackgroundColor: data[2],
-            });
-          }
-        });
-      });
-    }
-    return fData;
-  };
   const enableThemeAppExtension = () => {
     const URL = `https://${window.shop}/admin/themes/current/editor?context=apps&activateAppId03c5b64c-6fb7-4d66-9436-f69cf5a4546c/floating-embed`;
     window.open(URL, "_blank");
   };
   useEffect(async () => {
-    const response = await getallMetaField(app);
-
+    const response = await Get_All_Shop_Metafields(app);
     if (response) {
-      const info = formatterData(JSON.parse(response));
-      setDisplayData(info);
-      setTotalPage(Math.ceil(info.length / pagePerData));
-      setItem(info);
+      setDisplayData(response);
+      setTotalPage(Math.ceil(response.length / pagePerData));
+      setItem(response);
     }
     setGetLoader(false);
     if (Location?.state) {
@@ -131,7 +92,8 @@ const Dashboard = () => {
       settoastFlag(true);
       Location.state = null;
     }
-    // setMloadingFlag(false);
+    setMloadingFlag(false);
+    setPage(1);
   }, [deleteActive]);
 
   useEffect(async () => {
@@ -140,8 +102,9 @@ const Dashboard = () => {
     }
     let startIndex = (page - 1) * pagePerData;
     let endIndex = (page - 1) * pagePerData + pagePerData;
+    console.log("DATA : ", item);
     console.log("page :", startIndex, endIndex);
-    setcurrentpageDate(item.slice(startIndex, endIndex));
+    setcurrentpageDate(item?.slice(startIndex, endIndex));
   }, [page, item]);
 
   useEffect(async () => {
@@ -152,7 +115,7 @@ const Dashboard = () => {
     );
     setItem(temp);
     setPage(1);
-    // setTotalPage(temp.length / pagePerData);
+    setTotalPage(temp.length / pagePerData);
   }, [queryValue]);
   const filterControl = (
     <Filters
@@ -188,7 +151,8 @@ const Dashboard = () => {
         }
       } else {
         //Next
-        console.log("total page : ", totalPage);
+        // console.log("total page : ", totalPage);
+
         const ca = page + 1;
         if (ca === totalPage) {
           setHasPage({ next: false, prev: true });
@@ -201,9 +165,8 @@ const Dashboard = () => {
     }
   };
   const handleRirectAndShowContent = (country) => {
-    console.log("Country CODE :", country);
-    window.open("https://" + window.shop, "_blank");
-    redirectPoint.document.write("<div>Panthil</div>");
+    window.open("https://" + window.shop + "?c_code=" + country, "_blank");
+    // redirectPoint.document.write("<div>Panthil</div>");
   };
   const deleteModel = () => {
     return (
@@ -220,17 +183,18 @@ const Dashboard = () => {
             loading: loadingFlag,
             destructive: true,
             onAction: async () => {
-              // if (actionData.Name) {
-              setloadingFlag(true);
-              const res = await deleteMetaField(app, actionData);
-              setloadingFlag(false);
-              setDeleteActive(false);
-              setPage(1);
-              setQueryValue("");
-              setToastMessage("Successfully Deleted");
-              settoastFlag(true);
+              try {
+                setloadingFlag(true);
+                const res = await Del_Country_Metafield(app, actionData);
+
+                setloadingFlag(false);
+                setDeleteActive(false);
+                setPage(1);
+                setQueryValue("");
+                setToastMessage("Successfully Deleted");
+                settoastFlag(true);
+              } catch (error) {}
             },
-            // },
           }}
           secondaryActions={[
             {
@@ -243,7 +207,7 @@ const Dashboard = () => {
         >
           <Modal.Section>
             <TextContainer>
-              <p>Are you sure you want to delete this content?</p>
+              <p>Are you sure you want to delete this dynamic content?</p>
             </TextContainer>
           </Modal.Section>
         </Modal>
@@ -264,6 +228,12 @@ const Dashboard = () => {
                   enableThemeAppExtension();
                 },
               }}
+              secondaryAction={{
+                content: "More Info",
+                onAction: () => {
+                  props.handleTabChange(1);
+                },
+              }}
               // secondaryAction={{ content: 'Learn more' }}
               status="info"
             ></Banner>
@@ -282,10 +252,10 @@ const Dashboard = () => {
               </div>
             ) : (
               <Card>
-                {item.length === 0 ? (
+                {displayData.length === 0 ? (
                   <>
                     <EmptyState
-                      heading="Manage your Country Content"
+                      heading="Manage your dynamic content country wise"
                       action={{
                         content: "Add Content",
                         onAction: () => {
@@ -295,8 +265,8 @@ const Dashboard = () => {
                       image="https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"
                     >
                       <p>
-                        Track and receive your incoming inventory from
-                        suppliers.
+                        Click on "Add Content" button to create your first
+                        dynamic content
                       </p>
                     </EmptyState>
                   </>
@@ -337,7 +307,16 @@ const Dashboard = () => {
     </Frame>
   );
   function renderItem(item, _, index) {
-    const { id, Name, Country, Display, Content, BackgroundColor } = item;
+    const {
+      id,
+      Name,
+      Country,
+      fullCountry,
+      Display,
+      Content,
+      metafield_key,
+      BackgroundColor,
+    } = item;
 
     const firstItem =
       items && Array.isArray(items) && items.length && items.length !== 0
@@ -368,9 +347,7 @@ const Dashboard = () => {
             <div className="dynamic-details">
               {/* <div>{index + 1}</div> */}
               <div className="header_text">{Name}</div>
-              <div className="header_text">
-                {Country ? Countries[Country] : "Default"}
-              </div>
+              <div className="header_text">{fullCountry}</div>
               <div className="header_text">{Display}</div>
               <div className="flex_sb">
                 <div
@@ -391,12 +368,7 @@ const Dashboard = () => {
                 <div
                   onClick={() => {
                     const country_code = Country ? Country : "Default";
-                    // console.log("country : ", Country);
-                    window.open(
-                      "https://" + window.shop + "?c_code=" + country_code,
-                      "_blank"
-                    );
-                    redirectPoint.document.write("<div>Panthil</div>");
+                    handleRirectAndShowContent(country_code);
                   }}
                 >
                   <Icon source={ViewMajor} color="warning" />
@@ -407,8 +379,7 @@ const Dashboard = () => {
                       Country: Country,
                       Display:
                         Display === "Header" ? 0 : Display === "Footer" ? 1 : 2,
-                      Content: Content,
-                      BackgroundColor: BackgroundColor,
+                      metafield_key: metafield_key,
                     });
                     setDeleteActive(true);
                   }}

@@ -1,39 +1,80 @@
-Metafield Data  
+Metafield Country Content : 
 {
     namespace : "appmixo_dynamic",
-    key : "appmixo_1",
+    key : "appmixo_0",  (appmixo_1,appmixo_2,appmixo_3,...)
     value : {
-        country_content: {
-            "country_code":["name","content","backgroundColor"],
-               ["name","content","backgroundColor"],
-                ["name","content","backgroundColor"]
-        },
-        default: ["name","content","backgroundColor"],
-               ["name","content","backgroundColor"],
-                ["name","content","backgroundColor"]
+            "Default": [[ "name"  ,  "content"  ,  "backgroundColor"  ,  "timestamp"],
+               [ "name"  ,  "content"  ,  "backgroundColor"  ,  "timestamp"],
+                [ "name"  ,  "content"  ,  "backgroundColor"  ,  "timestamp"]],
+
+            "country_code":[[ "name"  ,  "content"  ,  "backgroundColor"  ,  "timestamp"],
+               [ "name"  ,  "content"  ,  "backgroundColor"  ,  "timestamp"],
+                [ "name"  ,  "content"  ,  "backgroundColor"  ,  "timestamp"]],
+          
+            "country_code":[[ "name"  ,  "content"  ,  "backgroundColor"  ,  "timestamp"],
+               [ "name"  ,  "content"  ,  "backgroundColor"  ,  "timestamp"],
+                [ "name"  ,  "content"  ,  "backgroundColor"  ,  "timestamp"]],
     },
+    owner_resource:"shop",
     type : "json",
 }
 
-
-
-"country_code":{
-                "Header":["content","backgroundColor"],
-                "Footer":["content","backgroundColor"],
-                "Product page":["content","backgroundColor"],
-            }
-            
+In this project create country wise content display own position like hreader , footer and products page.
+ 
 
 
 
 
 
-task 
-   [2] Display content on deshborad
-   [3]
 
 
 
 
 
-   contins with all country 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

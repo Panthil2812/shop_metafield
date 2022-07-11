@@ -126,11 +126,9 @@ router.post(
       console.log("del-country-content-metafield calling .......");
 
       const session = await Shopify.Utils.loadCurrentSession(req, res, false);
-      console.log(0);
       const info = req.body.value;
-      console.log(0);
+      console.log("delete : ", info);
       const delete_res = await Delete_country_content_metafield(session, info);
-      console.log(0);
       console.log("del-country-content-metafield successfully .......");
 
       return res.status(200).send(delete_res);
@@ -223,21 +221,21 @@ router.post("/add-country-metafield", verifyRequest(app), async (req, res) => {
             const del_country_content = JSON.parse(C_call_data[0].value);
             del_country_content[info.old_country_code][info.old_option] = null;
             const del_country = del_country_content[info.old_country_code];
-            console.log("DEL_COUNTRY : ", del_country);
+            // console.log("DEL_COUNTRY : ", del_country);
             if (
               del_country[0] === null &&
               del_country[1] === null &&
               del_country[2] === null
             ) {
-              delete del_country_content[info.Country];
+              delete del_country_content[info.old_country_code];
             }
-            console.log("final country", country_content);
+            // console.log("final country", country_content);
             const saved_country = await Add_Content_Metafield(
               session,
               old_country_content.key,
               JSON.stringify(del_country_content)
             );
-            console.log("fuisdvniu");
+            // console.log("fuisdvniu");
             const dd = await Already_Create_Content_Metafield(
               session,
               country_content,

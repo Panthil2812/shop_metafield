@@ -93,6 +93,14 @@
       
                 const f_color = data[1][1] ? data[1][1][2]:"#fff"
                 const footer = data[1][1] ? data[1][1][1]:""
+
+                {% comment %} [[ "name"  ,  "content"  ,  "backgroundColor"  ,  "timestamp"],
+               [ "name"  ,  "content"  ,  "backgroundColor"  ,  "timestamp"],
+                [ "name"  ,  "content"  ,  "backgroundColor"  ,  "timestamp"]] {% endcomment %}
+
+                const p_color = data[1][2] ? data[1][2][2]:"#fff"
+                const product = data[1][2] ? data[1][2][1]:""
+                
                 if (document.querySelectorAll(".dynamic_header_Drop")[0]) {
                   console.log("div conditions true");
                   document.querySelectorAll(".dynamic_header_Drop")[0].innerHTML = `<div style="background-color:${h_color};padding: 1px;">${header}</div>`;
@@ -107,6 +115,10 @@
                   console.log("main div footer");
                   document.querySelectorAll("#shopify-section-footer")[0].insertAdjacentHTML('beforebegin',`<div style="background-color:${f_color};padding: 1px;">${footer}</div>`);
                 } 
+                if (document.querySelectorAll(".dynamic_products_Drop")[0]) {
+                  console.log("div conditions true");
+                  document.querySelectorAll(".dynamic_products_Drop")[0].innerHTML = `<div style="background-color:${p_color};">${product}</div>`;
+                }
           } 
     }
     
@@ -119,7 +131,7 @@
         {% assign variable = 'appmixo_' | append: forloop.index0 %}
         vv= {{ shop.metafields.appmixo_dynamic[ variable ] }} 
         for (const [key, value] of Object.entries(vv)) {
-           console.log(` ${key} : ${value[0]} `);
+           {% comment %} console.log(` ${key} : ${value[0]} `); {% endcomment %}
            ALL_CONTENT.push([key,value]);
   
         }   
@@ -130,7 +142,7 @@
     }
     
     document.addEventListener("readystatechange", async() => {
-      console.log("Dynamic content11")
+      {% comment %} console.log("Dynamic content11") {% endcomment %}
   
       switch (event.target.readyState) {
         case 'loading':
@@ -139,10 +151,10 @@
           break;
   
         case 'interactive':
-          console.log("interactive 0.15.0")
-          console.time("final")
+          console.log("interactive 0.3.0")
+          {% comment %} console.time("final") {% endcomment %}
           dynamicContent();
-          console.timeEnd("final")
+          {% comment %} console.timeEnd("final") {% endcomment %}
           break;
   
         case 'complete':

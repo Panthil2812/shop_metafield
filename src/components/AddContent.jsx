@@ -1,17 +1,13 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import {
   AppProvider,
   Page,
   Card,
   hsbToHex,
   Select,
-  Frame,
   FormLayout,
-  Toast,
   TextField,
-  PageActions,
   InlineError,
-  Stack,
   Popover,
   Button,
   rgbToHsb,
@@ -60,7 +56,7 @@ const AddContent = () => {
     // { label: "Select display content", value: "10" },
     { label: "Header", value: "0" },
     { label: "Footer", value: "1" },
-    // { label: "Product page", value: "2" },
+    { label: "Products page", value: "2" },
   ];
   const [color, setColor] = useState(
     Location.state
@@ -84,6 +80,8 @@ const AddContent = () => {
         ? "0"
         : Location.state.Display === "Footer"
         ? "1"
+        : Location.state.Display === "Products page"
+        ? "2"
         : ""
       : ""
   );
@@ -135,6 +133,8 @@ const AddContent = () => {
           ? "0"
           : Location.state.Display === "Footer"
           ? "1"
+          : Location.state.Display === "Products page"
+          ? "2"
           : ""
         : "",
       old_country_code: Location.state ? Location.state.Country : "",
@@ -147,9 +147,9 @@ const AddContent = () => {
     setErrorCountry(val_status[2]);
     setErrorContent(val_status[3]);
     if (val_status[0] || val_status[1] || val_status[2] || val_status[3]) {
-      console.log("error");
+      // console.log("error");
     } else {
-      console.log("call api");
+      // console.log("call api");
       info.country_code = switchFlag ? "Default" : country;
       info.option = parseInt(option);
       // console.log(info);

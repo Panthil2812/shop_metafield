@@ -166,7 +166,6 @@ const Dashboard = (props) => {
   };
   const handleRirectAndShowContent = (country) => {
     window.open("https://" + window.shop + "?c_code=" + country, "_blank");
-    // redirectPoint.document.write("<div>Panthil</div>");
   };
   const deleteModel = () => {
     return (

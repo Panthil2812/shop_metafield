@@ -119,7 +119,7 @@ const AddContent = () => {
   );
   const myfunction = () => {
     // console.log(content);
-    document.getElementById("panthil").innerHTML = content.getValue;
+    document.getElementById("display_content").innerHTML = content.getValue;
   };
   const saveContent = async () => {
     setloadingFlag(true);
@@ -284,7 +284,7 @@ const AddContent = () => {
               />
             </div>
             <div
-              id="panthil"
+              id="display_content"
               style={{
                 backgroundColor: hsbToHex(color),
               }}

@@ -77,7 +77,6 @@ router.get("/get-all-shop-metafields", verifyRequest(app), async (req, res) => {
     const session = await Shopify.Utils.loadCurrentSession(req, res, false);
     const result = await Get_Metafield(session, "");
     // console.log("result: " + JSON.stringify(result));
-    // console.log("panthil");
     result.map((e) => {
       const M_Data = JSON.parse(e.value);
       Object.keys(M_Data).map((key) => {
@@ -457,7 +456,6 @@ router.post("/all_delete_metafields", verifyRequest(app), async (req, res) => {
 
     const session = await Shopify.Utils.loadCurrentSession(req, res, false);
 
-    // console.log("method panthil:", ddd);
     const fff = await all_delete_metafields(session);
     console.log("all_delete_metafields successfully .......");
 

@@ -1,0 +1,100 @@
+<script>
+    const find_button_div = () => {
+        {% comment %} const options =['add to cart','sold out']
+        console.log(`first :${options[0]},second :${options[1]}`) {% endcomment %}
+        const button_array = document.getElementsByTagName("button")
+        const dynamic_content_div = button_array[Object.keys(button_array).filter((key, index)=>(button_array[index]?.innerText?.toLocaleLowerCase() === "add to cart" ||
+        button_array[index]?.innerText?.toLocaleLowerCase() === "sold out"))[0]];
+
+        console.log("dynamic_content_div : ",dynamic_content_div);
+        return dynamic_content_div;
+        {% comment %} for ( let i in button_array) {
+            if(button_array[i].innerText.toLocaleLowerCase() === options[0] ||
+            button_array[i].innerText.toLocaleLowerCase() === options[1] )
+                {
+                    return i;
+                }
+          } {% endcomment %}
+    }
+    const Dynamic_find_div = () =>
+    {   
+        let output = null;
+        const form_div = document.querySelectorAll("[action='/cart/add']")
+        if(form_div.length > 0) 
+        {
+            for (const element of form_div)
+            {
+                console.log("element", element);
+                const find_button_div = element.querySelectorAll("[type='submit']")
+                if(find_button_div.length > 0)
+                {
+                   for(const button of find_button_div)
+                   {
+                     console.log("button", button);
+                     const parent_div = button.parentElement;
+                     console.log("button parentElement", button.parentElement);
+                     if(parent_div.firstElementChild.type === "submit")
+                     {
+                       const  next_Sibling = parent_div.nextElementSibling;
+                       if(next_Sibling)
+                       {
+                          console.log("nextSibling", next_Sibling.parentElement);
+                          return next_Sibling.parentElement;
+                       }
+                       return parent_div;
+                    }else{
+                        return button;
+                    }
+                   }
+                }
+            } 
+        } 
+    }
+    const dynamicContent = () => {
+        console.log("Loading");
+        console.time("start")
+        const div = `<div class="dynamic_content_div" style="background-color:#000000;"><p style="text-align: center;"><span style="font-size: 16px;"><span style="color: rgb(241, 241, 241);"><strong>xbfzvcxx&nbsp;</strong></span></span></p></div>`
+        const find_div = Dynamic_find_div();
+        //not remove form elements 
+        if(find_div){
+            
+            find_div.insertAdjacentHTML("beforebegin",div)
+        }else{
+           consol.log("find_div not found") 
+        }
+        console.timeEnd("start")
+    }
+    
+    
+    
+    
+   
+    document.addEventListener("readystatechange", async() => {
+        {% comment %} console.log("Dynamic content11") {% endcomment %}
+    
+        switch (event.target.readyState) {
+          case 'loading':
+            console.log("event.target.readystate", event.target.readyState);
+    
+            break;
+    
+          case 'interactive':
+            console.log("interactive 0.3.0")
+            {% comment %} console.time("final") {% endcomment %}
+            await dynamicContent();
+            {% comment %} console.timeEnd("final") {% endcomment %}
+            break;
+    
+          case 'complete':
+            break;
+        }
+      })
+</script>
+{% schema %}
+{
+"name": "Find Div in Products Page",
+"target": "body",
+"templates": ["product"],
+"settings": []
+}
+{% endschema %}~

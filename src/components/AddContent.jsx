@@ -62,7 +62,7 @@ const AddContent = () => {
     Location.state
       ? rgbToHsb(hexRgb(Location?.state?.BackgroundColor))
       : {
-          hue: 1,
+          hue: 0,
           brightness: 1,
           saturation: 0,
         }

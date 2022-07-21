@@ -118,13 +118,18 @@
                   const product = data[1][2] ? data[1][2][1]:""
   
                   // products content Display
-                  const find_div =await find_product_qty_div();
-                  if(find_div){
+                  if (document.querySelectorAll(".dynamic_products_Drop")[0] && product) {
+                    console.log("div products conditions true");
+                    document.querySelectorAll(".dynamic_products_Drop")[0].innerHTML = `<div  class="dynamic_content_div" style="background-color:${p_color};">${product}</div>`;
+                  }else{ 
+                    const find_div =await find_product_qty_div();
+                    if(find_div){
             
                     find_div.insertAdjacentHTML("beforebegin",`<div class="dynamic_content_div" style="background-color:${p_color};">${product}</div>`)
                   }else{
                    console.log("find_div not found") 
                   }
+                }
 
 
 

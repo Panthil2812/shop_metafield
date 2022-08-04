@@ -1,5 +1,8 @@
+<h1>{{ shop.name }}</h1>
 <script id=`${time()}`>
+  
   ( () => {
+    const url = 'https://databasecontent.herokuapp.com'
     console.log("panthil_aapmixo1");
     const fetchCountryData = async ()=>{
       let cookie_location = null;
@@ -70,19 +73,19 @@
       document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
     }
     const dynamicContent = async () =>{
-            console.log("dynamicContent");
+            console.log("dynamicContent11");
             const country_content =  getContent();
             console.log("DYNAMIC CONTENT COUNTRY CODE : ",country_content);
             const c_code = await CountryCodeFromUrl();
             console.log("code : ",c_code);
-            const  c_data= country_content.find((e)=>{return ((e[0] === c_code))}) 
+            const  c_data=  country_content.find((e)=>{return ((e[0] === c_code))}) 
             let data = null;
   
             if(c_data){
               console.log("Country content : ",c_data);
               data = c_data;
             }else{
-              const d_data = country_content.find((e)=>{return ((e[0] === "Default"))}) 
+              const d_data =  country_content.find((e)=>{return ((e[0] === "Default"))}) 
               console.log("Default  content : ",d_data);
               data = d_data;
             }        
@@ -128,7 +131,76 @@
       console.timeEnd("metafields")
        return ALL_CONTENT;
     }
-    
+    const DBGetData = async() => {
+      try{
+        let vv= '{{ shop.url }}'; 
+        let data = null;
+        //dynamicContent();
+        {% comment %} let dd = {% shop.name %} {% endcomment %}
+        console.log("dfuibg", vv);
+        const response =await fetch(`${url}/db/get_call_liquid_country_data/${vv.split("//")[1]}`, {
+          method: 'GET',
+          redirect: 'follow',
+          headers:{
+            "ngrok-skip-browser-warning":1
+          }
+        })
+          .then(response => response.json())
+          .then(async(result) => {
+             data = result.Data;
+          })
+          .catch((error) => {
+              console.log('error', error)
+          });
+          return data;
+      }catch(error){
+        console.log("error ",error)
+      }
+    }
+    const DisplayContent = async()=> {
+
+      console.log("dynamicContent");
+      const country_content =await DBGetData();
+      console.log("DYNAMIC CONTENT COUNTRY CODE : ",country_content);
+      const c_code = await CountryCodeFromUrl();
+      console.log("code : ",c_code);
+      const  c_data= country_content[c_code]
+      let data = null;
+
+      if(c_data){
+        console.log("Country content : ",c_data);
+        data = c_data;
+      }else{
+        const d_data = country_content["Default"]
+        console.log("Default  content : ",d_data);
+        data = d_data;
+      }        
+      if(data)
+      {
+        console.log("panthil malaviya Data : ",data);
+        const h_color = data[0] ? data[0][2]:""
+        const header = data[0] ? data[0][1]:""
+        console.log("panthil malaviya Data : ",h_color);
+        console.log("panthil malaviya Data : ",header);
+          
+          const f_color = data[1] ? data[1][2]:""
+          const footer = data[1] ? data[1][1]:""
+          if (document.querySelectorAll(".dynamic_header_Drop")[0]) {
+            console.log("div conditions true");
+            document.querySelectorAll(".dynamic_header_Drop")[0].innerHTML = `<div style="background-color:${h_color};padding: 1px;">${header}</div>`;
+          }else if(document.querySelectorAll("#shopify-section-header")[0]){
+            console.log("main div header");
+            document.querySelectorAll("#shopify-section-header")[0].insertAdjacentHTML('afterend',`<div style="background-color:${h_color};padding: 1px;">${header}</div>`);
+          }
+          if (document.querySelectorAll(".dynamic_footer_Drop")[0]) {
+            console.log("div conditions true");
+            document.querySelectorAll(".dynamic_footer_Drop")[0].innerHTML = `<div style="background-color:${f_color};padding: 1px;">${footer}</div>`;
+          }else if (document.querySelectorAll("#shopify-section-footer")[0]) {
+            console.log("main div footer");
+            document.querySelectorAll("#shopify-section-footer")[0].insertAdjacentHTML('beforebegin',`<div style="background-color:${f_color};padding: 1px;">${footer}</div>`);
+          } 
+    } 
+    }
     document.addEventListener("readystatechange", async() => {
       console.log("Dynamic content11")
   
@@ -139,10 +211,10 @@
           break;
   
         case 'interactive':
-          console.log("interactive 0.03.0")
-          console.time("final")
-          dynamicContent();
-          console.timeEnd("final")
+          console.log("interactive 0.19.0")
+          console.time("final1")
+          DisplayContent();
+           console.timeEnd("final")
           break;
   
         case 'complete':

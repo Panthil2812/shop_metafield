@@ -7,7 +7,7 @@ import {
 class CustomSessionStorage {
   storeCallback = async (session) => {
     try {
-      console.log("11111111111111111111111111111");
+      // console.log("11111111111111111111111111111");
       return !!(await createOrUpdateSession(session));
     } catch (err) {
       throw new Error(err);
@@ -16,7 +16,7 @@ class CustomSessionStorage {
 
   loadCallback = async (id) => {
     try {
-      console.log("2222222222222222222222222222222222222", id);
+      // console.log("2222222222222222222222222222222222222", id);
       const data = await getSession(id);
 
       if (data) {

@@ -29,6 +29,7 @@ import { userLoggedInFetch } from "../App";
 import SunEditor from "suneditor-react";
 import "suneditor/dist/css/suneditor.min.css";
 import { Add_Content_Metafield } from "../function/allFunction";
+import { Add_DB_Country } from "../function/allDBFunction";
 const editorOptions = {
   imageUrlInput: false,
   buttonList: [
@@ -152,8 +153,10 @@ const AddContent = () => {
       console.log("call api");
       info.country_code = switchFlag ? "Default" : country;
       info.option = parseInt(option);
-      // console.log(info);
+      console.log(info);
       let response = await Add_Content_Metafield(app, info);
+      let response1 = await Add_DB_Country(app, info);
+      console.log(response1?.data?.Data);
       const pageFlag = Location.state ? 1 : 0;
       navigate("/", {
         state: { page: pageFlag },

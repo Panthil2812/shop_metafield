@@ -305,10 +305,13 @@ const Already_Create_Content_Metafield = async (session, c_data, info) => {
 const Delete_country_content_metafield = async (session, info) => {
   try {
     const C_call_data = await Get_Metafield(session, info.metafield_key);
+    console.log("ccccc", C_call_data);
+
     const country_content = JSON.parse(C_call_data[0].value);
-    country_content[info.Country][info.Display] = null;
+    console.log("fduib", country_content);
+    country_content ? (country_content[info.Country][info.Display] = null) : "";
     const del_country = country_content[info.Country];
-    // console.log("DEL_COUNTRY : ", del_country);
+    console.log("DEL_COUNTRY : ", del_country);
     if (
       del_country[0] === null &&
       del_country[1] === null &&
@@ -316,7 +319,7 @@ const Delete_country_content_metafield = async (session, info) => {
     ) {
       delete country_content[info.Country];
     }
-    // console.log("final country", country_content);
+    console.log("final country", country_content);
     const saved_country = await Add_Content_Metafield(
       session,
       info.metafield_key,

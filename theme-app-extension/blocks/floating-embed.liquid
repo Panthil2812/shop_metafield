@@ -3,7 +3,6 @@
   
   ( () => {
     const url = 'https://appmixo-dynamic-content-app.appmixo.in'
-    console.log("panthil_aapmixo1");
     const fetchCountryData = async ()=>{
       let cookie_location = null;
       const response =await fetch("https://appmixo.in/cdn-cgi/trace", {
@@ -177,11 +176,8 @@
       }        
       if(data)
       {
-        console.log("panthil malaviya Data : ",data);
         const h_color = data[0] ? data[0][2]:""
         const header = data[0] ? data[0][1]:""
-        console.log("panthil malaviya Data : ",h_color);
-        console.log("panthil malaviya Data : ",header);
           
           const f_color = data[1] ? data[1][2]:""
           const footer = data[1] ? data[1][1]:""

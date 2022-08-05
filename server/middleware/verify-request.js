@@ -10,10 +10,10 @@ const TEST_GRAPHQL_QUERY = `
 
 export default function verifyRequest(app, { returnHeader = true } = {}) {
   return async (req, res, next) => {
-    console.log("panthil");
+    // console.log("panthil");
     const session = await Shopify.Utils.loadCurrentSession(req, res, false);
 
-    console.log(session);
+    // console.log(session);
     let shop = req.query.shop;
     // console.log("shop : ", shop);
     // console.log(
@@ -35,7 +35,7 @@ export default function verifyRequest(app, { returnHeader = true } = {}) {
       session?.accessToken &&
       (!session?.expires || session?.expires >= new Date())
     ) {
-      console.log("panthil malaviya .......");
+      // console.log("panthil malaviya .......");
       try {
         // make a request to make sure oauth has succeeded, retry otherwise
         const client = new Shopify.Clients.Graphql(

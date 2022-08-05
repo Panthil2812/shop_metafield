@@ -8,12 +8,14 @@ import { connectDB } from "./services/db/index.js";
 import applyAuthMiddleware from "./middleware/auth.js";
 import verifyRequest from "./middleware/verify-request.js";
 import MetafieldRouter from "./services/metafield/metafield.route.js";
+import MetafieldDBRoute from "./services/db/metafield/metafielddb.route.js";
 import bodyParser from "body-parser";
 import { addWebhookHandlers } from "./webhooks/index.js";
 import { verifyWebhook } from "./middleware/verify-request.js";
 import CustomSessionStorage from "./services/session/index.js";
 const USE_ONLINE_TOKENS = false;
 const TOP_LEVEL_OAUTH_COOKIE = "shopify_top_level_oauth";
+import cors from "cors";
 
 const PORT = parseInt(process.env.PORT || "8081", 10);
 const isTest = process.env.NODE_ENV === "test" || !!process.env.VITE_TEST_BUILD;
@@ -49,6 +51,8 @@ export async function createServer(
   isProd = process.env.NODE_ENV === "production"
 ) {
   const app = express();
+
+  app.use(cors());
 
   app.use(
     bodyParser.urlencoded({
@@ -136,6 +140,7 @@ export async function createServer(
     }
   });
   app.use("/", MetafieldRouter);
+  app.use("/db", MetafieldDBRoute);
   /**
    * @type {import('vite').ViteDevServer}
    */

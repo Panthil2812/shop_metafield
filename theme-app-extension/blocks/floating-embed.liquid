@@ -43,7 +43,11 @@
               const cookie_d = document.cookie.split("; ").reduce((obj,ele)=>{
                 let arr=ele.split("=");
                 return {...obj,[arr[0]]:arr[1]} },{})["ams_location"];
-                if(cookie_d && cookie_d.length<8)
+                console.log("country code fetch api")
+                const code = await fetchCountryData();
+                  console.log("CountryCodeFromUrl : " ,code);
+                  setCookie("ams_location",code,1)
+                {% comment %} if(cookie_d && cookie_d.length<8)
                 {
                   console.log("cookie true")  
                   console.log("CountryCodeFromUrl : " ,cookie_d);
@@ -54,7 +58,7 @@
                   console.log("CountryCodeFromUrl : " ,code);
                   setCookie("ams_location",code,1)
   
-                }
+                } {% endcomment %}
               {% comment %} console.log("byufsgvggyukgyuk   :  ", cookie_d); {% endcomment %}
           } 
           return (document.cookie.split("; ").reduce((obj,ele)=>{
@@ -207,7 +211,7 @@
           break;
   
         case 'interactive':
-          console.log("interactive 0.06.0")
+          console.log("interactive 0.07.0")
           console.time("final1")
           DisplayContent();
            console.timeEnd("final")

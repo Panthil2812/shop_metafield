@@ -1,17 +1,13 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import {
   AppProvider,
   Page,
   Card,
   hsbToHex,
   Select,
-  Frame,
   FormLayout,
-  Toast,
   TextField,
-  PageActions,
   InlineError,
-  Stack,
   Popover,
   Button,
   rgbToHsb,
@@ -61,13 +57,13 @@ const AddContent = () => {
     // { label: "Select display content", value: "10" },
     { label: "Header", value: "0" },
     { label: "Footer", value: "1" },
-    // { label: "Product page", value: "2" },
+    { label: "Product page", value: "2" },
   ];
   const [color, setColor] = useState(
     Location.state
       ? rgbToHsb(hexRgb(Location?.state?.BackgroundColor))
       : {
-          hue: 1,
+          hue: 0,
           brightness: 1,
           saturation: 0,
         }
@@ -85,6 +81,8 @@ const AddContent = () => {
         ? "0"
         : Location.state.Display === "Footer"
         ? "1"
+        : Location.state.Display === "Products page"
+        ? "2"
         : ""
       : ""
   );
@@ -136,6 +134,8 @@ const AddContent = () => {
           ? "0"
           : Location.state.Display === "Footer"
           ? "1"
+          : Location.state.Display === "Products page"
+          ? "2"
           : ""
         : "",
       old_country_code: Location.state ? Location.state.Country : "",
@@ -155,7 +155,7 @@ const AddContent = () => {
       info.option = parseInt(option);
       console.log(info);
       let response = await Add_Content_Metafield(app, info);
-      let response1 = await Add_DB_Country(app, info);
+      // let response1 = await Add_DB_Country(app, info);
       console.log(response1?.data?.Data);
       const pageFlag = Location.state ? 1 : 0;
       navigate("/", {

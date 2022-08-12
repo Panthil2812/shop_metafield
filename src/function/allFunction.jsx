@@ -56,13 +56,13 @@ export const Get_All_Shop_Metafields = async (app, info) => {
         "ngrok-skip-browser-warning": false,
       },
     });
-    const fff = await axios.get("/db/get_all_country_data", {
-      headers: {
-        Authorization: "Bearer " + token,
-        "ngrok-skip-browser-warning": false,
-      },
-    });
-    console.log("fusdgbuvdjcnhj", fff.data.Data);
+    // const fff = await axios.get("/db/get_all_country_data", {
+    //   headers: {
+    //     Authorization: "Bearer " + token,
+    //     "ngrok-skip-browser-warning": false,
+    //   },
+    // });
+    // console.log("fusdgbuvdjcnhj", fff.data.Data);
     return Promise.resolve(value?.data);
   } catch (error) {
     return Promise.reject(error);

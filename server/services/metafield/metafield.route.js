@@ -90,7 +90,11 @@ router.get("/get-all-shop-metafields", verifyRequest(app), async (req, res) => {
               Country: key,
               fullCountry: key === "Default" ? "Default" : Countries[key],
               metafield_key: e.key,
-              Display: index ? (index === 1 ? "Footer" : "Products") : "Header",
+              Display: index
+                ? index === 1
+                  ? "Footer"
+                  : "Products page"
+                : "Header",
               Content: data[1],
               BackgroundColor: data[2],
               timestamp: data[3],

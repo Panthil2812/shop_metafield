@@ -187,7 +187,7 @@ const Dashboard = (props) => {
               try {
                 setloadingFlag(true);
                 const res = await Del_Country_Metafield(app, actionData);
-                const res1 = await Delete_DB_Country(app, actionData);
+                // const res1 = await Delete_DB_Country(app, actionData);
                 setloadingFlag(false);
                 setDeleteActive(false);
                 setPage(1);

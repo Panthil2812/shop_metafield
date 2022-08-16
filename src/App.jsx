@@ -99,3 +99,7 @@ export function userLoggedInFetch(app) {
 // HOST=https://b904-2405-201-200c-69d7-74bb-1166-1fd6-de10.ngrok.io
 // mongo_srv=mongodb+srv://hackathon:appmixo123@cluster0.wzlae.mongodb.net/live-heroku-dynamic?retryWrites=true&w=majority
 // SHOPIFY_API_VERSION=2022-07
+
+// "scripts": {
+//   "start": "node server/index.js"
+// },

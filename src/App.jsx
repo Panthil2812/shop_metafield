@@ -37,7 +37,7 @@ export default function App() {
 
 function MyProvider({ children }) {
   const app = useAppBridge();
-
+  console.log("start");
   const client = new ApolloClient({
     cache: new InMemoryCache(),
     link: new HttpLink({

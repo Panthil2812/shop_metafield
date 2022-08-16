@@ -7,7 +7,7 @@ import "dotenv/config";
 import { connectDB } from "./services/db/index.js";
 import applyAuthMiddleware from "./middleware/auth.js";
 import verifyRequest from "./middleware/verify-request.js";
-import MetafieldRouter from "./services/metafield/metafield.route.js";
+import MetafieldRouter from "./services/metafield/newmetafield.route.js";
 import MetafieldDBRoute from "./services/db/metafield/metafielddb.route.js";
 import bodyParser from "body-parser";
 import { addWebhookHandlers } from "./webhooks/index.js";

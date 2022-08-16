@@ -62,7 +62,7 @@ export const Get_All_Shop_Metafields = async (app, info) => {
     //     "ngrok-skip-browser-warning": false,
     //   },
     // });
-    // console.log("fusdgbuvdjcnhj", fff.data.Data);
+    // console.log("fusdgbuvdjcnhj", value?.data);
     return Promise.resolve(value?.data);
   } catch (error) {
     return Promise.reject(error);

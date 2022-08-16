@@ -69,7 +69,8 @@
       document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
     }
     const dynamicContent = async () =>{
-            console.log("dynamicContent");
+         console.log("=======> Rx-shopify", `{{ app.metafields.appmixo_dynamic | json }}`)
+            console.log("dynamicContent11");
             const country_content =  getContent();
             console.log("DYNAMIC CONTENT COUNTRY CODE : ",country_content);
             const c_code = await CountryCodeFromUrl();

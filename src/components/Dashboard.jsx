@@ -80,10 +80,15 @@ const Dashboard = (props) => {
   };
   useEffect(async () => {
     const response = await Get_All_Shop_Metafields(app);
-    if (response) {
-      setDisplayData(response);
-      setTotalPage(Math.ceil(response.length / pagePerData));
-      setItem(response);
+    if (response?.success) {
+      setDisplayData(response.data);
+      setTotalPage(Math.ceil(response.data.length / pagePerData));
+      setItem(response.data);
+    } else {
+      console.log("fdbgui");
+      setDisplayData([]);
+      setTotalPage(Math.ceil(response.data.length / pagePerData));
+      setItem([]);
     }
     setGetLoader(false);
     if (Location?.state) {

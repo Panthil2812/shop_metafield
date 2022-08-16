@@ -156,7 +156,7 @@ const AddContent = () => {
       console.log(info);
       let response = await Add_Content_Metafield(app, info);
       // let response1 = await Add_DB_Country(app, info);
-      console.log(response1?.data?.Data);
+      // console.log(response1?.data?.Data);
       const pageFlag = Location.state ? 1 : 0;
       navigate("/", {
         state: { page: pageFlag },

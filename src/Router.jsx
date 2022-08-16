@@ -10,8 +10,6 @@ const Router = () => {
           <Route path="/text" element={<HomePage />} />
           <Route path="/addcontent" element={<AddContent />} />
           <Route path="*" element={<h1>LASTY</h1>} />
-          {/* <Route path="/secondapp" element={<Products />} /> */}
-          {/* <Route path="*" element={<ErrorPage />} /> */}
         </Routes>
       </BrowserRouter>
     </>

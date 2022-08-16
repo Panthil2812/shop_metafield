@@ -180,10 +180,24 @@
       let vv =null;
       console.time("metafields")
       {% comment %} console.log("06-07-2022 - 2",JSON.stringify(shop.metafields.appmixo_dynamic)); {% endcomment %}
-      {% for metafield in shop.metafields.appmixo_dynamic %}
+      {% for metafield in app.metafields.appmixo_dynamic %}
         {% assign variable = 'appmixo_' | append: forloop.index0 %}
-        vv= {{ shop.metafields.appmixo_dynamic[ variable ] }} 
-        for (const [key, value] of Object.entries(vv)) {
+
+        {% comment %} vv= JSON.stringify("{{ app.metafields.appmixo_dynamic[variable ]  | replace : "'",'"' }}")
+        console.log("vv n  ",JSON.parse(vv.replaceAll("'", '"')
+        .replaceAll('style="', "style='")
+        .replaceAll(';">', ";'>"))) {% endcomment %}
+        vv ={{ app.metafields.appmixo_dynamic[variable] | json }}
+        {% comment %} console.log("vv n ",vv,typeof vv)
+        console.log("vv n stringify ",JSON.stringify(vv))
+        console.log("1234567890==========================================")
+        console.log("vv n parse ",JSON.parse(vv.replaceAll("'", '"')
+        .replaceAll('style="', "style='")
+        .replaceAll(';">', ";'>"))) {% endcomment %}
+        ff = JSON.parse(vv.replaceAll("'", '"')
+        .replaceAll('style="', "style='")
+        .replaceAll(';">', ";'>"))
+         for (const [key, value] of Object.entries(ff)) {
            {% comment %} console.log(` ${key} : ${value[0]} `); {% endcomment %}
            ALL_CONTENT.push([key,value]);
   
